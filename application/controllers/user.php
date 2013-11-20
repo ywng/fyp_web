@@ -38,7 +38,7 @@ class User extends REST_Controller {
 		if ($this->form_validation->run() === FALSE) {
 			// call fail response with error code (we can predefinite a set of this) 
 			// and the error message will be auto set (can be overriden by adding second parameter of string type)
-			$this->core_controller->fail_response(2, validation_error());
+			$this->core_controller->fail_response(2, validation_errors());
 		}
 
 		// assume table is there

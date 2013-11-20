@@ -10,7 +10,7 @@
 class CORE_Controller {
     
     protected $context = null;
-    private $white_list_uri = array('user/register', );
+    private $white_list_uri = array('user/register', ); // this will indicate the script not to run security check
     private $session = null;
     private $response_data = array();
     private $CI = null;
@@ -52,9 +52,9 @@ class CORE_Controller {
         $this->success_response($this->response_data);
     }
     
-    public function fail_response($custom_status_code = 0, $msg = null ) {
+    public function fail_response($custom_status_code = 0, $msg = null) {
 
-        if (!is_null($msg)) {
+        if (is_null($msg)) {
             // get the message back
             if ($custom_status_code < 0) {
                 $custom_status_code = $custom_status_code * -1;
@@ -71,11 +71,11 @@ class CORE_Controller {
 
         if ($this->response_helper) {
             $this->response_helper->response(array(
-                'status_code' => $custom_status_code,
+                'status_code' => $custom_status_code * -1,
                 'message' => $msg,
             ), 200);
         } else {
-            $this->fallback_fail_response($msg, $custom_status_code);
+            $this->fallback_fail_response($msg, $custom_status_code * -1);
         }
     }
     
