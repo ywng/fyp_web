@@ -24,7 +24,7 @@ class Driver extends REST_Controller {
 	public function register_post()
 	{
 
-		$this->core_controller->add_return_data('successful')->successfully_process();
+		
 	}
 
 	/**
