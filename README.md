@@ -144,7 +144,7 @@ Example: controllers/user.php -> register_post() method
 If you need to response success message back to the app, please do this
 </p>
 ```PHP
-  $this->core_controller->successfully_process();
+  $this->core_controller->successfully_processed();
 ```
 <p>
 After calling the above two methods, the server will <b>STOP</b> processing remaining codes.
@@ -162,7 +162,7 @@ $this->core_controller->add_return_data($key, $value);
 // Note that this method can be chained, i.e.
 $this->core_controller->add_return_data($key1, $value1)->add_return_data($key2, $value2)->add_return_data($key3, $value3);
 
-// Please remember to call successfully_process() in the end of the chain if no more processing is needed.
+// Please remember to call successfully_processed() in the end of the chain if no more processing is needed.
 ```
 <p>
 On the call of fail_response(), all added return data <b>will be dropped and will not be included</b> in the return message.
