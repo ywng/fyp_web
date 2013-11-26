@@ -121,10 +121,10 @@ class Passenger extends REST_Controller {
 
 }
 
-<<<<<<< HEAD
+
 /* End of file passenger.php */
 /* Location: ./application/controllers/passenger.php */
 =======
 /* End of file Passenger.php */
 /* Location: ./application/controllers/Passenger.php */
->>>>>>> b1a28b368a1f2b1f6350e5fdaf509b329f461957
+
