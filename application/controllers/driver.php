@@ -32,7 +32,7 @@ class Driver extends REST_Controller {
 	*  View Profile
 	*
 	*/
-	public function viweProfile_get()
+	public function viewProfile_get()
 	{
 
 		
