@@ -23,9 +23,8 @@ class Passenger extends REST_Controller {
 	*/
 	public function register_post()
 	{
-<<<<<<< HEAD
-		
 
+		
 	}
 
 	/**
