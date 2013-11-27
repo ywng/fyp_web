@@ -23,7 +23,7 @@ class Passenger extends REST_Controller {
 	*/
 	public function register_post()
 	{
-			// load up the validation file
+		// load up the validation file
         $this->load->library('form_validation');
 
         /*
@@ -90,12 +90,12 @@ class Passenger extends REST_Controller {
 	*  This can be accessed by /passenger/viewProfile with GET method
 	*
 	*/
-	public function view_profile_get()
+	public function viewProfile_get()
 	{
 		$this->load->model('passenger_model');
 		$pid=$this->input->get('pid');
 		$passenger_info = $this->passenger_model->get_passenger_by_pid($pid);
-        if ($passenger_info < 0) {
+        if (sizeof($passenger_info) !=1) {
                 $this->core_controller->fail_response(5);
         }
 
@@ -170,7 +170,31 @@ class Passenger extends REST_Controller {
 	*/
 	public function login_post()
 	{
-		
+		// load up the validation file
+        $this->load->library('form_validation');
+
+        /*
+        *        user_name, email, password
+        *
+        */
+
+        $validation_config = array(
+  				array('field' => 'username', 'label' => 'username', 'rules' => 'trim|required|xss_clean|min_length[6]'),
+              	array('field' => 'password', 'label' => 'password', 'rules' => 'trim|required|xss_clean|min_length[6]|md5'), 
+                // use md5 to hash the password
+                array('field' => 'email', 'label' => 'email address', 'rules' => 'trim|required|xss_clean|valid_email'),
+        );
+
+        $this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
+
+        if ($this->form_validation->run() === FALSE) {
+   			$this->core_controller->fail_response(2, validation_errors());
+        }
+
+        $this->load->model('passenger_model');
+
+
+
 		
 	}
 
