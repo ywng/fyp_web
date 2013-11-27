@@ -51,6 +51,22 @@ class Passenger_model extends CI_Model {
 			return -1;
 		}
 	}
+
+	private function get_passenger($key, $value) {
+		$result = $this->db->from($this->Table_name)
+						->where($key, $value)
+						->get();
+		if ($result->num_rows() > 0) {
+			return $result->row_array(1);
+		} else {
+			return array();
+		}
+	}
+
+	function get_passenger_by_pid($pid) {
+		return $this->get_passenger($this->KEY_pid, $pid);
+	}
+	
 }
 
 /* End of file passenger_model.php */

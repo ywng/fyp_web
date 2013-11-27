@@ -92,7 +92,13 @@ class Passenger extends REST_Controller {
 	*/
 	public function viewProfile_get()
 	{
-		
+		$pid=$_GET["pid"];
+		$passenger_info = $this->passenger_model->get_passenger_by_pid($pid);
+        if ($passenger_info < 0) {
+                $this->core_controller->fail_response(5);
+        }
+
+        $this->core_controller->add_return_data('Passenger Info:', $passenger_info)->successfully_processed();
 		
 	}
 
