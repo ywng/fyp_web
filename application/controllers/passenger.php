@@ -90,9 +90,9 @@ class Passenger extends REST_Controller {
 	*  This can be accessed by /passenger/viewProfile with GET method
 	*
 	*/
-	public function viewProfile_get()
+	public function view_profile_get()
 	{
-		$pid=$_GET["pid"];
+		$pid=$this->input->get('pid');
 		$passenger_info = $this->passenger_model->get_passenger_by_pid($pid);
         if ($passenger_info < 0) {
                 $this->core_controller->fail_response(5);
