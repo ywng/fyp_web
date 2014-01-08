@@ -69,13 +69,27 @@ class Passenger_model extends CI_Model {
 		return $this->get_passenger_by_key($this->KEY_email, $email);
 	}
 
-	function get_passenger_by_id($pid) {
-		return $this->get_passenger_by_key($this->KEY_pid, $pid);
+	function get_passenger_by_pid($pid) {
+		return $this->get_passenger($this->KEY_pid, $pid);
 	}
-
+	
 	function get_passenger_by_phone_no($phone_no) {
 		return $this->get_passenger_by_key($this->KEY_phone_no, $phone_no);
 	}
+
+	private function get_passenger($key, $value) {
+		$result = $this->db->from($this->Table_name)
+						->where($key, $value)
+						->get();
+		if ($result->num_rows() > 0) {
+			return $result->row_array(1);
+		} else {
+			return array();
+		}
+	}
+
+	
+	
 }
 
 /* End of file passenger_model.php */

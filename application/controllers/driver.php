@@ -2,9 +2,9 @@
 
 
 /**
- * Users related function are put here
+ * Drivers related function are put here
  *
- * @author hpchan
+ * @author FYP luo1
  */
 
 require_once (APPPATH. 'libraries/REST_Controller.php');
@@ -28,17 +28,139 @@ class Driver extends REST_Controller {
 	}
 
 	/**
-	*  This can be accessed by /driver/profile with GET method
+	*  This can be accessed by /driver/viewProfile with GET method
 	*  View Profile
 	*
 	*/
-	public function profile_get()
+	public function viewProfile_get()
 	{
 
-		$this->core_controller->add_return_data('successful')->successfully_process();
+		
 	}
+
+	/**
+	*  This can be accessed by /driver/editProfile with POST method
+	*  Edit Profile
+	*
+	*/
+	public function editProfile_post()
+	{
+
+		
+	}
+
+	/**
+	*  This can be accessed by /driver/bidTrip with POST method
+	*  Bid Trip
+	*
+	*/
+	public function bidTrip_post()
+	{
+
+		
+	}
+
+	/**
+	*  This can be accessed by /driver/cancelTrip with POST method
+	*  Cancel Trip
+	*
+	*/
+	public function cancelTrip_post()
+	{
+
+		
+	}
+
+	/**
+	*  This can be accessed by /driver/confirmPickUp with POST method
+	*  Confirm Pick-up
+	*
+	*/
+	public function confirmPickUp_post()
+	{
+
+		
+	}
+
+	/**
+	*  This can be accessed by /driver/confirmFinish with POST method
+	*  Confirm Finish
+	*
+	*/
+	public function confirmFinish_post()
+	{
+
+		
+	}
+
+	/**
+	*  This can be accessed by /driver/setStatus with POST method
+	*  Set Status 
+	*
+	*/
+	public function setStatus_post()
+	{
+
+		
+	}
+
+	/**
+	*  This can be accessed by /driver/ratePassenger with POST method
+	*  Rate Passenger
+	*
+	*/
+	public function ratePassenger_post()
+	{
+
+		
+	}
+
+	/**
+	*  This can be accessed by /driver/getTripHistory with GET method
+	*  Get Trip History
+	*
+	*/
+	public function getTripHistory_get()
+	{
+
+		
+	}
+
+	/**
+	*  This can be accessed by /driver/getActiveTrip with GET method
+	*  Get Active Trip
+	*
+	*/
+	public function getActiveTrip_get()
+	{
+
+		
+	}
+
+	/**
+	*  This can be accessed by /driver/login with POST method
+	*  Login
+	*
+	*/
+	public function login_post()
+	{
+
+		
+	}
+
+	/**
+	*  This can be accessed by /driver/logout with POST method
+	*  Logout
+	*
+	*/
+	public function logout_post()
+	{
+
+		
+	}
+
 
 }
 
-/* End of file user.php */
-/* Location: ./application/controllers/user.php */
+/* End of file driver.php */
+/* Location: ./application/controllers/driver.php */

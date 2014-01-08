@@ -4,7 +4,7 @@
 /**
  * Passengers related function are put here
  *
- * @author hpchan
+ * @author FYP luo1
  */
 
 require_once (APPPATH. 'libraries/REST_Controller.php');
@@ -52,38 +52,118 @@ class Passenger extends REST_Controller {
 		}
 
 		// check if the phone, email is already associated with other accounts
-		$this->load->model('passenger_model');
 
-		$existance = $this->passenger_model->check_if_passenger_exists_by_phone($this->input->post('phone'));
-		if ($existance) {
-			$this->core_controller->fail_response(3);
-		}
+        $this->load->model('passenger_model');
 
-		$existance = $this->passenger_model->check_if_passenger_exists_by_email($this->input->post('email'));
-		if ($existance) {
-			$this->core_controller->fail_response(4);
-		}
+        $existance = $this->passenger_model->check_if_passenger_exists_by_phone($this->input->post('phone'));
+        if ($existance) {
+                $this->core_controller->fail_response(3);
+        }
 
-		// passed the validation process, then we add the passenger into the database
-		$data = array(
-			$this->passenger_model->KEY_first_name => $this->input->post('first_name'),
-			$this->passenger_model->KEY_last_name => $this->input->post('last_name'),			
-			$this->passenger_model->KEY_password => $this->input->post('password'),
-			$this->passenger_model->KEY_email => $this->input->post('email'),
-			$this->passenger_model->KEY_phone_no => $this->input->post('phone'),
-		);
-		$passenger_id = $this->passenger_model->add_Passenger($data);
-		if ($passenger_id < 0) {
-			$this->core_controller->fail_response(5);
-		}
+        $existance = $this->passenger_model->check_if_passenger_exists_by_email($this->input->post('email'));
+        if ($existance) {
+                $this->core_controller->fail_response(4);
+        }
 
-		// probably we would like add some data before we end our process, use add_return_data('__key__', __value__)
-		// After adding all required return data, call successfully_processed() from core_controller
-		// Note: add_return_data is chainable
-		// Example: $this->core_controller->add_return_data('key1', 'value1')->add_return_data('key2', 'value2')->add_return_data('key3', 'value3')->...
-		$this->core_controller->add_return_data('pid', $passenger_id)->successfully_processed();
+        // passed the validation process, then we add the passenger into the database
+        $data = array(
+                $this->passenger_model->KEY_first_name => $this->input->post('first_name'),
+                $this->passenger_model->KEY_last_name => $this->input->post('last_name'),                        
+                $this->passenger_model->KEY_password => $this->input->post('password'),
+                $this->passenger_model->KEY_email => $this->input->post('email'),
+                $this->passenger_model->KEY_phone_no => $this->input->post('phone'),
+        );
+        $passenger_id = $this->passenger_model->add_Passenger($data);
+        if ($passenger_id < 0) {
+                $this->core_controller->fail_response(5);
+        }
+
+        // probably we would like add some data before we end our process, use add_return_data('__key__', __value__)
+        // After adding all required return data, call successfully_processed() from core_controller
+        // Note: add_return_data is chainable
+        // Example: $this->core_controller->add_return_data('key1', 'value1')->add_return_data('key2', 'value2')->add_return_data('key3', 'value3')->...
+        $this->core_controller->add_return_data('pid', $passenger_id)->successfully_processed();		
+
+		
 	}
 
+	/**
+	*  This can be accessed by /passenger/viewProfile with GET method
+	*
+	*/
+	public function viewProfile_get()
+	{
+		$this->load->model('passenger_model');
+		$pid=$this->input->get('pid');
+		$passenger_info = $this->passenger_model->get_passenger_by_pid($pid);
+        if (sizeof($passenger_info) !=1) {
+                $this->core_controller->fail_response(5);
+        }
+
+        $this->core_controller->add_return_data('Passenger Info:', $passenger_info)->successfully_processed();
+		
+	}
+
+	/**
+	*  This can be accessed by /passenger/editProfile with POST method
+	*
+	*/
+	public function editProfile_post()
+	{
+		
+		
+	}
+
+	/**
+	*  This can be accessed by /passenger/confirmDriver with POST method
+	*
+	*/
+	public function confirmDriver_post()
+	{
+		
+		
+	}
+
+	/**
+	*  This can be accessed by /passenger/cancelTrip with POST method
+	*
+	*/
+	public function cancelTrip_post()
+	{
+		
+		
+	}
+
+	/**
+	*  This can be accessed by /passenger/rateDriver with POST method
+	*
+	*/
+	public function rateDriver_post()
+	{
+		
+		
+	}
+
+	/**
+	*  This can be accessed by /passenger/getTripHistory with GET method
+	*
+	*/
+	public function getTripHistory_get()
+	{
+		
+		
+	}
+
+
+	/**
+	*  This can be accessed by /passenger/getActiveTrip with GET method
+	*
+	*/
+	public function getActiveTrip_get()
+	{
+		
+
+	}
 
 	/**
 	*  This can be accessed by /passenger/login with POST method
@@ -137,9 +217,18 @@ class Passenger extends REST_Controller {
 			$this->core_controller->add_return_data($key, $value);
 		}
 		$this->core_controller->request_successfully_processed();
-
+		
 	}
 
+	/**
+	*  This can be accessed by /passenger/logout with POST method
+	*
+	*/
+	public function logout_post()
+	{
+		
+		
+	}
 
 	/* helper function */
 
@@ -165,7 +254,9 @@ class Passenger extends REST_Controller {
 
 		return $user_data_array;
 	}
+
 }
 
-/* End of file Passenger.php */
-/* Location: ./application/controllers/Passenger.php */
+
+/* End of file passenger.php */
+/* Location: ./application/controllers/passenger.php */
