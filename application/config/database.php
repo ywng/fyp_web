@@ -48,10 +48,10 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'dbsvr1.cse.ust.hk';
-$db['default']['username'] = 'luo1';
-$db['default']['password'] = '9f4cmth7';
-$db['default']['database'] = 'luo1';
+$db['default']['hostname'] = 'db4free.net';
+$db['default']['username'] = 'taxibook_admin';
+$db['default']['password'] = 'taxibook_admin';
+$db['default']['database'] = 'taxibook_db1';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;

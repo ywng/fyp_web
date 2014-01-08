@@ -9,8 +9,8 @@
 
 class CORE_Controller {
     
-    protected $context = null;
-    private $white_list_uri = array('user/register', ); // this will indicate the script not to run security check
+    protected $current_user_obj = null;
+    private $white_list_uri = array('passenger/register', 'passenger/login'); // this will indicate the script not to run security check
     private $session = null;
     private $response_data = array();
     private $CI = null;
@@ -91,39 +91,54 @@ class CORE_Controller {
 		return $this;
     }
     
-	public function get_context() {
-		return $this->context;
+	public function get_current_user() {
+		return $this->current_user_obj;
 	}
-
-    public function new_user() {
-        return new user();
-    }
     
     private function credentials_check() {
 	
 		$this->CI->load->library('form_validation');
-        $this->CI->form_validation->set_rules('id','username', 'trim|required|xss_clean|min_length[6]');
+        $this->CI->form_validation->set_rules('email','email', 'trim|required|xss_clean|min_length[6]|valid_email');
         $this->CI->form_validation->set_rules('session_token', 'session token', 'trim|required|xss_clean|min_length[30]');
-        $this->CI->form_validation->set_rules('schema', 'app schema', 'trim|required|xss_clean|min_length[1]');
+        $this->CI->form_validation->set_rules('user_type', 'user type', 'trim|required|xss_clean|min_length[6]');
         $this->CI->form_validation->set_error_delimiters('', '');
 
         if ($this->CI->form_validation->run() === FALSE) {
             return FALSE;
         } else {
-            $this->CI->load->model('user_model');
             $this->CI->load->model('session_model');
-            $user_detail = $this->CI->user_model->get_user_by_username($this->CI->input->post('username'));
-            
-			// check if user does not exist
-			if (count($user_detail) == 0) {
-				return FALSE;
-			}
+            $user_type = 0;
+            if ($this->input->post('user_type') == 'passenger') {
+                
+                $user_type = 'passenger';
+                $this->CI->load->model('passenger_model');
+                $user_detail = $this->CI->passenger_model->get_passenger_by_email($this->CI->input->post('email'));
 
-            $current_user = user::db_record_to_object($user_detail[0]);
+                // check if passenger exists
+                if (count($user_detail) == 0) {
+                    return FALSE;
+                }
+
+                $this->current_user_obj = $user_detail[0];
+                $id = $user_detail['pid'];
+
+            } else if ($this->input->post('user_type') == 'driver') {
+
+                $user_type = 'driver';
+                $this->CI->load->model('driver_model');
+                $user_detail = $this->CI->driver_model->get_driver_by_email($this->CI->input->post('email'));
+
+                // check if driver exists
+                if (count($user_detail) == 0) {
+                    return FALSE;
+                }
+
+                $this->current_user_obj = $user_detail[0];
+                $id = $user_detail['did'];
+            }
             
-            $this->context->set_current_user_obj($current_user);
-            
-            $result = $this->CI->session_model->get_session_by_user_id($current_user->get_user_id());
+            $result = $this->CI->session_model->get_session_by_id($id, $user_type);
+
             if (!is_null($result) && is_array($result) && count($result) > 0) {
                 // has session token, check
                 
@@ -131,8 +146,8 @@ class CORE_Controller {
                 
                 if ($received_session_token && $received_session_token == $result['session_token']) {
                     if (time() - strtotime($result['expire_time']) >= 0) {
-                        $this->CI->session_model->generate_new_session_token($current_user->get_user_id());
-                        $this->session = $this->CI->session_model->get_session_by_user_id($current_user->get_user_id());
+                        $this->CI->session_model->generate_new_session_token($id, $user_type);
+                        $this->session = $this->CI->session_model->get_session_by_id($id, $user_type);
                     } else {
                         $this->session['session_token'] = $result['session_token'];
                         $this->session['expire_time'] = $result['expire_time'];

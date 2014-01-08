@@ -31,6 +31,19 @@ class Passenger_model extends CI_Model {
 		}
 	}
 
+	private function get_passenger_by_key($key, $value) {
+		$result = $this->db->from($this->Table_name)
+							->where($key, $value)
+							->get();
+
+		if ($result->num_rows() > 0) {
+			return $result->result_array();
+		} else {
+			return array();
+		}
+
+	}
+
 	// function check_if_passenger_exists_by_username($username) {
 	// 	return $this->check_if_passenger_exists($this->KEY_username, $username);
 	// }
@@ -50,6 +63,18 @@ class Passenger_model extends CI_Model {
 		} else {
 			return -1;
 		}
+	}
+
+	function get_passenger_by_email($email) {
+		return $this->get_passenger_by_key($this->KEY_email, $email);
+	}
+
+	function get_passenger_by_id($pid) {
+		return $this->get_passenger_by_key($this->KEY_pid, $pid);
+	}
+
+	function get_passenger_by_phone_no($phone_no) {
+		return $this->get_passenger_by_key($this->KEY_phone_no, $phone_no);
 	}
 }
 

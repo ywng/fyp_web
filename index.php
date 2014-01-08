@@ -191,6 +191,15 @@ if (defined('ENVIRONMENT'))
 		define('APPPATH', BASEPATH.$application_folder.'/');
 	}
 
+
+/*
+set the time
+*/
+if( ! ini_get('date.timezone') )
+{
+   date_default_timezone_set('Asia/Hong_Kong');
+}
+
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE

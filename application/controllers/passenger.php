@@ -17,6 +17,8 @@ class Passenger extends REST_Controller {
 		$this->core_controller->set_response_helper($this);
 	}
 
+	var $user_type = 'passenger';
+
 	/**
 	*  This can be accessed by /passenger/register with POST method
 	*
@@ -49,8 +51,6 @@ class Passenger extends REST_Controller {
 			$this->core_controller->fail_response(2, validation_errors());
 		}
 
-		// assume table is there
-
 		// check if the phone, email is already associated with other accounts
 		$this->load->model('passenger_model');
 
@@ -82,6 +82,88 @@ class Passenger extends REST_Controller {
 		// Note: add_return_data is chainable
 		// Example: $this->core_controller->add_return_data('key1', 'value1')->add_return_data('key2', 'value2')->add_return_data('key3', 'value3')->...
 		$this->core_controller->add_return_data('pid', $passenger_id)->successfully_processed();
+	}
+
+
+	/**
+	*  This can be accessed by /passenger/login with POST method
+	*
+	*/
+	public function login_post()
+	{
+		// load up the validation file
+		$this->load->library('form_validation');
+
+		/*
+		*	first_name, last_name, phone, password, email
+		*
+		*/
+
+		$validation_config = array(
+			array('field' => 'password', 'label' => 'password', 'rules' => 'trim|required|xss_clean|min_length[6]|md5'), 
+			// use md5 to hash the password
+			array('field' => 'email', 'label' => 'email address', 'rules' => 'trim|required|xss_clean|valid_email'),
+		);
+
+		$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
+
+		if ($this->form_validation->run() === FALSE) {
+			$this->core_controller->fail_response(2, validation_errors());
+		}
+
+
+		$this->load->model('passenger_model');
+
+		$users_data = $this->passenger_model->get_passenger_by_email($this->input->post('email'));
+
+		if (count($users_data) == 0) {
+			// email does not exist
+			$this->core_controller->fail_response(6);
+		}
+
+
+		$user_data = $users_data[0];
+
+		if ($user_data[$this->passenger_model->KEY_password] != $this->input->post('password')) {
+			$this->core_controller->fail_response(6);
+		}
+
+		$new_session_token = $this->get_valid_session_token_for_passenger($user_data[$this->passenger_model->KEY_pid]);
+
+		$this->core_controller->add_return_data('session_token', $new_session_token['session_token'])
+							->add_return_data('expire_time', $new_session_token['expire_time']);
+
+		foreach (hide_passenger_data($user_data) as $key => $value) {
+			$this->core_controller->add_return_data($key, $value);
+		}
+		$this->core_controller->request_successfully_processed();
+
+	}
+
+
+	/* helper function */
+
+	private function get_valid_session_token_for_passenger($pid) {
+		$this->load->model('session_model');
+		$result = $this->session_model->session_token_based_on_id($pid, $this->user_type);
+        if (!is_null($result) && is_array($result) && count($result) > 0) {
+            // has session token, check
+            
+       		if (!$result['expired']) {
+		    	return $this->session_model->get_session_by_id($pid, $this->user_type);
+		    }
+        }
+        $this->session_model->generate_new_session_token($pid, $this->user_type);
+        return $this->session_model->get_session_by_id($pid, $this->user_type);
+	}
+
+	private function hide_passenger_data($passenger_data_array) {
+		$this->load->model('passenger_model');
+		if (array_key_exists($this->passenger_model->KEY_password, $passenger_data_array)) {
+			unset($passenger_data_array[$this->passenger_model->KEY_password]);
+		}
+
+		return $user_data_array;
 	}
 }
 

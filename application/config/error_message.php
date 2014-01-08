@@ -12,7 +12,7 @@ $config['error'][2] = 'Standard validation error, you should use validation_erro
 $config['error'][3] = 'Phone number is already taken by others.';
 $config['error'][4] = 'Email is already taken by others.';
 $config['error'][5] = 'Fail to insert user';
-// $config['error'][6] = 
+$config['error'][6] = 'Email/Password combo does not exist';
 
 // Driver related error message
 
