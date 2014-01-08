@@ -213,10 +213,10 @@ class Passenger extends REST_Controller {
 		$this->core_controller->add_return_data('session_token', $new_session_token['session_token'])
 							->add_return_data('expire_time', $new_session_token['expire_time']);
 
-		foreach (hide_passenger_data($user_data) as $key => $value) {
+		foreach ($this->hide_passenger_data($user_data) as $key => $value) {
 			$this->core_controller->add_return_data($key, $value);
 		}
-		$this->core_controller->request_successfully_processed();
+		$this->core_controller->successfully_processed();
 		
 	}
 
@@ -252,7 +252,7 @@ class Passenger extends REST_Controller {
 			unset($passenger_data_array[$this->passenger_model->KEY_password]);
 		}
 
-		return $user_data_array;
+		return $passenger_data_array;
 	}
 
 }

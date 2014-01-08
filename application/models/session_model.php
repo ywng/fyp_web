@@ -63,7 +63,7 @@ class Session_model extends CI_Model{
     private function get_session_token_based_on_id($id, $user_type) {
         $result = $this->db->select($this->KEY_session_token . ', ' . $this->KEY_expire_time)
                 ->where($this->KEY_id, $id)
-                ->where($this->KEY_user_id, $user_type)
+                ->where($this->KEY_user_type, $user_type)
                 ->from($this->Table_Name)
                 ->get();
         $row = $result->row_array('1');
@@ -82,10 +82,15 @@ class Session_model extends CI_Model{
      */
     function generate_new_session_token($id, $user_type) {
 
-		$bytes = openssl_random_pseudo_bytes(128, $cstrong);
-		$session_token = bin2hex($bytes);
+		// $bytes = openssl_random_pseudo_bytes(128, $cstrong);
+
+		// $session_token = bin2hex($bytes);
+
+        $mtrand = mt_rand(); // generate a random number for session computing
+
+        $session_token = hash('sha512', time().$mtrand, FALSE);
 		
-		$expired = $this->is_session_token_expired($id);
+		$expired = $this->is_session_token_expired($id, $user_type);
 		
 		if ($expired == -1) {
 			$this->insert_session_token($id, $user_type, $session_token);
