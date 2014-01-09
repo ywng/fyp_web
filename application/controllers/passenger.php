@@ -4,7 +4,7 @@
 /**
  * Passengers related function are put here
  *
- * @author FYP luo1
+ * @author hpchan
  */
 
 require_once (APPPATH. 'libraries/REST_Controller.php');
@@ -88,67 +88,98 @@ class Passenger extends REST_Controller {
 	}
 
 	/**
-	*  This can be accessed by /passenger/viewProfile with GET method
+	*  This can be accessed by /passenger/view_profile with GET method
 	*
 	*/
-	public function viewProfile_get()
+	public function view_profile_get()
 	{
+
+		// passenger can only see his/her own profile
+
+        $this->core_controller->add_return_data('passenger', 
+        	$this->hide_passenger_data($this->core_controller->get_current_user())) // hide password
+        		->successfully_processed();
+		
+	}
+
+	/**
+	*  This can be accessed by /passenger/edit_profile with POST method
+	*
+	*/
+	public function edit_profile_post()
+	{
+		// only phone number and password can be changed
+		$this->load->library('form_validation');
+
+		$validation_config = array(
+			array('field' => 'password_flag', 'label' => 'change password flag', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]|numeric'),
+			array('field' => 'password', 'label' => 'password', 'rules' => 'trim|xss_clean|min_length[6]|md5'), 
+			// use md5 to hash the password
+			array('field' => 'phone_flag', 'label' => 'change phone flag', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]|numeric'),
+			array('field' => 'phone', 'label' => 'phone number', 'rules' => 'trim|xss_clean|min_length[8]|max_length[8]|numeric'),
+		);
+
+		if ($this->form_validation->run() === FALSE) {
+			$this->core_controller->fail_response(2, validation_errors());
+		}
+
 		$this->load->model('passenger_model');
-		$pid=$this->input->get('pid');
-		$passenger_info = $this->passenger_model->get_passenger_by_pid($pid);
-        if (sizeof($passenger_info) !=1) {
-                $this->core_controller->fail_response(5);
-        }
+		$update_data = array();
 
-        $this->core_controller->add_return_data('Passenger Info:', $passenger_info)->successfully_processed();
-		
+		if ($this->input->post('password_flag') == 1) {
+			$update_data[$this->passenger_model->KEY_password] = $this->input->post('password');
+		}
+		if ($this->input->post('phone_flag') == 1) {
+			$update_data[$this->passenger_model->KEY_phone_no] = $this->input->post('phone');
+		}
+
+		if (count($update_data) == 0) {
+			$this->core_controller->fail_response(8); // nothing to update
+		}
+
+		$current_user = $this->core_controller->get_current_user();
+
+		$update_status = $this->passenger_model->update_passenger($current_user[$this->passenger_model->KEY_pid], $update_data);
+
+		$this->core_controller->successfully_processed();
+
 	}
 
 	/**
-	*  This can be accessed by /passenger/editProfile with POST method
+	*  This can be accessed by /passenger/confirm_driver with POST method
 	*
 	*/
-	public function editProfile_post()
+	public function confirm_driver_post()
 	{
 		
 		
 	}
 
 	/**
-	*  This can be accessed by /passenger/confirmDriver with POST method
+	*  This can be accessed by /passenger/cancel_trip with POST method
 	*
 	*/
-	public function confirmDriver_post()
+	public function cancel_trip_post()
 	{
 		
 		
 	}
 
 	/**
-	*  This can be accessed by /passenger/cancelTrip with POST method
+	*  This can be accessed by /passenger/rate_driver with POST method
 	*
 	*/
-	public function cancelTrip_post()
+	public function rate_driver_post()
 	{
 		
 		
 	}
 
 	/**
-	*  This can be accessed by /passenger/rateDriver with POST method
+	*  This can be accessed by /passenger/trip_history with GET method
 	*
 	*/
-	public function rateDriver_post()
-	{
-		
-		
-	}
-
-	/**
-	*  This can be accessed by /passenger/getTripHistory with GET method
-	*
-	*/
-	public function getTripHistory_get()
+	public function trip_history_get()
 	{
 		
 		
@@ -156,10 +187,10 @@ class Passenger extends REST_Controller {
 
 
 	/**
-	*  This can be accessed by /passenger/getActiveTrip with GET method
+	*  This can be accessed by /passenger/active_trip with GET method
 	*
 	*/
-	public function getActiveTrip_get()
+	public function active_trip_get()
 	{
 		
 
@@ -221,13 +252,19 @@ class Passenger extends REST_Controller {
 	}
 
 	/**
-	*  This can be accessed by /passenger/logout with POST method
+	*  This can be accessed by /passenger/logout with GET method
 	*
 	*/
-	public function logout_post()
+	public function logout_get()
 	{
-		
-		
+		// expire current passenger session token
+		$this->load->model('session_model');
+		$this->load->model('passenger_model');
+		$current_user = $this->core_controller->get_current_user();
+
+		$this->session_model->expire_session($current_user[$this->passenger_model->KEY_pid], $this->user_type);
+
+		$this->core_controller->successfully_processed();
 	}
 
 	/* helper function */

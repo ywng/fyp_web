@@ -71,9 +71,6 @@ class Session_model extends CI_Model{
     }
 
 
-    
-    
-    
     /**
      * 
      * @param int $id
@@ -118,7 +115,7 @@ class Session_model extends CI_Model{
     /**
      *
      * @param int $id
-     * @param enum $user_type
+     * @param string $user_type
      * @return int 1 if it is expired, 0 if it is not expired, -1 if no record
      */
 
