@@ -18,37 +18,37 @@ class Admin extends REST_Controller {
 	}
 
 	/**
-	*  This can be accessed by /admin/getSuspendList with GET method
+	*  This can be accessed by /admin/suspend_drivers with GET method
 	*
 	*/
-	public function getSuspendList_get()
+	public function suspend_drivers_get()
 	{
 		
 	}
 
 	/**
-	*  This can be accessed by /admin/activateUser with POST method
+	*  This can be accessed by /admin/activate_driver with POST method
 	*
 	*/
-	public function activateUser_post()
+	public function activate_driver_post()
 	{
 		
 	}
 
 	/**
-	*  This can be accessed by /admin/getUnapprovedDriverList with GET method
+	*  This can be accessed by /admin/pending_approval_drivers with GET method
 	*
 	*/
-	public function getUnapprovedDriverList_get()
+	public function pending_approval_drivers_get()
 	{
 		
 	}
 
 	/**
-	*  This can be accessed by /admin/approveDriver with POST method
+	*  This can be accessed by /admin/approve_driver with POST method
 	*
 	*/
-	public function approveDriver_post()
+	public function approve_driver_post()
 	{
 		
 	}
