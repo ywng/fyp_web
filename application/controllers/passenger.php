@@ -162,9 +162,34 @@ class Passenger extends REST_Controller {
 	*  This can be accessed by /passenger/active_trip with GET method
 	*
 	*/
-	public function active_trip_get()
+	public function active_trip_get($limit = NULL, $offset = NULL)
 	{
-		
+
+		if (is_null($limit) || empty($limit) || !is_numeric($limit)) {
+			$limit = 20;
+		}
+		if (is_null($offset) || empty($offset) || !is_numeric($offset)) {
+			$offset = 0;
+		}
+
+		$current_passenger = $this->core_controller->get_current_user();
+
+		$this->load->model('order_model');
+		$results = $this->order_model->get_all_active_orders_by_pid($current_passenger[$this->order_model->KEY_pid], $limit, $offset);
+
+		$results_with_separated_gps = array();
+
+		foreach ($results as $row) {
+
+			$trip_detail = $this->split_latitude_longitude($row, $this->order_model->KEY_gps_from, 
+				$this->order_model->KEY_gps_from.'latitude', $this->order_model->KEY_gps_from.'longitude');
+
+			$trip_detail = $this->split_latitude_longitude($trip_detail, $this->order_model->KEY_gps_to, 
+				$this->order_model->KEY_gps_to.'latitude', $this->order_model->KEY_gps_to.'longitude');
+			$results_with_separated_gps[] = $trip_detail;
+		}
+
+		$this->core_controller->add_return_data('order', $results)->successfully_processed();
 
 	}
 
@@ -262,6 +287,18 @@ class Passenger extends REST_Controller {
 		}
 
 		return $passenger_data_array;
+	}
+
+	private function split_latitude_longitude($data, $key, $latitude_key, $longitude_key) {
+		if (array_key_exists($key, $data)) {
+			$loc = explode(";", $data[$key]);
+			if (count($loc) == 2) {
+				$data[$latitude_key] = $loc[0];
+				$data[$longitude_key] = $loc[1];
+				unset($data[$key]);
+			}
+		}
+		return $data;
 	}
 
 }

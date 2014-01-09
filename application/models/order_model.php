@@ -141,6 +141,7 @@ class Order_model extends CI_Model {
 	private function get_all_orders_by_key($table_name, $key, $value, $limit, $offset) {
 		$result = $this->db->from($table_name)
 						->where($key, $value)
+						->order_by($this->KEY_post_time, 'DESC')
 						->limit($limit, $offset)->get();
 
 		if ($result->num_rows() > 0) {
