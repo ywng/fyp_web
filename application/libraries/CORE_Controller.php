@@ -120,7 +120,7 @@ class CORE_Controller {
             }
 
             $this->current_user_obj = $user_detail[0];
-            $id = $user_detail['pid'];
+            $id = $user_detail[0]['pid'];
 
         } else if ($input_user_type == 'driver') {
 
@@ -134,7 +134,7 @@ class CORE_Controller {
             }
 
             $this->current_user_obj = $user_detail[0];
-            $id = $user_detail['did'];
+            $id = $user_detail[0]['did'];
         }
         
         $result = $this->CI->session_model->get_session_by_id($id, $user_type);

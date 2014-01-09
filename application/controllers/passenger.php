@@ -119,6 +119,8 @@ class Passenger extends REST_Controller {
 			array('field' => 'phone', 'label' => 'phone number', 'rules' => 'trim|xss_clean|min_length[8]|max_length[8]|numeric'),
 		);
 
+		$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
+		
 		if ($this->form_validation->run() === FALSE) {
 			$this->core_controller->fail_response(2, validation_errors());
 		}
@@ -143,36 +145,6 @@ class Passenger extends REST_Controller {
 
 		$this->core_controller->successfully_processed();
 
-	}
-
-	/**
-	*  This can be accessed by /passenger/confirm_driver with POST method
-	*
-	*/
-	public function confirm_driver_post()
-	{
-		
-		
-	}
-
-	/**
-	*  This can be accessed by /passenger/cancel_trip with POST method
-	*
-	*/
-	public function cancel_trip_post()
-	{
-		
-		
-	}
-
-	/**
-	*  This can be accessed by /passenger/rate_driver with POST method
-	*
-	*/
-	public function rate_driver_post()
-	{
-		
-		
 	}
 
 	/**

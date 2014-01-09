@@ -49,49 +49,6 @@ class Driver extends REST_Controller {
 		
 	}
 
-	/**
-	*  This can be accessed by /driver/bidTrip with POST method
-	*  Bid Trip
-	*
-	*/
-	public function bidTrip_post()
-	{
-
-		
-	}
-
-	/**
-	*  This can be accessed by /driver/cancelTrip with POST method
-	*  Cancel Trip
-	*
-	*/
-	public function cancelTrip_post()
-	{
-
-		
-	}
-
-	/**
-	*  This can be accessed by /driver/confirmPickUp with POST method
-	*  Confirm Pick-up
-	*
-	*/
-	public function confirmPickUp_post()
-	{
-
-		
-	}
-
-	/**
-	*  This can be accessed by /driver/confirmFinish with POST method
-	*  Confirm Finish
-	*
-	*/
-	public function confirmFinish_post()
-	{
-
-		
-	}
 
 	/**
 	*  This can be accessed by /driver/setStatus with POST method
@@ -99,17 +56,6 @@ class Driver extends REST_Controller {
 	*
 	*/
 	public function setStatus_post()
-	{
-
-		
-	}
-
-	/**
-	*  This can be accessed by /driver/ratePassenger with POST method
-	*  Rate Passenger
-	*
-	*/
-	public function ratePassenger_post()
 	{
 
 		

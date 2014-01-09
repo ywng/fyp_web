@@ -92,6 +92,65 @@ class Driver_model extends CI_Model {
 	function get_driver_by_license_no($license_no) {
 		return $this->get_driver_by_key($this->KEY_license_no, $license_no);
 	}
+
+
+
+
+
+
+
+	/* gps related */
+
+	function get_driver_location($did) {
+
+		$result = $this->db->select($this->KEY_gps)
+						->from($this->Table_name_driver_location)
+						->where($this->KEY_did, $did)
+						->get();
+		if ($result->num_rows() > 0) {
+			$gps = $result->row(1)->{$this->KEY_gps};
+			$loc = explode(";", $gps);
+			return array('latitude' => $loc[0], 'longitude' => $loc[1]);
+		} else {
+			return array();
+		}
+
+	}
+
+	function update_driver_location($did, $latitude, $longitude) {
+
+		$driver_previous_loc = $this->get_driver_location($did);
+
+		$data = array( $this->KEY_did => $did, $this->KEY_gps => $latitude . ';' . $longitude );
+
+		if (count($driver_previous_loc) == 0) {
+			
+			// insert
+			$this->db->insert($this->Table_name_driver_location, $data);
+
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			} else {
+				return FALSE;
+			}
+
+		} else {
+			
+			// update
+			$this->db->where($this->KEY_did, $did)
+					->update($this->Table_name_driver_location, array(
+							$this->KEY_gps => $data[$this->KEY_gps]
+						));
+
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			} else {
+				return FALSE;
+			}
+
+		}
+	}
+
 }
 
 /* End of file driver_model.php */
