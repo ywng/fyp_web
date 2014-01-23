@@ -37,22 +37,11 @@ class Passenger_model extends CI_Model {
 							->get();
 
 		if ($result->num_rows() > 0) {
-			return $result->result_array();
-		} else {
-			return array();
-		}
-
-	}
-
-	private function get_passenger($key, $value) {
-		$result = $this->db->from($this->Table_name)
-						->where($key, $value)
-						->get();
-		if ($result->num_rows() > 0) {
 			return $result->row_array(1);
 		} else {
 			return array();
 		}
+
 	}
 
 	// function check_if_passenger_exists_by_username($username) {
@@ -81,7 +70,7 @@ class Passenger_model extends CI_Model {
 	}
 
 	function get_passenger_by_pid($pid) {
-		return $this->get_passenger($this->KEY_pid, $pid);
+		return $this->get_passenger_by_key($this->KEY_pid, $pid);
 	}
 
 	function get_passenger_by_phone_no($phone_no) {

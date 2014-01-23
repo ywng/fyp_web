@@ -35,7 +35,7 @@ class Trip extends REST_Controller {
 
 
 	/**
-	*  This can be accessed by /trip/trip_detail with GET method
+	*  This can be accessed by /trip/trip_details with GET method
 	*
 	*/
 	public function trip_details_get()
@@ -53,11 +53,26 @@ class Trip extends REST_Controller {
 			$this->core_controller->fail_response(101);
 		}
 
-		$this->split_latitude_longitude($trip_detail, $this->order_model->KEY_gps_from, 
-			$this->order_model->KEY_gps_from.'latitude', $this->order_model->KEY_gps_from.'longitude');
+		$trip_detail = $this->split_latitude_longitude($trip_detail, $this->order_model->KEY_gps_from, 
+			$this->order_model->KEY_gps_from.'_latitude', $this->order_model->KEY_gps_from.'_longitude');
 
-		$this->split_latitude_longitude($trip_detail, $this->order_model->KEY_gps_to, 
-			$this->order_model->KEY_gps_to.'latitude', $this->order_model->KEY_gps_to.'longitude');
+		$trip_detail = $this->split_latitude_longitude($trip_detail, $this->order_model->KEY_gps_to, 
+			$this->order_model->KEY_gps_to.'_latitude', $this->order_model->KEY_gps_to.'_longitude');
+
+		if ($trip_detail[$this->order_model->KEY_pid]) {
+			$this->load->model('passenger_model');
+			$passenger_data = $this->passenger_model->get_passenger_by_pid($trip_detail[$this->order_model->KEY_pid]);
+			$passenger_data = $this->hide_passenger_data($passenger_data); // hide the password before sending back
+			$this->core_controller->add_return_data('passenger', $passenger_data);
+		}
+
+		if ($trip_detail[$this->order_model->KEY_did]) {
+			$this->load->model('driver_model');
+			$driver_data = $this->driver_model->get_driver_by_did($trip_detail[$this->order_model->KEY_did]);
+			$driver_data = $this->hide_driver_data($driver_data); // hide the password before sending back
+			$this->core_controller->add_return_data('driver', $driver_data);
+		}
+
 
 		$this->core_controller->add_return_data('order', $trip_detail)->successfully_processed();
 	}
@@ -412,7 +427,7 @@ class Trip extends REST_Controller {
 
 	private function split_latitude_longitude($data, $key, $latitude_key, $longitude_key) {
 		if (array_key_exists($key, $data)) {
-			$loc = explode(";", $data[$key]);
+			$loc = explode(",", $data[$key]);
 			if (count($loc) == 2) {
 				$data[$latitude_key] = $loc[0];
 				$data[$longitude_key] = $loc[1];
@@ -440,6 +455,24 @@ class Trip extends REST_Controller {
 
 		return $this->order_model->change_status($oid, $new_status_id);
 
+	}
+
+	private function hide_passenger_data($passenger_data_array) {
+		$this->load->model('passenger_model');
+		if (array_key_exists($this->passenger_model->KEY_password, $passenger_data_array)) {
+			unset($passenger_data_array[$this->passenger_model->KEY_password]);
+		}
+
+		return $passenger_data_array;
+	}
+
+	private function hide_driver_data($driver_data_array) {
+		$this->load->model('driver_model');
+		if (array_key_exists($this->driver_model->KEY_password, $driver_data_array)) {
+			unset($driver_data_array[$this->driver_model->KEY_password]);
+		}
+
+		return $driver_data_array;
 	}
 }
 

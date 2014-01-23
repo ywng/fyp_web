@@ -100,8 +100,8 @@ class Order_model extends CI_Model {
 
 	function create_new_order($pid, $laitude_from, $longitude_from, $latitude_to, $longitude_to, $other_detail) {
 
-		$gps_from = $latitude_from.';'.$longitude_from;
-		$gps_to = $latitude_to.';'.$longitude_to;
+		$gps_from = $latitude_from.','.$longitude_from;
+		$gps_to = $latitude_to.','.$longitude_to;
 		$other_detail[$this->KEY_pid] = $pid;
 		$other_detail[$this->KEY_gps_from] = $gps_from;
 		$other_detail[$this->KEY_gps_to] = $gps_to;

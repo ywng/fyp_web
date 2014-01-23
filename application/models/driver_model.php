@@ -45,7 +45,7 @@ class Driver_model extends CI_Model {
 							->get();
 
 		if ($result->num_rows() > 0) {
-			return $result->result_array();
+			return $result->row_array(1);
 		} else {
 			return array();
 		}
@@ -81,8 +81,8 @@ class Driver_model extends CI_Model {
 		return $this->get_driver_by_key($this->KEY_email, $email);
 	}
 
-	function get_driver_by_id($pid) {
-		return $this->get_driver_by_key($this->KEY_pid, $pid);
+	function get_driver_by_did($did) {
+		return $this->get_driver_by_key($this->KEY_did, $did);
 	}
 
 	function get_driver_by_phone_no($phone_no) {

@@ -182,14 +182,14 @@ class Passenger extends REST_Controller {
 		foreach ($results as $row) {
 
 			$trip_detail = $this->split_latitude_longitude($row, $this->order_model->KEY_gps_from, 
-				$this->order_model->KEY_gps_from.'latitude', $this->order_model->KEY_gps_from.'longitude');
+				$this->order_model->KEY_gps_from.'_latitude', $this->order_model->KEY_gps_from.'_longitude');
 
 			$trip_detail = $this->split_latitude_longitude($trip_detail, $this->order_model->KEY_gps_to, 
-				$this->order_model->KEY_gps_to.'latitude', $this->order_model->KEY_gps_to.'longitude');
+				$this->order_model->KEY_gps_to.'_latitude', $this->order_model->KEY_gps_to.'_longitude');
 			$results_with_separated_gps[] = $trip_detail;
 		}
 
-		$this->core_controller->add_return_data('order', $results)->successfully_processed();
+		$this->core_controller->add_return_data('order', $results_with_separated_gps)->successfully_processed();
 
 	}
 
@@ -222,15 +222,12 @@ class Passenger extends REST_Controller {
 
 		$this->load->model('passenger_model');
 
-		$users_data = $this->passenger_model->get_passenger_by_email($this->input->post('email'));
+		$user_data = $this->passenger_model->get_passenger_by_email($this->input->post('email'));
 
-		if (count($users_data) == 0) {
+		if (count($user_data) == 0) {
 			// email does not exist
 			$this->core_controller->fail_response(6);
 		}
-
-
-		$user_data = $users_data[0];
 
 		if ($user_data[$this->passenger_model->KEY_password] != $this->input->post('password')) {
 			$this->core_controller->fail_response(6);
@@ -291,7 +288,7 @@ class Passenger extends REST_Controller {
 
 	private function split_latitude_longitude($data, $key, $latitude_key, $longitude_key) {
 		if (array_key_exists($key, $data)) {
-			$loc = explode(";", $data[$key]);
+			$loc = explode(",", $data[$key]);
 			if (count($loc) == 2) {
 				$data[$latitude_key] = $loc[0];
 				$data[$longitude_key] = $loc[1];
