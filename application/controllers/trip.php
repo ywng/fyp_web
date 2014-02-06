@@ -118,6 +118,7 @@ class Trip extends REST_Controller {
 				array('field' => 'gps_to_latitude', 'label' => 'to gps latitude', 'rules' => 'trim|required|xss_clean|min_length[1]|numeric'),
 				array('field' => 'gps_to_longitude', 'label' => 'to gps longitude', 'rules' => 'trim|required|xss_clean|min_length[1]|numeric'),
 				array('field' => 'to_gps_name', 'label' => 'to gps name', 'rules' => 'trim|xss_clean|max_length[100]'),
+				array('field' => 'pickup_time', 'label' => 'pick up time', 'rules' => 'trim|required|xss_clean|max_length[50]'),
 				array('field' => 'special_note', 'label' => 'special note', 'rules' => 'trim|xss_clean'),
 				array('field' => 'estimated_price', 'label' => 'estimated price', 'rules' => 'trim|required|xss_clean|numeric|min_length[1]'),
 				array('field' => 'estimated_duration', 'label' => 'estimated duration', 'rules' => 'trim|required|xss_clean|numeric|min_length[1]'),
@@ -150,7 +151,10 @@ class Trip extends REST_Controller {
 		if ($this->input->post('estimated_duration', TRUE) !== FALSE) {
 			$detail[$this->order_model->KEY_estimated_duration] = $this->input->post('estimated_duration');
 		}
-		$detail[$this->order_model->KEY_status_id] = $Status_KEY_pending;
+		if ($this->input->post('pickup_time', TRUE) !== FALSE) {
+			$detail[$this->order_model->KEY_order_time] = date('Y-m-d G:i:s', $this->input->post('pickup_time'));
+		}
+		$detail[$this->order_model->KEY_status_id] = $this->order_model->Status_KEY_pending;
 
 
 		$order_id = $this->order_model->create_new_order($current_user['pid'], 

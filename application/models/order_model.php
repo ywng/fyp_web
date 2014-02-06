@@ -98,14 +98,14 @@ class Order_model extends CI_Model {
 		return $this->get_all_inactive_orders_by_key($this->KEY_pid, $pid, $limit, $offset);
 	}
 
-	function create_new_order($pid, $laitude_from, $longitude_from, $latitude_to, $longitude_to, $other_detail) {
+	function create_new_order($pid, $latitude_from, $longitude_from, $latitude_to, $longitude_to, $other_detail) {
 
 		$gps_from = $latitude_from.','.$longitude_from;
 		$gps_to = $latitude_to.','.$longitude_to;
 		$other_detail[$this->KEY_pid] = $pid;
 		$other_detail[$this->KEY_gps_from] = $gps_from;
 		$other_detail[$this->KEY_gps_to] = $gps_to;
-		$other_detail[$this->KEY_post_time] = date('Y-m-d G:i:s', $now);
+		$other_detail[$this->KEY_post_time] = date('Y-m-d G:i:s');
 		$this->db->insert($this->Table_name_active, $other_detail);
 
 		if ($this->db->affected_rows() > 0) {
