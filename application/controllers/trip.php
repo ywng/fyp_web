@@ -71,6 +71,11 @@ class Trip extends REST_Controller {
 			$driver_data = $this->driver_model->get_driver_by_did($trip_detail[$this->order_model->KEY_did]);
 			$driver_data = $this->hide_driver_data($driver_data); // hide the password before sending back
 			$this->core_controller->add_return_data('driver', $driver_data);
+
+			$location_data = $this->driver_model->get_driver_location($trip_detail[$this->order_model->KEY_did]);
+			if (count($location_data) > 0) {
+				$this->core_controller->add_return_data('driver_location', $location_data);
+			}
 		}
 
 

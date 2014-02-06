@@ -109,7 +109,7 @@ class Driver_model extends CI_Model {
 						->get();
 		if ($result->num_rows() > 0) {
 			$gps = $result->row(1)->{$this->KEY_gps};
-			$loc = explode(";", $gps);
+			$loc = explode(",", $gps);
 			return array('latitude' => $loc[0], 'longitude' => $loc[1]);
 		} else {
 			return array();
