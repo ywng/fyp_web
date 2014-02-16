@@ -65,7 +65,7 @@ class Driver_model extends CI_Model {
 	}
 
 	function check_if_driver_exists_by_license_no($license_no) {
-		return $this->check_if_driver_exists($this->KEY_license_no, $KEY_license_no);
+		return $this->check_if_driver_exists($this->KEY_license_no,$license_no);
 	}
 
 	function add_driver($data) {
