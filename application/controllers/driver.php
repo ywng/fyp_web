@@ -216,9 +216,16 @@ class Driver extends REST_Controller {
 	*  Logout
 	*
 	*/
-	public function logout_post()
+	public function logout_get()
 	{
+		// expire current passenger session token
+		$this->load->model('session_model');
+		$this->load->model('driver_model');
+		$current_user = $this->core_controller->get_current_user();
 
+		$this->session_model->expire_session($current_user[$this->driver_model->KEY_did], $this->user_type);
+
+		$this->core_controller->successfully_processed();
 		
 	}
 
