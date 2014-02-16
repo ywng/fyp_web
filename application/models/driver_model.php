@@ -96,7 +96,33 @@ class Driver_model extends CI_Model {
 
 
 
+	/* status related */
 
+	function get_avail($did) {
+
+		$result = $this->db->select($this->KEY_is_available)
+						->from($this->Table_name_driver)
+						->where($this->KEY_did, $did)
+						->get();
+		
+		return $result->row(1)->{$this->KEY_is_available};
+
+	}
+
+	function update_avail($did, $avail) {	
+		// update
+		$this->db->where($this->KEY_did, $did)
+				->update($this->Table_name_driver, array(
+						$this->KEY_is_available => $avail
+					));
+
+		if ($this->db->affected_rows() > 0) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+
+	}
 
 
 	/* gps related */

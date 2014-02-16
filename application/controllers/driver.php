@@ -86,6 +86,7 @@ class Driver extends REST_Controller {
                 $this->driver_model->KEY_phone_no => $this->input->post('phone'),
                 $this->driver_model->KEY_license_no => $this->input->post('license_no'),
                 $this->driver_model->KEY_license_photo => $this->input->post('license_photo'),
+                $this->driver_model->KEY_is_available => 1,
 
         );
         $driver_id = $this->driver_model->add_driver($data);
@@ -125,13 +126,37 @@ class Driver extends REST_Controller {
 
 
 	/**
-	*  This can be accessed by /driver/setStatus with POST method
-	*  Set Status 
+	*  This can be accessed by /driver/set_avail with POST method
+	*  Set Availability
 	*
 	*/
-	public function setStatus_post()
+	public function set_avail_post()
 	{
+		$this->load->model('driver_model');
+		$current_driver = $this->core_controller->get_current_user();
+	    
 
+	    if ($this->driver_model->update_avail($current_driver[$this->driver_model->KEY_did],$this->input->post('avail'))) {
+               $this->core_controller->successfully_processed(); 
+        }else{
+        	   $this->core_controller->fail_response(5);
+        }
+		
+		
+	}
+
+	/**
+	*  This can be accessed by /driver/get_avail with GET method
+	*  Get Availability 
+	*
+	*/
+	public function get_avail_get()
+	{
+		$this->load->model('driver_model');
+		$current_driver = $this->core_controller->get_current_user();
+		$avail = $this->driver_model->get_avail($current_driver[$this->driver_model->KEY_did]);
+
+		$this->core_controller->add_return_data('avail', $avail)->successfully_processed();
 		
 	}
 
@@ -143,17 +168,42 @@ class Driver extends REST_Controller {
 	public function getTripHistory_get()
 	{
 
+
 		
 	}
 
 	/**
-	*  This can be accessed by /driver/getActiveTrip with GET method
+	*  This can be accessed by /driver/active_trip with GET method
 	*  Get Active Trip
 	*
 	*/
-	public function getActiveTrip_get()
+	public function active_trip_get($limit = NULL, $offset = NULL)
 	{
+		if (is_null($limit) || empty($limit) || !is_numeric($limit)) {
+			$limit = 20;
+		}
+		if (is_null($offset) || empty($offset) || !is_numeric($offset)) {
+			$offset = 0;
+		}
 
+		$current_driver = $this->core_controller->get_current_user();
+
+		$this->load->model('order_model');
+		$results = $this->order_model->get_all_active_orders_by_did($current_driver[$this->order_model->KEY_did], $limit, $offset);
+
+		$results_with_separated_gps = array();
+
+		foreach ($results as $row) {
+
+			$trip_detail = $this->split_latitude_longitude($row, $this->order_model->KEY_gps_from, 
+				$this->order_model->KEY_gps_from.'_latitude', $this->order_model->KEY_gps_from.'_longitude');
+
+			$trip_detail = $this->split_latitude_longitude($trip_detail, $this->order_model->KEY_gps_to, 
+				$this->order_model->KEY_gps_to.'_latitude', $this->order_model->KEY_gps_to.'_longitude');
+			$results_with_separated_gps[] = $trip_detail;
+		}
+
+		$this->core_controller->add_return_data('order', $results_with_separated_gps)->successfully_processed();
 		
 	}
 
@@ -254,6 +304,17 @@ class Driver extends REST_Controller {
 		return $driver_data_array;
 	}
 
+	private function split_latitude_longitude($data, $key, $latitude_key, $longitude_key) {
+		if (array_key_exists($key, $data)) {
+			$loc = explode(",", $data[$key]);
+			if (count($loc) == 2) {
+				$data[$latitude_key] = $loc[0];
+				$data[$longitude_key] = $loc[1];
+				unset($data[$key]);
+			}
+		}
+		return $data;
+	}
 
 }
 
