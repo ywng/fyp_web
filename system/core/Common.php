@@ -560,5 +560,30 @@ if ( ! function_exists('html_escape'))
 	}
 }
 
+// ---------------------------------------------------------------------------
+if ( ! function_exists('get_mimes'))
+{
+  /**
+   * Returns the MIME types array from config/mimes.php
+   *
+   * @return  array
+   */
+  function &get_mimes()
+  {
+    static $_mimes = array();
+ 
+    if (defined('ENVIRONMENT') && is_file(APPPATH.'config/'.ENVIRONMENT.'/mimes.php'))
+    {
+      $_mimes = include(APPPATH.'config/'.ENVIRONMENT.'/mimes.php');
+    }
+    elseif (is_file(APPPATH.'config/mimes.php'))
+    {
+      $_mimes = include(APPPATH.'config/mimes.php');
+    }
+ 
+    return $_mimes;
+  }
+}
+
 /* End of file Common.php */
 /* Location: ./system/core/Common.php */

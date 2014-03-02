@@ -14,6 +14,7 @@ class Driver extends REST_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->library('CORE_Controller');
+		$this->load->helper(array('form', 'url'));
 		$this->core_controller->set_response_helper($this);
 	}
 
@@ -33,6 +34,7 @@ class Driver extends REST_Controller {
 
 		// load up the validation file
 		$this->load->library('form_validation');
+		$this->load->helper('url');
 
 		/*
 		*	first_name, last_name, phone, password, email, license_no, licence_photo
@@ -93,6 +95,31 @@ class Driver extends REST_Controller {
         if ($driver_id < 0) {
                 $this->core_controller->fail_response(5);
         }
+
+        //create account successfully, so store the license photo
+        $config['upload_path'] = getcwd().'/uploads/';
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['max_size']	= '100000';
+		$config['max_width']  = '10240';
+		$config['max_height']  = '7680';
+
+		$this->load->library('upload', $config);
+
+		if ( ! $this->upload->do_upload())
+		{
+			$error = array('error' => $this->upload->display_errors());
+
+			//$this->load->view('upload_form'，$error);
+			 $this->core_controller->add_return_data('upload_image_error', $error);
+		}
+		else
+		{
+			$data = array('upload_data' => $this->upload->data());
+
+			//$this->load->view('upload_success'，$data);
+			 $this->core_controller->add_return_data('image_data', $data);
+		}
+
 
         // probably we would like add some data before we end our process, use add_return_data('__key__', __value__)
         // After adding all required return data, call successfully_processed() from core_controller
@@ -161,13 +188,37 @@ class Driver extends REST_Controller {
 	}
 
 	/**
-	*  This can be accessed by /driver/getTripHistory with GET method
+	*  This can be accessed by /driver/inactive_trip with GET method
 	*  Get Trip History
 	*
 	*/
-	public function getTripHistory_get()
+	public function inactive_trip_get($limit = NULL, $offset = NULL)
 	{
+		if (is_null($limit) || empty($limit) || !is_numeric($limit)) {
+			$limit = 20;
+		}
+		if (is_null($offset) || empty($offset) || !is_numeric($offset)) {
+			$offset = 0;
+		}
 
+		$current_driver = $this->core_controller->get_current_user();
+
+		$this->load->model('order_model');
+		$results = $this->order_model->get_all_inactive_orders_by_did($current_driver[$this->order_model->KEY_did], $limit, $offset);
+
+		$results_with_separated_gps = array();
+
+		foreach ($results as $row) {
+
+			$trip_detail = $this->split_latitude_longitude($row, $this->order_model->KEY_gps_from, 
+				$this->order_model->KEY_gps_from.'_latitude', $this->order_model->KEY_gps_from.'_longitude');
+
+			$trip_detail = $this->split_latitude_longitude($trip_detail, $this->order_model->KEY_gps_to, 
+				$this->order_model->KEY_gps_to.'_latitude', $this->order_model->KEY_gps_to.'_longitude');
+			$results_with_separated_gps[] = $trip_detail;
+		}
+
+		$this->core_controller->add_return_data('order', $results_with_separated_gps)->successfully_processed();
 
 		
 	}
