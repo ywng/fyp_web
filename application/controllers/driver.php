@@ -79,29 +79,12 @@ class Driver extends REST_Controller {
                 $this->core_controller->fail_response(4);
         }
 
-        // passed the validation process, then we add the passenger into the database
-        $data = array(
-                $this->driver_model->KEY_first_name => $this->input->post('first_name'),
-                $this->driver_model->KEY_last_name => $this->input->post('last_name'),                        
-                $this->driver_model->KEY_password => $this->input->post('password'),
-                $this->driver_model->KEY_email => $this->input->post('email'),
-                $this->driver_model->KEY_phone_no => $this->input->post('phone'),
-                $this->driver_model->KEY_license_no => $this->input->post('license_no'),
-                $this->driver_model->KEY_license_photo => $this->input->post('license_photo'),
-                $this->driver_model->KEY_is_available => 1,
-
-        );
-        $driver_id = $this->driver_model->add_driver($data);
-        if ($driver_id < 0) {
-                $this->core_controller->fail_response(5);
-        }
-
-        //create account successfully, so store the license photo
-        $config['upload_path'] = getcwd().'/uploads/';
-		$config['allowed_types'] = 'gif|jpg|png';
-		$config['max_size']	= '100000';
-		$config['max_width']  = '10240';
-		$config['max_height']  = '7680';
+        //upload license photo
+        $config['upload_path'] = './uploads/';
+		$config['allowed_types'] = '*';
+		//$config['max_size']	= '100000';
+		//$config['max_width']  = '10240';
+		//$config['max_height']  = '887680';
 
 		$this->load->library('upload', $config);
 
@@ -111,15 +94,33 @@ class Driver extends REST_Controller {
 
 			//$this->load->view('upload_form'，$error);
 			 $this->core_controller->add_return_data('upload_image_error', $error);
+			 $this->core_controller->fail_response(5);
 		}
 		else
 		{
-			$data = array('upload_data' => $this->upload->data());
+			$file_data =  $this->upload->data();
 
 			//$this->load->view('upload_success'，$data);
-			 $this->core_controller->add_return_data('image_data', $data);
+			 $this->core_controller->add_return_data('image_data', $file_data);
 		}
 
+        // passed the validation process & upload photo sucessfully, then we add the passenger into the database
+        //the photo absolute path is stored
+        $data = array(
+                $this->driver_model->KEY_first_name => $this->input->post('first_name'),
+                $this->driver_model->KEY_last_name => $this->input->post('last_name'),                        
+                $this->driver_model->KEY_password => $this->input->post('password'),
+                $this->driver_model->KEY_email => $this->input->post('email'),
+                $this->driver_model->KEY_phone_no => $this->input->post('phone'),
+                $this->driver_model->KEY_license_no => $this->input->post('license_no'),
+                $this->driver_model->KEY_license_photo => $this->input->post('license_photo'),
+                $this->driver_model->KEY_is_available => 1,
+                $this->driver_model->KEY_license_photo=> $file_data['full_path'],
+        );
+        $driver_id = $this->driver_model->add_driver($data);
+        if ($driver_id < 0) {
+                $this->core_controller->fail_response(5);
+        }
 
         // probably we would like add some data before we end our process, use add_return_data('__key__', __value__)
         // After adding all required return data, call successfully_processed() from core_controller

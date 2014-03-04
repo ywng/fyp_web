@@ -1222,19 +1222,18 @@ class CI_Upload {
 				 * value, which is only put to allow us to get the return status code.
 				 */
 			//if (function_usable('exec'))
-			if(true)
-			{
-
+			//{
+/*
 				$mime = @exec($cmd, $mime, $return_status);
 				if ($return_status === 0 && is_string($mime) && preg_match($regexp, $mime, $matches))
 				{
 					$this->file_type = $matches[1];
 					return;
-				}
-			} 
+				}*/
+			//} 
 
-			if ( ! ini_get('safe_mode') )//&& function_usable('shell_exec'))
-			{
+			//if ( ! ini_get('safe_mode') && function_usable('shell_exec'))
+			//{
 				$mime = @shell_exec($cmd);
 				if (strlen($mime) > 0)
 				{
@@ -1245,11 +1244,10 @@ class CI_Upload {
 						return;
 					}
 				}
-			}
+			//}
 
 			//if (function_usable('popen'))
-			if(true)
-			{
+			//{
 				$proc = @popen($cmd, 'r');
 				if (is_resource($proc))
 				{
@@ -1265,7 +1263,7 @@ class CI_Upload {
 						}
 					}
 				}
-			}
+			//}
 		}
 
 		// Fall back to the deprecated mime_content_type(), if available (still better than $_FILES[$field]['type'])
