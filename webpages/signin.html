@@ -17,7 +17,56 @@
 
     <!-- Custom styles for this template -->
     <link href="css/signin.css" rel="stylesheet">
-    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+
+    <script>
+     
+         function signin(){
+               
+                if(!document.querySelector('.userTypeCheckbox:checked')){
+                  alert("Please select the user type!");
+                }
+                var checkedValue = document.querySelector('.userTypeCheckbox:checked').value;
+                //alert(checkedValue);
+                var data='email='+escape($('#email').val())+'&password='+escape($('#password').val());
+               
+               alert(data);
+
+               $.ajax({
+                  url: 'http://taxibook.site50.net/server/index.php/passenger/login',
+                  data: data,
+                  type: 'post',
+                  context: document.body,
+                   dataType: "json",
+                   async: false,
+                  contentType:'application/x-www-form-urlencoded',
+                
+                 
+                  success: function(data, textStatus, jqXHR){
+                      //alert(data);
+                      localStorage.session_token=data['session_token'];
+                      localStorage.email=$('#email').val();
+                      localStorage.user_type='passenger';
+                      
+                      //go to login page
+                      window.location.href = 'pass_dash.html';
+                     
+                     
+
+                  },
+                  error: function(jqXHR, textStatus, error){
+                     alert(error);
+                     
+                  }
+               });
+
+          }
+     
+
+  
+
+  </script>
+
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -46,7 +95,7 @@
         <label class="checkbox">
           <input class="userTypeCheckbox" type="checkbox" value="Admin" > Admin
         </label>
-        <button class="btn btn-lg btn-primary btn-block"  id="signinBtn">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block"  id="signinBtn" onclick="signin()">Sign in</button>
       </form>
 
     </div> <!-- /container -->
@@ -58,45 +107,6 @@
   </body>
 
 
-  <script>
-      $(document).ready(function(){
-          $('#signinBtn').click(function(){
-               
-                if(!document.querySelector('.userTypeCheckbox:checked')){
-                  alert("Please select the user type!");
-                }
-                var checkedValue = document.querySelector('.userTypeCheckbox:checked').value;
-                //alert(checkedValue);
-                var data='email='+escape($('#email').val())+'&password='+escape($('#password').val());
-               
-               // alert(data);
-
-                $.ajax({
-                  url: 'http://taxibook.site50.net/server/index.php/passenger/login/',
-                  context: document.body,
-                  cache: false,
-                  data: data,
-                  type: 'POST',
-                  contentType:'application/x-www-form-urlencoded',
-                  dataType: 'text',
-                  async: false,
-                  success: function(data){
-                      alert(data);
-                      localStorage.session_token=data['session_token'];
-                      localStorage.email=$('#email').val();
-                      localStorage.user_type='passenger';
-                      
-                      //go to login page
-                      window.location.href = 'pass_dash.html';
-                     
-
-                  }
-               });
-
-          });
-      });
-
-
-  </script>
+  
 
 </html>
