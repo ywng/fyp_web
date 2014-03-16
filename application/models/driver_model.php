@@ -2,7 +2,7 @@
 
 
 /**
- * Handle all transcations for the driver table 
+ * Handle all transcations for the driver-related tables 
  *
  * @author hpchan
  */
@@ -20,12 +20,14 @@ class Driver_model extends CI_Model {
 	var $KEY_license_photo = 'license_photo';
 	var $KEY_member_status_id = 'member_status_id';
 	var $KEY_is_available = 'is_available';
+	
+	var $Table_name_assigned_drivers = 'Assigned_Drivers';
+	var $KEY_oid = 'oid';
+	var $KEY_assigned_time = 'assigned_time';
 
 	var $Table_name_driver_location = 'Driver_Location';
 	var $KEY_gps = 'gps';
-
-
-
+	
 	/* this is used for internal mapping, normally do not call this outside this file */
 
 	private function check_if_driver_exists($key, $value) {
@@ -124,9 +126,44 @@ class Driver_model extends CI_Model {
 
 	}
 
+	/* assigned_drivers */
+	function insert_assigned_drivers($drivers,$oid){
+		
+		foreach ($drivers as $did){
+			$entry[$this->KEY_did] = $did;
+			$entry[$this->KEY_oid] = $oid;
+			$entry[$this->KEY_assigned_time] = date('Y-m-d G:i:s');
+			$this->db->insert($this->Table_name_assigned_drivers, $entry);
+		}
+		
 
+	}
+	
 	/* gps related */
-
+	function get_list_of_nearby_drivers($p_gps,$oid,$max_driver){
+		$loc = explode(",", $p_gps);
+		$latitude = $loc[0];
+		$longitude = $loc[1];
+		$query = $this->db->query("SELECT dl.$this->KEY_did, ( 3959 * acos( cos( radians($latitude) ) * cos( radians( SUBSTRING_INDEX($this->KEY_gps, ',', 1) ) ) * 
+												cos( radians( SUBSTRING_INDEX($this->KEY_gps, ',', -1) ) - radians($longitude) ) + sin( radians($latitude) ) * 
+												sin( radians( SUBSTRING_INDEX($this->KEY_gps, ',', 1) ) ) ) ) 
+											AS distance 
+											FROM $this->Table_name_driver_location  dl
+											JOIN $this->Table_name_driver d ON d.$this->KEY_did=dl.$this->KEY_did
+											WHERE d.$this->KEY_is_available=1 
+												AND d.$this->KEY_member_status_id=1
+												AND d.$this->KEY_did NOT IN (SELECT $this->KEY_did FROM $this->Table_name_assigned_drivers WHERE $this->KEY_oid=$oid)
+											ORDER BY distance ASC LIMIT 0, $max_driver");
+											//exclude drivers with: 1) already in [Assigned_Driver] 2) member_status_id!=1    3) is_available!=1
+		
+		$dids = array();
+		foreach ($query->result() as $row)
+		{
+		   array_push($dids,$row->{"$this->KEY_did"});
+		}
+		return $dids;
+	}
+	
 	function get_driver_location($did) {
 
 		$result = $this->db->select($this->KEY_gps)
