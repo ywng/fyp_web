@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="bootstrap/ico/favicon.png">
 
-    <title>Signin Template for Bootstrap</title>
+    <title>Signin</title>
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -17,9 +17,19 @@
 
     <!-- Custom styles for this template -->
     <link href="css/signin.css" rel="stylesheet">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 
     <script>
+         $( document ).ready(function() {
+              if(localStorage.getItem("X-taxibook-loggedIn")=="true"){
+                 if(localStorage.getItem("X-taxibook-user-type")=="passenger"){
+                    $(location).attr('href','http://taxibook.site50.net/server/webpages/pass_dash.html');
+                } else if(localStorage.getItem("X-taxibook-user-type")=="admin"){
+                    $(location).attr('href','http://taxibook.site50.net/server/webpages/admin_dash.html');
+                }
+              }
+         });
+    
      
          function signin(){
                
@@ -29,38 +39,42 @@
                 var checkedValue = document.querySelector('.userTypeCheckbox:checked').value;
                 //alert(checkedValue);
                 var data='email='+escape($('#email').val())+'&password='+escape($('#password').val());
-               
-               alert(data);
+        
+               //alert(data);
 
                $.ajax({
-                  url: 'http://taxibook.site50.net/server/index.php/passenger/login',
-                  data: data,
-                  type: 'post',
-                  context: document.body,
-                   dataType: "json",
-                   async: false,
-                  contentType:'application/x-www-form-urlencoded',
-                
-                 
-                  success: function(data, textStatus, jqXHR){
-                      //alert(data);
-                      localStorage.session_token=data['session_token'];
-                      localStorage.email=$('#email').val();
-                      localStorage.user_type='passenger';
-                      
-                      //go to login page
-                      window.location.href = 'pass_dash.html';
-                     
-                     
+                    url: "http://taxibook.site50.net/server/index.php/"+checkedValue.toLowerCase()+"/login",
+                    context: document.body,
+                    data:data,
+                    dataType: "json", 
+                    headers : {Accept : "application/json","Access-Control-Allow-Origin" : "*"},
+                    type: 'POST', 
+                    async: false,
+                    success: function(data, textStatus, jqXHR){
+                     // alert(data.session_token);
+                      //alert(data.status_code);
+                      if(data.status_code=='1'){
+                        //alert("equal");
+                        localStorage.setItem("X-taxibook-session-token", data.session_token);
+                        localStorage.setItem("X-taxibook-email", data.email);
+                        localStorage.setItem("X-taxibook-user-type", checkedValue.toLowerCase());
+                        localStorage.setItem("X-taxibook-loggedIn", "true");
 
-                  },
-                  error: function(jqXHR, textStatus, error){
-                     alert(error);
-                     
-                  }
-               });
+                      }else{
+                        alert(data.message);
+                      }
+
+                    },
+                    error: function(jqHXR, textStatus, errorThrown) {
+                      console.log('ajax error:' +textStatus + ' ' + errorThrown);
+                    }
+
+                }); // end of the ajax call
+              
 
           }
+
+        
      
 
   

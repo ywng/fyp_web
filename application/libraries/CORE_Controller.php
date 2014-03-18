@@ -10,7 +10,7 @@
 class CORE_Controller {
     
     protected $current_user_obj = null;
-    private $white_list_uri = array('passenger/register', 'passenger/login', 'driver/register', 'driver/login', 'trip/assign_drivers'); // this will indicate the script not to run security check
+    private $white_list_uri = array('passenger/register', 'passenger/login', 'driver/register', 'driver/login', 'trip/assign_drivers','admin/login'); // this will indicate the script not to run security check
     private $session = null;
     private $response_data = array();
     private $CI = null;
@@ -135,6 +135,19 @@ class CORE_Controller {
 
             $this->current_user_obj = $user_detail;
             $id = $user_detail['did'];
+        }else if ($input_user_type == 'admin') {
+
+            $user_type = 'admin';
+            $this->CI->load->model('admin_model');
+            $user_detail = $this->CI->admin_model->get_admin_by_email($input_email);
+
+            // check if driver exists
+            if (count($user_detail) == 0) {
+                return FALSE;
+            }
+
+            $this->current_user_obj = $user_detail;
+            $id = $user_detail['id'];
         }
         
         $result = $this->CI->session_model->get_session_by_id($id, $user_type);
