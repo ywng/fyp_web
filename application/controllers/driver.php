@@ -138,9 +138,6 @@ class Driver extends REST_Controller {
 	{
 		$this->load->model('driver_model');
 		$driver_array = $this->driver_model->get_all_driver();
-		$this->core_controller->add_return_data('sEcho', 1);
-		$this->core_controller->add_return_data('iTotalRecords', count($driver_array));
-		$this->core_controller->add_return_data('iTotalDisplayRecords', count($driver_array));
 		$this->core_controller->add_return_data('aaData', $driver_array)->successfully_processed();	
 	}
 

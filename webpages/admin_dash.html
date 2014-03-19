@@ -56,21 +56,42 @@
   </head>
 
    <script>
+       var driver_arr;
       $( document ).ready(function() {
            //  alert(localStorage.getItem("X-taxibook-session-token"));
 
       $.ajax({
           url: "http://taxibook.site50.net/server/index.php/driver/allDriver",
           context: document.body,
-          dataType: "json", 
-          headers : {Accept : "application/json","Access-Control-Allow-Origin" : "*","X-taxibook-session-token":localStorage.getItem("X-taxibook-session-token"),"X-taxibook-email":localStorage.getItem("X-taxibook-email"),"X-taxibook-user-type":localStorage.getItem("X-taxibook-user-type")},
+         // dataType: "json", 
+          headers : {"Access-Control-Allow-Origin" : "*","X-taxibook-session-token":localStorage.getItem("X-taxibook-session-token"),"X-taxibook-email":localStorage.getItem("X-taxibook-email"),"X-taxibook-user-type":localStorage.getItem("X-taxibook-user-type")},
           type: 'GET', 
           async: false,
           success: function(data, textStatus, jqXHR){
-            alert(data);
-              alert(data.status_code+" "+data.message);
-              alert(data.aaData[0].did);
-            
+              var len=data.aaData.length;
+              driver_arr=new Array(); 
+              for(var i=0;i<len;i++){
+                 var driver=new Array(); 
+                 driver[0]=data.aaData[i].did;
+                 driver[1]=data.aaData[i].first_name+data.aaData[i].last_name;
+                 driver[2]=data.aaData[i].phone_no;
+                 driver[3]=data.aaData[i].license_no;
+                 driver[4]=data.aaData[i].license_photo;
+                 if(data.aaData[i].member_status_id=="1")
+                   driver[5]="Approved";
+                 else
+                   driver[5]="Pending";
+                 if(data.aaData[i].is_available=="1")
+                   driver[6]="Yes";
+                 else
+                   driver[6]="No";
+
+                 driver_arr[i]=driver;
+              }
+
+             // for(var i=0;i<len;i++){
+               //  alert(driver_arr[i][0]);
+              //}
 
           },
           error: function(jqHXR, textStatus, errorThrown) {
@@ -81,7 +102,7 @@
 
       //tables
       var id = -1;//simulation of id
-      $('#example').dataTable({ bJQueryUI: true,"sPaginationType": "full_numbers"}).makeEditable({
+      $('#example').dataTable({ "aaData":driver_arr, bJQueryUI: true,"sPaginationType": "full_numbers"}).makeEditable({
                 sUpdateURL: function(value, settings){
                      return(value); //Simulation of server-side response using a callback function
                 },
@@ -258,6 +279,66 @@
       <td class="center">Yes</td>
     </tr>
 
+    <tr class="odd_gradeX" id="2">
+      <td class="read_only"> 2</td>
+      <td>Jason Ng</td>
+      <td>54203134</td>
+      <td class="center">AM 730</td>
+
+      <td class="center">www.exampl2e.com</td>
+      <td class="center">Approved</td>
+      <td class="center">Yes</td>
+    </tr>
+
+
+    <tr class="odd_gradeX" id="2">
+      <td class="read_only"> 2</td>
+      <td>Jason Ng</td>
+      <td>54203134</td>
+      <td class="center">AM 730</td>
+
+      <td class="center">www.exampl2e.com</td>
+      <td class="center">Approved</td>
+      <td class="center">Yes</td>
+    </tr>
+
+
+    <tr class="odd_gradeX" id="2">
+      <td class="read_only"> 2</td>
+      <td>Jason Ng</td>
+      <td>54203134</td>
+      <td class="center">AM 730</td>
+
+      <td class="center">www.exampl2e.com</td>
+      <td class="center">Approved</td>
+      <td class="center">Yes</td>
+    </tr>
+
+
+    <tr class="odd_gradeX" id="2">
+      <td class="read_only"> 2</td>
+      <td>Jason Ng</td>
+      <td>54203134</td>
+      <td class="center">AM 730</td>
+
+      <td class="center">www.exampl2e.com</td>
+      <td class="center">Approved</td>
+      <td class="center">Yes</td>
+    </tr>
+
+
+    <tr class="odd_gradeX" id="2">
+      <td class="read_only"> 2</td>
+      <td>Jason Ng</td>
+      <td>54203134</td>
+      <td class="center">AM 730</td>
+
+      <td class="center">www.exampl2e.com</td>
+      <td class="center">Approved</td>
+      <td class="center">Yes</td>
+    </tr>
+
+    
     <tr class="odd_gradeX" id="2">
       <td class="read_only"> 2</td>
       <td>Jason Ng</td>
