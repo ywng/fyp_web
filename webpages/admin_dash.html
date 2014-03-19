@@ -38,7 +38,7 @@
 
     
     <script type="text/javascript" src="DataTables-1.9.4/media/js/complete.js"></script>
-    <script src="DataTables-1.9.4/media/js/jquery.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
     <script src="DataTables-1.9.4/media/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="DataTables-1.9.4/media/js/jquery.dataTables.editable.js"></script>
     <script src="DataTables-1.9.4/media/js/jquery.jeditable.js" type="text/javascript"></script>
@@ -63,12 +63,13 @@
           url: "http://taxibook.site50.net/server/index.php/driver/allDriver",
           context: document.body,
           dataType: "json", 
-          headers : {Accept : "application/json","Access-Control-Allow-Origin" : "*"},
+          headers : {Accept : "application/json","Access-Control-Allow-Origin" : "*","X-taxibook-session-token":localStorage.getItem("X-taxibook-session-token"),"X-taxibook-email":localStorage.getItem("X-taxibook-email"),"X-taxibook-user-type":localStorage.getItem("X-taxibook-user-type")},
           type: 'GET', 
           async: false,
           success: function(data, textStatus, jqXHR){
-           
-              alert(data);
+            alert(data);
+              alert(data.status_code+" "+data.message);
+              alert(data.aaData[0].did);
             
 
           },
