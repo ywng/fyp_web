@@ -113,7 +113,6 @@ class Driver extends REST_Controller {
                 $this->driver_model->KEY_email => $this->input->post('email'),
                 $this->driver_model->KEY_phone_no => $this->input->post('phone'),
                 $this->driver_model->KEY_license_no => $this->input->post('license_no'),
-                $this->driver_model->KEY_license_photo => $this->input->post('license_photo'),
                 $this->driver_model->KEY_is_available => 1,
                 $this->driver_model->KEY_member_status_id => 0,
                 $this->driver_model->KEY_license_photo=> $file_data['full_path'],
@@ -132,6 +131,20 @@ class Driver extends REST_Controller {
 	}
 
 	/**
+	*  This can be accessed by /driver/allDriver with GET method
+	*  
+	*/
+	public function allDriver_get()
+	{
+		$this->load->model('driver_model');
+		$driver_array = $this->driver_model->get_all_driver();
+		$this->core_controller->add_return_data('sEcho', 1);
+		$this->core_controller->add_return_data('iTotalRecords', count($driver_array));
+		$this->core_controller->add_return_data('iTotalDisplayRecords', count($driver_array));
+		$this->core_controller->add_return_data('aaData', $driver_array)->successfully_processed();	
+	}
+
+	/**
 	*  This can be accessed by /driver/viewProfile with GET method
 	*  View Profile
 	*
@@ -141,6 +154,8 @@ class Driver extends REST_Controller {
 
 		
 	}
+
+
 
 	/**
 	*  This can be accessed by /driver/editProfile with POST method

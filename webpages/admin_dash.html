@@ -59,6 +59,25 @@
       $( document ).ready(function() {
            //  alert(localStorage.getItem("X-taxibook-session-token"));
 
+      $.ajax({
+          url: "http://taxibook.site50.net/server/index.php/driver/allDriver",
+          context: document.body,
+          dataType: "json", 
+          headers : {Accept : "application/json","Access-Control-Allow-Origin" : "*"},
+          type: 'GET', 
+          async: false,
+          success: function(data, textStatus, jqXHR){
+           
+              alert(data);
+            
+
+          },
+          error: function(jqHXR, textStatus, errorThrown) {
+            console.log('ajax error:' +textStatus + ' ' + errorThrown);
+          }
+
+      }); // end of the ajax call
+
       //tables
       var id = -1;//simulation of id
       $('#example').dataTable({ bJQueryUI: true,"sPaginationType": "full_numbers"}).makeEditable({
