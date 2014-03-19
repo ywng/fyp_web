@@ -95,6 +95,10 @@ class Driver_model extends CI_Model {
 		return $this->get_driver_by_key($this->KEY_license_no, $license_no);
 	}
 
+	function get_all_driver() {
+		return $this->db->get($this->Table_name_driver)->result();
+	}
+
 
 
 

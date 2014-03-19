@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+     <link rel="shortcut icon" href="bootstrap/ico/favicon.png?v=2">
+
+    <title>Admin Portal</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+
+   <!-- styles for tables-->
+    <style type="text/css" media="screen">
+      @import "DataTables-1.9.4/media/css/demo_page.css";
+      @import "DataTables-1.9.4/media/css/demo_table.css";
+      @import "http://www.datatables.net/media/css/site_jui.ccss";
+      @import "DataTables-1.9.4/media/css/demo_table_jui.css";
+      @import "DataTables-1.9.4/media/css/themes/base/jquery-ui.css";
+      @import "DataTables-1.9.4/media/css/themes/smoothness/jquery-ui-1.7.2.custom.css";
+      /*
+       * Override styles needed due to the mix of three different CSS sources! For proper examples
+       * please see the themes example in the 'Examples' section of this site
+       */
+      .dataTables_info { padding-top: 0; }
+      .dataTables_paginate { padding-top: 0; }
+      .css_right { float: right; }
+      #example_wrapper .fg-toolbar { font-size: 0.8em }
+      #theme_links span { float: left; padding: 2px 10px; }
+    </style>
+
+    
+    <script type="text/javascript" src="DataTables-1.9.4/media/js/complete.js"></script>
+    <script src="DataTables-1.9.4/media/js/jquery.js" type="text/javascript"></script>
+    <script src="DataTables-1.9.4/media/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="DataTables-1.9.4/media/js/jquery.dataTables.editable.js"></script>
+    <script src="DataTables-1.9.4/media/js/jquery.jeditable.js" type="text/javascript"></script>
+    <script src="DataTables-1.9.4/media/js/jquery-ui.js" type="text/javascript"></script>
+    <script src="DataTables-1.9.4/media/js/jquery.validate.js" type="text/javascript"></script>
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+   <script>
+      $( document ).ready(function() {
+           //  alert(localStorage.getItem("X-taxibook-session-token"));
+
+      $.ajax({
+          url: "http://taxibook.site50.net/server/index.php/driver/allDriver",
+          context: document.body,
+          dataType: "json", 
+          headers : {Accept : "application/json","Access-Control-Allow-Origin" : "*"},
+          type: 'GET', 
+          async: false,
+          success: function(data, textStatus, jqXHR){
+           
+              alert(data);
+            
+
+          },
+          error: function(jqHXR, textStatus, errorThrown) {
+            console.log('ajax error:' +textStatus + ' ' + errorThrown);
+          }
+
+      }); // end of the ajax call
+
+      //tables
+      var id = -1;//simulation of id
+      $('#example').dataTable({ bJQueryUI: true,"sPaginationType": "full_numbers"}).makeEditable({
+                sUpdateURL: function(value, settings){
+                     return(value); //Simulation of server-side response using a callback function
+                },
+                sAddURL: "AddData.php",
+                sAddHttpMethod: "GET",
+                sDeleteHttpMethod: "GET",
+                sDeleteURL: "DeleteData.php",
+                "aoColumns": [
+                          {   cssclass: "required" },
+                          { },
+                          { indicator: 'Saving platforms...', tooltip: 'Click to edit platforms',
+                                    type: 'textarea',submit:'Save changes'},
+                          {indicator: 'Saving Engine Version...',tooltip: 'Click to select engine version',
+                            loadtext: 'loading...',type: 'select',
+                          onblur: 'cancel',submit: 'Ok', loadurl: 'EngineVersionList.php',
+                          loadtype: 'GET'
+                           },
+                           {
+                              indicator: 'Saving CSS Grade...', tooltip: 'Click to select CSS Grade',
+                              loadtext: 'loading...', type: 'select',
+                               onblur: 'submit',data: "{'':'Please select...', 'A':'A','B':'B','C':'C'}"
+                            }
+                 ],
+                oAddNewRowButtonOptions: {  label: "Add...", icons: {primary:'ui-icon-plus'}   },
+                oDeleteRowButtonOptions: {  label: "Remove", icons: {primary:'ui-icon-trash'}},
+                oAddNewRowFormOptions: {  title: 'Add a new browser', show: "blind", hide: "explode",  modal: true} ,
+                sAddDeleteToolbarSelector: ".dataTables_length"               
+
+                });
+      });
+
+      function logout(){
+         localStorage.setItem("X-taxibook-session-token", "");
+         localStorage.setItem("X-taxibook-email","");
+         localStorage.setItem("X-taxibook-user-type", "");
+         localStorage.setItem("X-taxibook-loggedIn","false");
+      }
+       
+
+  </script>
+
+  <body >
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Admin Dashboard</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="signin.html" onclick="logout()">Logout</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Analytics</a></li>
+            <li><a href="#">Export</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Driver Overview</a></li>
+            <li><a href="#example">Driver Approval</a></li>
+            <li><a href="#example">Driver Suspension</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Passenger Overview</a></li>
+            <li><a href="">Passenger Suspension</a></li>
+          
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Dashboard</h1>
+
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="bootstrap/holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Label</h4>
+              <span class="text-muted">Something else</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="bootstrap/holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Label</h4>
+              <span class="text-muted">Something else</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="bootstrap/holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Label</h4>
+              <span class="text-muted">Something else</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="bootstrap/holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Label</h4>
+              <span class="text-muted">Something else</span>
+            </div>
+          </div>
+
+          <h2 class="sub-header">Pending Approval Drivers</h2>
+
+           <!-- Table========================== -->
+
+        <div class="full_width">
+<form id="formAddNewRow" action="#" title="Add a new browser" style="width:600px;min-width:600px">
+        <label for="engine">Rendering engine</label><br />
+  <input type="text" name="engine" id="name" class="required" rel="0" />
+        <br />
+        <label for="browser">Browser</label><br />
+  <input type="text" name="browser" id="browser" rel="1" />
+        <input type="hidden" name="platform" rel="2" />
+        <br />
+        <label for="version">Engine version</label><br />
+  <select name="version" id="version" rel="3">
+                <option>1.5</option>
+                <option>1.7</option>
+                <option>1.8</option>
+        </select>
+        <br />
+        <label for="grade">CSS grade</label><br />
+    <input type="radio" name="grade" value="A" rel="4"> First<br>
+    <input type="radio" name="grade" value="B" rel="4"> Second<br>
+    <input type="radio" name="grade" value="C" checked rel="4"> Third
+        <br />
+</form>
+
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+  <thead>
+    <tr>
+      <th>Driver ID</th>
+      <th>Name</th>
+      <th>Phone Number</th>
+      <th>License No</th>
+      <th>License Photo</th>
+      <th>Approved</th>
+      <th>Available</th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <th>Driver ID</th>
+      <th>Name</th>
+      <th>Phone Number</th>
+      <th>License No</th>
+      <th>License Photo</th>
+      <th>Approved</th>
+      <th>Available</th>
+    </tr>
+
+  </tfoot>
+  <tbody>
+    <tr class="odd_gradeX" id="2">
+      <td class="read_only"> 1</td>
+      <td>Ben Leung</td>
+      <td>54203135</td>
+      <td class="center">PK 123</td>
+
+      <td class="center">www.example.com</td>
+      <td class="center">Pending</td>
+      <td class="center">Yes</td>
+    </tr>
+
+    <tr class="odd_gradeX" id="2">
+      <td class="read_only"> 2</td>
+      <td>Jason Ng</td>
+      <td>54203134</td>
+      <td class="center">AM 730</td>
+
+      <td class="center">www.exampl2e.com</td>
+      <td class="center">Approved</td>
+      <td class="center">Yes</td>
+    </tr>
+    
+  </tbody>
+</table>
+        </div>
+     
+    
+
+       
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="js/docs.min.js"></script>
+  </body>
+
+ 
+
+</html>

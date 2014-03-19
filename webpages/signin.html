@@ -7,9 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+<<<<<<< HEAD
     <link rel="shortcut icon" href="bootstrap/ico/favicon.png">
 
     <title>Signin Template for Bootstrap</title>
+=======
+    <link rel="shortcut icon" href="bootstrap/ico/favicon.png?v=2">
+
+    <title>Signin</title>
+>>>>>>> FETCH_HEAD
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -17,7 +23,74 @@
 
     <!-- Custom styles for this template -->
     <link href="css/signin.css" rel="stylesheet">
+<<<<<<< HEAD
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+=======
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+
+    <script>
+         $( document ).ready(function() {
+              if(localStorage.getItem("X-taxibook-loggedIn")=="true"){
+                 if(localStorage.getItem("X-taxibook-user-type")=="passenger"){
+                    $(location).attr('href','http://taxibook.site50.net/server/webpages/pass_dash.html');
+                } else if(localStorage.getItem("X-taxibook-user-type")=="admin"){
+                    $(location).attr('href','http://taxibook.site50.net/server/webpages/admin_dash.html');
+                }
+              }
+         });
+    
+     
+         function signin(){
+               
+                if(!document.querySelector('.userTypeCheckbox:checked')){
+                  alert("Please select the user type!");
+                }
+                var checkedValue = document.querySelector('.userTypeCheckbox:checked').value;
+                //alert(checkedValue);
+                var data='email='+escape($('#email').val())+'&password='+escape($('#password').val());
+        
+               //alert(data);
+
+               $.ajax({
+                    url: "http://taxibook.site50.net/server/index.php/"+checkedValue.toLowerCase()+"/login",
+                    context: document.body,
+                    data:data,
+                    dataType: "json", 
+                    headers : {Accept : "application/json","Access-Control-Allow-Origin" : "*"},
+                    type: 'POST', 
+                    async: false,
+                    success: function(data, textStatus, jqXHR){
+                     // alert(data.session_token);
+                      //alert(data.status_code);
+                      if(data.status_code=='1'){
+                        //alert("equal");
+                        localStorage.setItem("X-taxibook-session-token", data.session_token);
+                        localStorage.setItem("X-taxibook-email", data.email);
+                        localStorage.setItem("X-taxibook-user-type", checkedValue.toLowerCase());
+                        localStorage.setItem("X-taxibook-loggedIn", "true");
+
+                      }else{
+                        alert(data.message);
+                      }
+
+                    },
+                    error: function(jqHXR, textStatus, errorThrown) {
+                      console.log('ajax error:' +textStatus + ' ' + errorThrown);
+                    }
+
+                }); // end of the ajax call
+              
+
+          }
+
+        
+     
+
+  
+
+  </script>
+
+>>>>>>> FETCH_HEAD
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -46,7 +119,11 @@
         <label class="checkbox">
           <input class="userTypeCheckbox" type="checkbox" value="Admin" > Admin
         </label>
+<<<<<<< HEAD
         <button class="btn btn-lg btn-primary btn-block" type="submit" id="signinBtn">Sign in</button>
+=======
+        <button class="btn btn-lg btn-primary btn-block"  id="signinBtn" onclick="signin()">Sign in</button>
+>>>>>>> FETCH_HEAD
       </form>
 
     </div> <!-- /container -->
@@ -58,6 +135,7 @@
   </body>
 
 
+<<<<<<< HEAD
   <script>
       $(document).ready(function(){
           $('#signinBtn').click(function(){
@@ -102,5 +180,8 @@
 
 
   </script>
+=======
+  
+>>>>>>> FETCH_HEAD
 
 </html>
