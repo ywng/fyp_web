@@ -115,7 +115,7 @@ class Driver extends REST_Controller {
                 $this->driver_model->KEY_license_no => $this->input->post('license_no'),
                 $this->driver_model->KEY_is_available => 1,
                 $this->driver_model->KEY_member_status_id => 0,
-                $this->driver_model->KEY_license_photo=> $file_data['full_path'],
+                $this->driver_model->KEY_license_photo=> "/server/uploads/".$file_data['file_name'],
         );
         $driver_id = $this->driver_model->add_driver($data);
         if ($driver_id < 0) {
