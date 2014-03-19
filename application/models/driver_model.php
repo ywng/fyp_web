@@ -130,6 +130,21 @@ class Driver_model extends CI_Model {
 
 	}
 
+	function approve_driver($did, $approval) {	
+		// update
+		$this->db->where($this->KEY_did, $did)
+				->update($this->Table_name_driver, array(
+						$this->KEY_member_status_id => $approval
+					));
+
+		if ($this->db->affected_rows() > 0) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+
+	}
+
 	/* assigned_drivers */
 	function insert_assigned_drivers($drivers,$oid){
 		

@@ -86,6 +86,17 @@ class Admin extends REST_Controller {
 	}
 
 	/**
+	*  This can be accessed by /admin/allDriver with GET method
+	*  
+	*/
+	public function allDriver_get()
+	{
+		$this->load->model('driver_model');
+		$driver_array = $this->driver_model->get_all_driver();
+		$this->core_controller->add_return_data('aaData', $driver_array)->successfully_processed();	
+	}
+
+	/**
 	*  This can be accessed by /admin/pending_approval_drivers with GET method
 	*
 	*/
@@ -100,6 +111,14 @@ class Admin extends REST_Controller {
 	*/
 	public function approve_driver_post()
 	{
+		$this->load->model('driver_model');
+		
+
+		 if ($this->driver_model->approve_driver($this->input->post('did'),$this->input->post('approval'))) {
+               $this->core_controller->successfully_processed(); 
+        }else{
+        	   $this->core_controller->fail_response(2);
+        }
 		
 	}
 

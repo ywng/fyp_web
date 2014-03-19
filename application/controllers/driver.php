@@ -130,16 +130,7 @@ class Driver extends REST_Controller {
 		
 	}
 
-	/**
-	*  This can be accessed by /driver/allDriver with GET method
-	*  
-	*/
-	public function allDriver_get()
-	{
-		$this->load->model('driver_model');
-		$driver_array = $this->driver_model->get_all_driver();
-		$this->core_controller->add_return_data('aaData', $driver_array)->successfully_processed();	
-	}
+	
 
 	/**
 	*  This can be accessed by /driver/viewProfile with GET method

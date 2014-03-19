@@ -57,11 +57,12 @@
 
    <script>
        var driver_arr;
+       var site_base="http://taxibook.site50.net";
       $( document ).ready(function() {
            //  alert(localStorage.getItem("X-taxibook-session-token"));
 
       $.ajax({
-          url: "http://taxibook.site50.net/server/index.php/driver/allDriver",
+          url: "http://taxibook.site50.net/server/index.php/admin/allDriver",
           context: document.body,
          // dataType: "json", 
           headers : {"Access-Control-Allow-Origin" : "*","X-taxibook-session-token":localStorage.getItem("X-taxibook-session-token"),"X-taxibook-email":localStorage.getItem("X-taxibook-email"),"X-taxibook-user-type":localStorage.getItem("X-taxibook-user-type")},
@@ -76,7 +77,9 @@
                  driver[1]=data.aaData[i].first_name+data.aaData[i].last_name;
                  driver[2]=data.aaData[i].phone_no;
                  driver[3]=data.aaData[i].license_no;
-                 driver[4]=data.aaData[i].license_photo;
+                 var filePath= data.aaData[i].license_photo;
+                 var fileName =filePath.split("/")[3];
+                 driver[4]="<a href="+site_base+filePath+" target=\"_blank\">"+fileName+"</a>";
                  if(data.aaData[i].member_status_id=="1")
                    driver[5]="Approved";
                  else
@@ -102,37 +105,65 @@
 
       //tables
       var id = -1;//simulation of id
-      $('#example').dataTable({ "aaData":driver_arr, bJQueryUI: true,"sPaginationType": "full_numbers"}).makeEditable({
-                sUpdateURL: function(value, settings){
-                     return(value); //Simulation of server-side response using a callback function
-                },
-                sAddURL: "AddData.php",
-                sAddHttpMethod: "GET",
-                sDeleteHttpMethod: "GET",
-                sDeleteURL: "DeleteData.php",
-                "aoColumns": [
-                          {   cssclass: "required" },
-                          { },
-                          { indicator: 'Saving platforms...', tooltip: 'Click to edit platforms',
-                                    type: 'textarea',submit:'Save changes'},
-                          {indicator: 'Saving Engine Version...',tooltip: 'Click to select engine version',
-                            loadtext: 'loading...',type: 'select',
-                          onblur: 'cancel',submit: 'Ok', loadurl: 'EngineVersionList.php',
-                          loadtype: 'GET'
-                           },
-                           {
-                              indicator: 'Saving CSS Grade...', tooltip: 'Click to select CSS Grade',
-                              loadtext: 'loading...', type: 'select',
-                               onblur: 'submit',data: "{'':'Please select...', 'A':'A','B':'B','C':'C'}"
-                            }
-                 ],
-                oAddNewRowButtonOptions: {  label: "Add...", icons: {primary:'ui-icon-plus'}   },
-                oDeleteRowButtonOptions: {  label: "Remove", icons: {primary:'ui-icon-trash'}},
-                oAddNewRowFormOptions: {  title: 'Add a new browser', show: "blind", hide: "explode",  modal: true} ,
-                sAddDeleteToolbarSelector: ".dataTables_length"               
+      /* Add/remove class to a row when clicked on */
+      $('#example tbody tr').click( function() {
+          $(this).toggleClass('row_selected');
+      });
+
+      /* Add a click handler for the delete row */
+      $('#approveSuspend').click( function() {
+
+          var anSelected = fnGetSelected( oTable );
+          if ( anSelected.length !== 0 ) {
+                var sData = oTable.fnGetData( anSelected[0] );
+                //alert( 'The cell clicked on had the value of '+sData );
+                
+                 var did=sData[0];
+                 var member_status;
+                 if(sData[5]=="Approved")
+                    member_status=0;//toggle
+                else
+                    member_status=1;
+
+                // alert(did+"  "+sData[5]);
+                 
+                 $.ajax({
+                      url: "http://taxibook.site50.net/server/index.php/admin/approve_driver",
+                      context: document.body,
+                      data:"did="+did+"&approval="+member_status,
+                     // dataType: "json", 
+                      headers : {"Access-Control-Allow-Origin" : "*","X-taxibook-session-token":localStorage.getItem("X-taxibook-session-token"),"X-taxibook-email":localStorage.getItem("X-taxibook-email"),"X-taxibook-user-type":localStorage.getItem("X-taxibook-user-type")},
+                      type: 'POST', 
+                      async: false,
+                      success: function(data, textStatus, jqXHR){
+                          var result=data.status_code;
+                         // alert(result);
+                          location.reload();
+
+                    },
+                    error: function(jqHXR, textStatus, errorThrown) {
+                      console.log('ajax error:' +textStatus + ' ' + errorThrown);
+                    }
+
+                }); // end of the ajax call
+          }
+      } );
+       
+      /* Init the table */
+     var oTable = $('#example').dataTable({ "aaData":driver_arr, bJQueryUI: true,"sPaginationType": "full_numbers"}).makeEditable({
+                            
 
                 });
       });
+
+      /*
+       * I don't actually use this here, but it is provided as it might be useful and demonstrates
+       * getting the TR nodes from DataTables
+       */
+      function fnGetSelected( oTableLocal )
+      {
+          return oTableLocal.$('tr.row_selected');
+      }
 
       function logout(){
          localStorage.setItem("X-taxibook-session-token", "");
@@ -181,8 +212,8 @@
           </ul>
           <ul class="nav nav-sidebar">
             <li><a href="">Driver Overview</a></li>
-            <li><a href="#example">Driver Approval</a></li>
-            <li><a href="#example">Driver Suspension</a></li>
+            <li><a href="#pendingApproval">Driver Approval</a></li>
+            <li><a href="#pendingApproval">Driver Suspension</a></li>
           </ul>
           <ul class="nav nav-sidebar">
             <li><a href="">Passenger Overview</a></li>
@@ -216,32 +247,12 @@
             </div>
           </div>
 
-          <h2 class="sub-header">Pending Approval Drivers</h2>
+          <h2 class="sub-header" id ='pendingApproval'>Pending Approval Drivers</h2>
 
            <!-- Table========================== -->
+        <p><a href="javascript:void(0)" id="approveSuspend">Approve / Suspend</a></p>
 
         <div class="full_width">
-<form id="formAddNewRow" action="#" title="Add a new browser" style="width:600px;min-width:600px">
-        <label for="engine">Rendering engine</label><br />
-  <input type="text" name="engine" id="name" class="required" rel="0" />
-        <br />
-        <label for="browser">Browser</label><br />
-  <input type="text" name="browser" id="browser" rel="1" />
-        <input type="hidden" name="platform" rel="2" />
-        <br />
-        <label for="version">Engine version</label><br />
-  <select name="version" id="version" rel="3">
-                <option>1.5</option>
-                <option>1.7</option>
-                <option>1.8</option>
-        </select>
-        <br />
-        <label for="grade">CSS grade</label><br />
-    <input type="radio" name="grade" value="A" rel="4"> First<br>
-    <input type="radio" name="grade" value="B" rel="4"> Second<br>
-    <input type="radio" name="grade" value="C" checked rel="4"> Third
-        <br />
-</form>
 
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
   <thead>
@@ -279,66 +290,6 @@
       <td class="center">Yes</td>
     </tr>
 
-    <tr class="odd_gradeX" id="2">
-      <td class="read_only"> 2</td>
-      <td>Jason Ng</td>
-      <td>54203134</td>
-      <td class="center">AM 730</td>
-
-      <td class="center">www.exampl2e.com</td>
-      <td class="center">Approved</td>
-      <td class="center">Yes</td>
-    </tr>
-
-
-    <tr class="odd_gradeX" id="2">
-      <td class="read_only"> 2</td>
-      <td>Jason Ng</td>
-      <td>54203134</td>
-      <td class="center">AM 730</td>
-
-      <td class="center">www.exampl2e.com</td>
-      <td class="center">Approved</td>
-      <td class="center">Yes</td>
-    </tr>
-
-
-    <tr class="odd_gradeX" id="2">
-      <td class="read_only"> 2</td>
-      <td>Jason Ng</td>
-      <td>54203134</td>
-      <td class="center">AM 730</td>
-
-      <td class="center">www.exampl2e.com</td>
-      <td class="center">Approved</td>
-      <td class="center">Yes</td>
-    </tr>
-
-
-    <tr class="odd_gradeX" id="2">
-      <td class="read_only"> 2</td>
-      <td>Jason Ng</td>
-      <td>54203134</td>
-      <td class="center">AM 730</td>
-
-      <td class="center">www.exampl2e.com</td>
-      <td class="center">Approved</td>
-      <td class="center">Yes</td>
-    </tr>
-
-
-    <tr class="odd_gradeX" id="2">
-      <td class="read_only"> 2</td>
-      <td>Jason Ng</td>
-      <td>54203134</td>
-      <td class="center">AM 730</td>
-
-      <td class="center">www.exampl2e.com</td>
-      <td class="center">Approved</td>
-      <td class="center">Yes</td>
-    </tr>
-
-    
     <tr class="odd_gradeX" id="2">
       <td class="read_only"> 2</td>
       <td>Jason Ng</td>
