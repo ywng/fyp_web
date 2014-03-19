@@ -175,6 +175,49 @@ class Trip extends REST_Controller {
 
 	}
 
+	public function assign_drivers_post()
+	{
+	
+		//POST
+		if ($this->input->post('p_gps', TRUE) !== FALSE) {
+			$p_gps = $this->input->post('p_gps');
+		}
+		if ($this->input->post('oid', TRUE) !== FALSE) {
+			$oid = $this->input->post('oid');
+		}
+		if ($this->input->post('max_driver', TRUE) !== FALSE) {
+			$oid = $this->input->post('max_driver');
+		}
+	
+		//validation
+		$this->load->library('form_validation');
+		$validation_config = array(
+			array('field' => 'p_gps', 'label' => 'p_gps (passenger gps)', 'rules' => 'trim|required|xss_clean'), 
+		);
+		$validation_config = array(
+			array('field' => 'oid', 'label' => 'oid', 'rules' => 'trim|required|xss_clean|numeric'), 
+		);
+		$validation_config = array(
+			array('field' => 'max_driver', 'label' => 'max_driver (max no. of drivers)', 'rules' => 'trim|required|xss_clean|numeric'), 
+		);
+		$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
+		if ($this->form_validation->run() === FALSE) {
+			$this->core_controller->fail_response(2, validation_errors());
+		}
+	
+		
+		$this->load->model('driver_model');
+		$nearby_dids = $this->driver_model->get_list_of_nearby_drivers($p_gps,$oid,$max_driver);	//retrive a sorted array of dids based distance (top 5)
+		$this->driver_model->insert_assigned_drivers($nearby_dids,$oid);	//add entry to [Assigned_Drivers]
+			
+		foreach ($nearby_dids as $key => $did){
+			$this->core_controller->add_return_data("driver$key", $did);	
+		}
+		$this->core_controller->add_return_data('count', count($nearby_dids));	
+		$this->core_controller->successfully_processed();	
+	}
+
+	
 	/**
 	*  This can be accessed by /trip/edit_trip_detail with POST method
 	*

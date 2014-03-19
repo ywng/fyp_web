@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="bootstrap/ico/favicon.png">
+
+    <title>Signin Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <form class="form-signin" role="form">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <input type="email" class="form-control" placeholder="Email address" id="email" required autofocus>
+        <input type="password" class="form-control" placeholder="Password" id="password" required>
+        <label class="checkbox">
+          <input class="userTypeCheckbox" type="checkbox" value="Driver" > Driver
+        </label>
+        <label class="checkbox">
+          <input class="userTypeCheckbox" type="checkbox" value="Passenger" > Passenger
+        </label>
+        <label class="checkbox">
+          <input class="userTypeCheckbox" type="checkbox" value="Admin" > Admin
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" id="signinBtn">Sign in</button>
+      </form>
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  </body>
+
+
+  <script>
+      $(document).ready(function(){
+          $('#signinBtn').click(function(){
+                var email =  document.querySelector('#email').value;
+                var password= document.querySelector('#password').value;
+              
+                //alert(password+email);
+                if(!document.querySelector('.userTypeCheckbox:checked')){
+                  alert("Please select the user type!");
+                }
+                var checkedValue = document.querySelector('.userTypeCheckbox:checked').value;
+                //alert(checkedValue);
+                var data='email='+escape($('#email').val())+'&password='+escape($('#password').val());
+               
+          
+  
+               // alert(data);
+
+                $.ajax({
+                  url: 'http://taxibook.site50.net/server/index.php/passenger/login/',
+                  context: document.body,
+                  cache: false,
+                  data: data,
+                  type: 'POST',
+                  contentType:'application/x-www-form-urlencoded',
+                  dataType: 'text/json',
+                  async: false,
+                  success: function(data, textStatus, jqXHR){
+                     alert(data);
+                      localStorage.session_token=data['session_token'];
+                      localStorage.email=$('#email').val();
+                      localStorage.user_type='passenger';
+
+                      //go to login page
+                      window.location.href = 'pass_dash.html';
+
+                  }
+               });
+
+          });
+      });
+
+
+  </script>
+
+</html>

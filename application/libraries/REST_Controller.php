@@ -394,6 +394,7 @@ abstract class REST_Controller extends CI_Controller
 
 		header('HTTP/1.1: ' . $http_code);
 		header('Status: ' . $http_code);
+		header('Access-Control-Allow-Origin: *');
 
 		// If zlib.output_compression is enabled it will compress the output,
 		// but it will not modify the content-length header to compensate for

@@ -112,11 +112,15 @@ class Passenger extends REST_Controller {
 		$this->load->library('form_validation');
 
 		$validation_config = array(
+			array('field' => 'last_name_flag' , 'label' => 'last name flag', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]'),
+			array('field' => 'last_name' , 'label' => 'last name', 'rules' => 'trim|xss_clean|min_length[1]'),
+			array('field' => 'first_name_flag' , 'label' => 'first name flag', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]'),
+			array('field' => 'first_name' , 'label' => 'first name', 'rules' => 'trim|xss_clean|min_length[1]'),
 			array('field' => 'password_flag', 'label' => 'change password flag', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]|numeric'),
 			array('field' => 'password', 'label' => 'password', 'rules' => 'trim|xss_clean|min_length[6]|md5'), 
 			// use md5 to hash the password
 			array('field' => 'phone_flag', 'label' => 'change phone flag', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]|numeric'),
-			array('field' => 'phone', 'label' => 'phone number', 'rules' => 'trim|xss_clean|min_length[8]|max_length[8]|numeric'),
+			array('field' => 'phone', 'label' => 'phone number', 'rules' => 'trim|xss_clean|min_length[8]|max_length[8]|numeric')
 		);
 
 		$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
@@ -134,6 +138,13 @@ class Passenger extends REST_Controller {
 		if ($this->input->post('phone_flag') == 1) {
 			$update_data[$this->passenger_model->KEY_phone_no] = $this->input->post('phone');
 		}
+		if ($this->input->post('last_name_flag') == 1) {
+			$update_data[$this->passenger_model->KEY_last_name] = $this->input->post('last_name');
+		}
+		if ($this->input->post('first_name_flag') == 1) {
+			$update_data[$this->passenger_model->KEY_first_name] = $this->input->post('first_name');
+		}
+		
 
 		if (count($update_data) == 0) {
 			$this->core_controller->fail_response(8); // nothing to update

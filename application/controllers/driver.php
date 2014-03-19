@@ -14,6 +14,7 @@ class Driver extends REST_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->library('CORE_Controller');
+		$this->load->helper(array('form', 'url'));
 		$this->core_controller->set_response_helper($this);
 	}
 
@@ -33,6 +34,7 @@ class Driver extends REST_Controller {
 
 		// load up the validation file
 		$this->load->library('form_validation');
+		$this->load->helper('url');
 
 		/*
 		*	first_name, last_name, phone, password, email, license_no, licence_photo
@@ -77,7 +79,33 @@ class Driver extends REST_Controller {
                 $this->core_controller->fail_response(4);
         }
 
-        // passed the validation process, then we add the passenger into the database
+        //upload license photo
+        $config['upload_path'] = './uploads/';
+		$config['allowed_types'] = '*';
+		//$config['max_size']	= '100000';
+		//$config['max_width']  = '10240';
+		//$config['max_height']  = '887680';
+
+		$this->load->library('upload', $config);
+
+		if ( ! $this->upload->do_upload())
+		{
+			$error = array('error' => $this->upload->display_errors());
+
+			//$this->load->view('upload_form'，$error);
+			 $this->core_controller->add_return_data('upload_image_error', $error);
+			 $this->core_controller->fail_response(5);
+		}
+		else
+		{
+			$file_data =  $this->upload->data();
+
+			//$this->load->view('upload_success'，$data);
+			 $this->core_controller->add_return_data('image_data', $file_data);
+		}
+
+        // passed the validation process & upload photo sucessfully, then we add the passenger into the database
+        //the photo absolute path is stored
         $data = array(
                 $this->driver_model->KEY_first_name => $this->input->post('first_name'),
                 $this->driver_model->KEY_last_name => $this->input->post('last_name'),                        
@@ -87,7 +115,8 @@ class Driver extends REST_Controller {
                 $this->driver_model->KEY_license_no => $this->input->post('license_no'),
                 $this->driver_model->KEY_license_photo => $this->input->post('license_photo'),
                 $this->driver_model->KEY_is_available => 1,
-
+                $this->driver_model->KEY_member_status_id => 0,
+                $this->driver_model->KEY_license_photo=> $file_data['full_path'],
         );
         $driver_id = $this->driver_model->add_driver($data);
         if ($driver_id < 0) {
@@ -118,9 +147,64 @@ class Driver extends REST_Controller {
 	*  Edit Profile
 	*
 	*/
-	public function editProfile_post()
+	public function edit_profile_post()
 	{
+		// only phone number and password can be changed
+		$this->load->library('form_validation');
 
+		$validation_config = array(
+			array('field' => 'last_name_flag' , 'label' => 'last name flag', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]'),
+			array('field' => 'last_name' , 'label' => 'last name', 'rules' => 'trim|xss_clean|min_length[1]'),
+			array('field' => 'first_name_flag' , 'label' => 'first name flag', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]'),
+			array('field' => 'first_name' , 'label' => 'first name', 'rules' => 'trim|xss_clean|min_length[1]'),
+			array('field' => 'password_flag', 'label' => 'change password flag', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]|numeric'),
+			array('field' => 'password', 'label' => 'password', 'rules' => 'trim|xss_clean|min_length[6]|md5'), 
+			// use md5 to hash the password
+			array('field' => 'phone_flag', 'label' => 'change phone flag', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]|numeric'),
+			array('field' => 'phone', 'label' => 'phone number', 'rules' => 'trim|xss_clean|min_length[8]|max_length[8]|numeric'),
+			array('field' => 'license_no_flag' , 'label' => 'first name flag', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]'),
+			array('field' => 'license_no' , 'label' => 'license no', 'rules' => 'trim|xss_clean|min_length[1]'),
+			array('field' => 'is_available_flag' , 'label' => 'first name flag', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]'),
+			array('field' => 'is_available' , 'label' => 'license no', 'rules' => 'trim|xss_clean|min_length[1]|max_length[1]|numeric')
+		);
+
+		$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
+		
+		if ($this->form_validation->run() === FALSE) {
+			$this->core_controller->fail_response(2, validation_errors());
+		}
+
+		$this->load->model('driver_model');
+		$update_data = array();
+
+		if ($this->input->post('password_flag') == 1) {
+			$update_data[$this->driver_model->KEY_password] = $this->input->post('password');
+		}
+		if ($this->input->post('phone_flag') == 1) {
+			$update_data[$this->driver_model->KEY_phone_no] = $this->input->post('phone');
+		}
+		if ($this->input->post('last_name_flag') == 1) {
+			$update_data[$this->driver_model->KEY_last_name] = $this->input->post('last_name');
+		}
+		if ($this->input->post('first_name_flag') == 1) {
+			$update_data[$this->driver_model->KEY_first_name] = $this->input->post('first_name');
+		}
+		if ($this->input->post('license_no_flag') == 1) {
+			$update_data[$this->driver_model->KEY_license_no] = $this->input->post('license_no');
+		}
+		if ($this->input->post('is_available_flag') == 1) {
+			$update_data[$this->driver_model->KEY_is_available] = $this->input->post('is_available');
+		}
+
+		if (count($update_data) == 0) {
+			$this->core_controller->fail_response(8); // nothing to update
+		}
+
+		$current_user = $this->core_controller->get_current_user();
+
+		$update_status = $this->driver_model->update_driver($current_user[$this->driver_model->KEY_did], $update_data);
+
+		$this->core_controller->successfully_processed();
 		
 	}
 
@@ -161,13 +245,37 @@ class Driver extends REST_Controller {
 	}
 
 	/**
-	*  This can be accessed by /driver/getTripHistory with GET method
+	*  This can be accessed by /driver/inactive_trip with GET method
 	*  Get Trip History
 	*
 	*/
-	public function getTripHistory_get()
+	public function inactive_trip_get($limit = NULL, $offset = NULL)
 	{
+		if (is_null($limit) || empty($limit) || !is_numeric($limit)) {
+			$limit = 20;
+		}
+		if (is_null($offset) || empty($offset) || !is_numeric($offset)) {
+			$offset = 0;
+		}
 
+		$current_driver = $this->core_controller->get_current_user();
+
+		$this->load->model('order_model');
+		$results = $this->order_model->get_all_inactive_orders_by_did($current_driver[$this->order_model->KEY_did], $limit, $offset);
+
+		$results_with_separated_gps = array();
+
+		foreach ($results as $row) {
+
+			$trip_detail = $this->split_latitude_longitude($row, $this->order_model->KEY_gps_from, 
+				$this->order_model->KEY_gps_from.'_latitude', $this->order_model->KEY_gps_from.'_longitude');
+
+			$trip_detail = $this->split_latitude_longitude($trip_detail, $this->order_model->KEY_gps_to, 
+				$this->order_model->KEY_gps_to.'_latitude', $this->order_model->KEY_gps_to.'_longitude');
+			$results_with_separated_gps[] = $trip_detail;
+		}
+
+		$this->core_controller->add_return_data('order', $results_with_separated_gps)->successfully_processed();
 
 		
 	}

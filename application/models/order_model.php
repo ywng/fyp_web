@@ -115,7 +115,7 @@ class Order_model extends CI_Model {
 		}
 
 	}
-
+	
 	function driver_confirm_order($oid, $did) {
 		return $this->update_order($oid, array($this->KEY_status_id => $Status_KEY_bidded, $this->KEY_did => $did));
 	}
