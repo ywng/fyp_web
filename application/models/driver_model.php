@@ -146,6 +146,15 @@ class Driver_model extends CI_Model {
 	}
 
 	/* assigned_drivers */
+	function assigned_drivers($oid, $gps_longitude,$gps_latitude, $max_driver){	//param: max_driver -> max number of drivers to send notification
+		
+		$drivers = $this->get_list_of_nearby_drivers($oid,$gps_longitude, $gps_latitude, $max_driver);
+		$this->insert_assigned_drivers($drivers,$oid);
+		// (TODO) send notification here
+		
+	}
+
+	//manage db storage of assigned drivers
 	function insert_assigned_drivers($drivers,$oid){
 		
 		foreach ($drivers as $did){
@@ -155,14 +164,9 @@ class Driver_model extends CI_Model {
 			$this->db->insert($this->Table_name_assigned_drivers, $entry);
 		}
 		
-
 	}
 	
-	/* gps related */
-	function get_list_of_nearby_drivers($p_gps,$oid,$max_driver){
-		$loc = explode(",", $p_gps);
-		$latitude = $loc[0];
-		$longitude = $loc[1];
+	function get_list_of_nearby_drivers($oid,$longitude,$latitude,$max_driver){
 		$query = $this->db->query("SELECT dl.$this->KEY_did, ( 3959 * acos( cos( radians($latitude) ) * cos( radians( SUBSTRING_INDEX($this->KEY_gps, ',', 1) ) ) * 
 												cos( radians( SUBSTRING_INDEX($this->KEY_gps, ',', -1) ) - radians($longitude) ) + sin( radians($latitude) ) * 
 												sin( radians( SUBSTRING_INDEX($this->KEY_gps, ',', 1) ) ) ) ) 
@@ -183,6 +187,7 @@ class Driver_model extends CI_Model {
 		return $dids;
 	}
 	
+	/* gps related */
 	function get_driver_location($did) {
 
 		$result = $this->db->select($this->KEY_gps)

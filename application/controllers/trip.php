@@ -19,6 +19,7 @@ class Trip extends REST_Controller {
 	var $Status_KEY_driver_picked_up = 5;
 	var $Status_KEY_trip_finished = 6;
 
+	var $CONST_MAX_DRIVERS_NEARBY = 5;
 
 	public function __construct() {
 		parent::__construct();
@@ -101,7 +102,7 @@ class Trip extends REST_Controller {
 
 	/**
 	*  This can be accessed by /trip/create_trip with POST method
-	*
+	*  create order, and assign orders to drivers
 	*/
 	public function create_trip_post()
 	{
@@ -167,15 +168,25 @@ class Trip extends REST_Controller {
 			$this->input->post('gps_to_latitude', TRUE), $this->input->post('gps_to_longitude', TRUE), 
 			$detail);
 
+		
 		if ($order_id === FALSE) {
 			$this->core_controller->fail_response(102);
 		}
-
+		
+		//assign drivers
+		$this->load->model('driver_model');
+		$this->driver_model->assigned_drivers(
+			$order_id,
+			$this->input->post('gps_from_longitude', TRUE),
+			$this->input->post('gps_from_latitude', TRUE), 
+			$this->CONST_MAX_DRIVERS_NEARBY
+		);
+		
 		$this->core_controller->add_return_data('oid', $order_id)->successfully_processed();
 
 	}
 
-	public function assign_drivers_post()
+	/*public function assign_drivers_post()
 	{
 	
 		//POST
@@ -215,7 +226,7 @@ class Trip extends REST_Controller {
 		}
 		$this->core_controller->add_return_data('count', count($nearby_dids));	
 		$this->core_controller->successfully_processed();	
-	}
+	}*/
 
 	
 	/**
