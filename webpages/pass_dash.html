@@ -7,11 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-<<<<<<< HEAD
-     <link rel="shortcut icon" href="bootstrap/ico/favicon.png">
-=======
-     <link rel="shortcut icon" href="bootstrap/ico/favicon.png?v=2">
->>>>>>> FETCH_HEAD
+   <link rel="shortcut icon" href="bootstrap/ico/favicon.png?v=2">
 
     <title>Passenger Dashboard</title>
 
@@ -31,11 +27,9 @@
     <![endif]-->
   </head>
 
-<<<<<<< HEAD
-  <body>
-=======
+
   <body >
->>>>>>> FETCH_HEAD
+
 
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
@@ -53,11 +47,8 @@
             <li><a href="#">Dashboard</a></li>
             <li><a href="#">Settings</a></li>
             <li><a href="#">Profile</a></li>
-<<<<<<< HEAD
-            <li><a href="#">Help</a></li>
-=======
             <li><a href="signin.html" onclick="logout()">Logout</a></li>
->>>>>>> FETCH_HEAD
+
           </ul>
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="Search...">
@@ -249,22 +240,15 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-<<<<<<< HEAD
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-=======
+
     <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
->>>>>>> FETCH_HEAD
+
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="js/docs.min.js"></script>
   </body>
 
   <script>
-<<<<<<< HEAD
-      $(document).ready(function(){
-         alert(localStorage.session_token);
 
-      });
-=======
       $( document ).ready(function() {
              alert(localStorage.getItem("X-taxibook-session-token"));
            
@@ -275,9 +259,25 @@
          localStorage.setItem("X-taxibook-email","");
          localStorage.setItem("X-taxibook-user-type", "");
          localStorage.setItem("X-taxibook-loggedIn","false");
+
+         $.ajax({
+                url: "http://taxibook.site50.net/server/index.php/passenger/logout",
+                context: document.body,
+                headers : {"Access-Control-Allow-Origin" : "*","X-taxibook-session-token":localStorage.getItem("X-taxibook-session-token"),"X-taxibook-email":localStorage.getItem("X-taxibook-email"),"X-taxibook-user-type":localStorage.getItem("X-taxibook-user-type")},
+                type: 'GET', 
+                async: false,
+                success: function(data, textStatus, jqXHR){
+                    var result=data.status_code;
+                   // alert(result);
+
+              },
+              error: function(jqHXR, textStatus, errorThrown) {
+                console.log('ajax error:' +textStatus + ' ' + errorThrown);
+              }
+
+          }); // end of the ajax call
       }
        
 
->>>>>>> FETCH_HEAD
   </script>
 </html>

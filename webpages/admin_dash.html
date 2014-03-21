@@ -61,7 +61,7 @@
       $( document ).ready(function() {
            //  alert(localStorage.getItem("X-taxibook-session-token"));
       //if not login, redirect to login page
-      if(localStorage.getItem("X-taxibook-loggedIn")=="false"){
+      if(!(localStorage.getItem("X-taxibook-loggedIn")=="true" && localStorage.getItem("X-taxibook-user-type")=="admin"){
         window.location.href="signin.html";
       }
 
