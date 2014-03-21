@@ -25,6 +25,7 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script src="config/config.js"></script>
   </head>
 
 
@@ -265,7 +266,7 @@
          localStorage.setItem("X-taxibook-loggedIn","false");
 
          $.ajax({
-                url: "http://taxibook.site50.net/server/index.php/passenger/logout",
+                url: serverDomain + "index.php/passenger/logout",
                 context: document.body,
                 headers : {"Access-Control-Allow-Origin" : "*","X-taxibook-session-token":localStorage.getItem("X-taxibook-session-token"),"X-taxibook-email":localStorage.getItem("X-taxibook-email"),"X-taxibook-user-type":localStorage.getItem("X-taxibook-user-type")},
                 type: 'GET', 

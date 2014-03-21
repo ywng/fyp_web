@@ -18,14 +18,15 @@
     <!-- Custom styles for this template -->
     <link href="css/signin.css" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script src="config/config.js"></script>
 
     <script>
          $( document ).ready(function() {
               if(localStorage.getItem("X-taxibook-loggedIn")=="true"){
                  if(localStorage.getItem("X-taxibook-user-type")=="passenger"){
-                    $(location).attr('href','http://taxibook.site50.net/server/webpages/pass_dash.html');
+                    $(location).attr('href', serverDomain + 'webpages/pass_dash.html');
                 } else if(localStorage.getItem("X-taxibook-user-type")=="admin"){
-                    $(location).attr('href','http://taxibook.site50.net/server/webpages/admin_dash.html');
+                    $(location).attr('href',serverDomain + 'webpages/admin_dash.html');
                 }
               }
          });
@@ -43,7 +44,7 @@
                //alert(data);
 
                $.ajax({
-                    url: "http://taxibook.site50.net/server/index.php/"+checkedValue.toLowerCase()+"/login",
+                    url: serverDomain + "index.php/"+checkedValue.toLowerCase()+"/login",
                     context: document.body,
                     data:data,
                     dataType: "json", 

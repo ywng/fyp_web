@@ -1,0 +1,1 @@
+var serverDomain = "http://taxibook.site50.net/server/";
