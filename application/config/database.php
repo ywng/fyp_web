@@ -48,11 +48,12 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'db4free.net';
-$db['default']['username'] = 'taxibook_admin';
-$db['default']['password'] = 'taxibook_admin';
-$db['default']['database'] = 'taxibook_db1';
-$db['default']['dbdriver'] = 'mysql';
+$db['default']['hostname'] = 'taxibook.czqhyjcvypoe.ap-southeast-1.rds.amazonaws.com';
+$db['default']['port'] = 3306;
+$db['default']['username'] = 'taxibookmaster';
+$db['default']['password'] = 'taxibookpassword';
+$db['default']['database'] = 'taxibook';
+$db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
@@ -63,6 +64,23 @@ $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
+
+
+$db['db4free']['hostname'] = 'db4free.net';
+$db['db4free']['username'] = 'taxibook_admin';
+$db['db4free']['password'] = 'taxibook_admin';
+$db['db4free']['database'] = 'taxibook_db1';
+$db['db4free']['dbdriver'] = 'mysql';
+$db['db4free']['dbprefix'] = '';
+$db['db4free']['pconnect'] = TRUE;
+$db['db4free']['db_debug'] = TRUE;
+$db['db4free']['cache_on'] = FALSE;
+$db['db4free']['cachedir'] = '';
+$db['db4free']['char_set'] = 'utf8';
+$db['db4free']['dbcollat'] = 'utf8_general_ci';
+$db['db4free']['swap_pre'] = '';
+$db['db4free']['autoinit'] = TRUE;
+$db['db4free']['stricton'] = FALSE;
 
 
 /* End of file database.php */

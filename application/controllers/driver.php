@@ -66,17 +66,17 @@ class Driver extends REST_Controller {
 
         $existance = $this->driver_model->check_if_driver_exists_by_phone($this->input->post('phone'));
         if ($existance) {
-                $this->core_controller->fail_response(3);
+            $this->core_controller->fail_response(3);
         }
 
         $existance = $this->driver_model->check_if_driver_exists_by_email($this->input->post('email'));
         if ($existance) {
-                $this->core_controller->fail_response(4);
+            $this->core_controller->fail_response(4);
         }
 
         $existance = $this->driver_model->check_if_driver_exists_by_license_no($this->input->post('license_no'));
         if ($existance) {
-                $this->core_controller->fail_response(4);
+            $this->core_controller->fail_response(4);
         }
 
         //upload license photo
@@ -87,11 +87,11 @@ class Driver extends REST_Controller {
 		//$config['max_height']  = '887680';
 
 		$this->load->library('upload', $config);
-
+		$url = null;
 		if ( ! $this->upload->do_upload())
 		{
 			$error = array('error' => $this->upload->display_errors());
-
+			// var_dump($error);
 			//$this->load->view('upload_form'，$error);
 			 $this->core_controller->add_return_data('upload_image_error', $error);
 			 $this->core_controller->fail_response(5);
@@ -101,11 +101,24 @@ class Driver extends REST_Controller {
 			$file_data =  $this->upload->data();
 
 			//$this->load->view('upload_success'，$data);
-			 $this->core_controller->add_return_data('image_data', $file_data);
+
+			// prepare to upload to S3 first
+			$this->load->helper('upload');
+			$this->load->config('amazon');
+			$accessKey = $this->config->item('amazonS3AccessKey');
+			$secretKey = $this->config->item('amazonS3SecretKey');
+
+			$url = upload_to_s3($file_data['full_path'], $file_data['file_name'], $accessKey, $secretKey);
+			if (!$url) {
+				$this->core_controller->add_return_data('upload_image_error', "Cannot upload to s3");
+				$this->core_controller->fail_response(5);
+			}
+
+			$this->core_controller->add_return_data('image_data', $file_data);
 		}
 
         // passed the validation process & upload photo sucessfully, then we add the passenger into the database
-        //the photo absolute path is stored
+        // the photo absolute path is stored
         $data = array(
                 $this->driver_model->KEY_first_name => $this->input->post('first_name'),
                 $this->driver_model->KEY_last_name => $this->input->post('last_name'),                        
@@ -115,7 +128,7 @@ class Driver extends REST_Controller {
                 $this->driver_model->KEY_license_no => $this->input->post('license_no'),
                 $this->driver_model->KEY_is_available => 1,
                 $this->driver_model->KEY_member_status_id => 0,
-                $this->driver_model->KEY_license_photo=> "/server/uploads/".$file_data['file_name'],
+                $this->driver_model->KEY_license_photo=> $url,
         );
         $driver_id = $this->driver_model->add_driver($data);
         if ($driver_id < 0) {
