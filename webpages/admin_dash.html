@@ -61,7 +61,7 @@
       $( document ).ready(function() {
            //  alert(localStorage.getItem("X-taxibook-session-token"));
       //if not login, redirect to login page
-      if(!(localStorage.getItem("X-taxibook-loggedIn")=="true" && localStorage.getItem("X-taxibook-user-type")=="admin"){
+      if(!(localStorage.getItem("X-taxibook-loggedIn")=="true" && localStorage.getItem("X-taxibook-user-type")=="admin")){
         window.location.href="signin.html";
       }
 
@@ -110,7 +110,7 @@
       //tables
       var id = -1;//simulation of id
       /* Add/remove class to a row when clicked on */
-      $('#example tbody tr').click( function() {
+      $('#example').click( function() {
           $(this).toggleClass('row_selected');
       });
 
