@@ -257,8 +257,8 @@ class Trip extends REST_Controller {
 		$this->load->model('order_model');
 		$current_passenger = $this->core_controller->get_current_user();
 
-		$status = $this->confirm_new_status($this->input->post('oid', TRUE), $Status_KEY_customer_confirmed, 
-			$this->order_model->KEY_pid, $current_driver[$this->order_model->KEY_pid]);
+		$status = $this->confirm_new_status($this->input->post('oid', TRUE), $this->order_model->Status_KEY_customer_confirmed, 
+			$this->order_model->KEY_pid, $current_passenger[$this->order_model->KEY_pid]);
 
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(100000002);
