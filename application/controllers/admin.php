@@ -68,6 +68,24 @@ class Admin extends REST_Controller {
 	}
 
 	/**
+	*  This can be accessed by /admin/logout with GET method
+	*  Logout
+	*
+	*/
+	public function logout_get()
+	{
+		// expire current passenger session token
+		$this->load->model('session_model');
+		$this->load->model('admin_model');
+		$current_user = $this->core_controller->get_current_user();
+
+		$this->session_model->expire_session($current_user[$this->admin_model->KEY_id], $this->user_type);
+
+		$this->core_controller->successfully_processed();
+		
+	}
+
+	/**
 	*  This can be accessed by /admin/suspend_drivers with GET method
 	*
 	*/

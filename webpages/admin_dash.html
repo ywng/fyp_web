@@ -60,6 +60,10 @@
        var site_base="http://taxibook.site50.net";
       $( document ).ready(function() {
            //  alert(localStorage.getItem("X-taxibook-session-token"));
+      //if not login, redirect to login page
+      if(localStorage.getItem("X-taxibook-loggedIn")=="false"){
+        window.location.href="signin.html";
+      }
 
       $.ajax({
           url: "http://taxibook.site50.net/server/index.php/admin/allDriver",
@@ -170,6 +174,23 @@
          localStorage.setItem("X-taxibook-email","");
          localStorage.setItem("X-taxibook-user-type", "");
          localStorage.setItem("X-taxibook-loggedIn","false");
+
+          $.ajax({
+                url: "http://taxibook.site50.net/server/index.php/admin/logout",
+                context: document.body,
+                headers : {"Access-Control-Allow-Origin" : "*","X-taxibook-session-token":localStorage.getItem("X-taxibook-session-token"),"X-taxibook-email":localStorage.getItem("X-taxibook-email"),"X-taxibook-user-type":localStorage.getItem("X-taxibook-user-type")},
+                type: 'GET', 
+                async: false,
+                success: function(data, textStatus, jqXHR){
+                    var result=data.status_code;
+                   // alert(result);
+
+              },
+              error: function(jqHXR, textStatus, errorThrown) {
+                console.log('ajax error:' +textStatus + ' ' + errorThrown);
+              }
+
+          }); // end of the ajax call
       }
        
 
@@ -192,7 +213,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Dashboard</a></li>
             <li><a href="#">Settings</a></li>
-            <li><a href="signin.html" onclick="logout()">Logout</a></li>
+            <li><a href="index.html" onclick="logout()">Logout</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="Search...">
@@ -279,27 +300,6 @@
 
   </tfoot>
   <tbody>
-    <tr class="odd_gradeX" id="2">
-      <td class="read_only"> 1</td>
-      <td>Ben Leung</td>
-      <td>54203135</td>
-      <td class="center">PK 123</td>
-
-      <td class="center">www.example.com</td>
-      <td class="center">Pending</td>
-      <td class="center">Yes</td>
-    </tr>
-
-    <tr class="odd_gradeX" id="2">
-      <td class="read_only"> 2</td>
-      <td>Jason Ng</td>
-      <td>54203134</td>
-      <td class="center">AM 730</td>
-
-      <td class="center">www.exampl2e.com</td>
-      <td class="center">Approved</td>
-      <td class="center">Yes</td>
-    </tr>
     
   </tbody>
 </table>
