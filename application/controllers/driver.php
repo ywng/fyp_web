@@ -459,7 +459,7 @@ class Driver extends REST_Controller {
 			$secret_key = $this->config->item('amazonS3SecretKey');
 			$this->load->helper('sns');
 
-			$sns_endpoint_name = sns_apple_register_endpoint($access_key, $secret_key, $email."_device", $device_token);
+			$sns_endpoint_name = sns_apple_register_endpoint('driver', $access_key, $secret_key, $email."_device", $device_token);
 
 			$insert_status = $this->apns_model->register_driver_device($did, $device_token, $sns_endpoint_name);
 			if ($insert_status !== FALSE) {
