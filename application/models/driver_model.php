@@ -150,8 +150,7 @@ class Driver_model extends CI_Model {
 		
 		$drivers = $this->get_list_of_nearby_drivers($oid,$gps_longitude, $gps_latitude, $max_driver);
 		$this->insert_assigned_drivers($drivers,$oid);
-		// (TODO) send notification here
-		
+		return $drivers;
 	}
 
 	//manage db storage of assigned drivers

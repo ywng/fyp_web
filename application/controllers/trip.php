@@ -175,59 +175,23 @@ class Trip extends REST_Controller {
 		
 		//assign drivers
 		$this->load->model('driver_model');
-		$this->driver_model->assigned_drivers(
+		$driver_ids = $this->driver_model->assigned_drivers(
 			$order_id,
 			$this->input->post('gps_from_longitude', TRUE),
 			$this->input->post('gps_from_latitude', TRUE), 
 			$this->CONST_MAX_DRIVERS_NEARBY
 		);
+
+		// Mark these drivers and send apns to them
+		foreach ($driver_ids as $row => $driver_id) {
+			$message = "Someone needs a taxi. Response?";
+			$detail_array = array( 'oid' => $order_id );
+			$this->send_apns_to_driver($driver_id, $message, $detail_array);
+		}
 		
 		$this->core_controller->add_return_data('oid', $order_id)->successfully_processed();
 
 	}
-
-	/*public function assign_drivers_post()
-	{
-	
-		//POST
-		if ($this->input->post('p_gps', TRUE) !== FALSE) {
-			$p_gps = $this->input->post('p_gps');
-		}
-		if ($this->input->post('oid', TRUE) !== FALSE) {
-			$oid = $this->input->post('oid');
-		}
-		if ($this->input->post('max_driver', TRUE) !== FALSE) {
-			$oid = $this->input->post('max_driver');
-		}
-	
-		//validation
-		$this->load->library('form_validation');
-		$validation_config = array(
-			array('field' => 'p_gps', 'label' => 'p_gps (passenger gps)', 'rules' => 'trim|required|xss_clean'), 
-		);
-		$validation_config = array(
-			array('field' => 'oid', 'label' => 'oid', 'rules' => 'trim|required|xss_clean|numeric'), 
-		);
-		$validation_config = array(
-			array('field' => 'max_driver', 'label' => 'max_driver (max no. of drivers)', 'rules' => 'trim|required|xss_clean|numeric'), 
-		);
-		$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
-		if ($this->form_validation->run() === FALSE) {
-			$this->core_controller->fail_response(2, validation_errors());
-		}
-	
-		
-		$this->load->model('driver_model');
-		$nearby_dids = $this->driver_model->get_list_of_nearby_drivers($p_gps,$oid,$max_driver);	//retrive a sorted array of dids based distance (top 5)
-		$this->driver_model->insert_assigned_drivers($nearby_dids,$oid);	//add entry to [Assigned_Drivers]
-			
-		foreach ($nearby_dids as $key => $did){
-			$this->core_controller->add_return_data("driver$key", $did);	
-		}
-		$this->core_controller->add_return_data('count', count($nearby_dids));	
-		$this->core_controller->successfully_processed();	
-	}*/
-
 	
 	/**
 	*  This can be accessed by /trip/edit_trip_detail with POST method
@@ -257,12 +221,20 @@ class Trip extends REST_Controller {
 		$this->load->model('order_model');
 		$current_passenger = $this->core_controller->get_current_user();
 
-		$status = $this->confirm_new_status($this->input->post('oid', TRUE), $this->order_model->Status_KEY_customer_confirmed, 
-			$this->order_model->KEY_pid, $current_passenger[$this->order_model->KEY_pid]);
+		$oid = $this->input->post('oid', TRUE);
+
+		$apns_array = array(
+				'message' => 'Passenger has just confirmed your bid.',
+				'detail' => array('oid' => $oid),
+			);
+
+		$status = $this->confirm_new_status($oid, $this->order_model->Status_KEY_customer_confirmed, 
+			$this->order_model->KEY_pid, $current_passenger[$this->order_model->KEY_pid], 'passenger', $apns_array);
 
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(100000002);
 		} else {
+
 			$this->core_controller->successfully_processed();
 		}
 	}
@@ -325,6 +297,10 @@ class Trip extends REST_Controller {
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(104);	
 		}
+
+		// send apns to passenger
+
+
 		$this->core_controller->successfully_processed();
 
 	}
@@ -361,8 +337,15 @@ class Trip extends REST_Controller {
 		$this->load->model('order_model');
 		$current_driver = $this->core_controller->get_current_user();
 
-		$status = $this->confirm_new_status($this->input->post('oid', TRUE), $Status_KEY_driver_coming, 
-			$this->order_model->KEY_did, $current_driver[$this->order_model->KEY_did]);
+		$oid = $this->input->post('oid', TRUE);
+
+		$apns_array = array(
+				'message' => 'Your driver is coming now!',
+				'detail' => array('oid' => $oid),
+			);
+
+		$status = $this->confirm_new_status($oid, $Status_KEY_driver_coming, 
+			$this->order_model->KEY_did, $current_driver[$this->order_model->KEY_did], 'driver', $apns_array);
 
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(100000002);
@@ -391,8 +374,15 @@ class Trip extends REST_Controller {
 		$this->load->model('order_model');
 		$current_driver = $this->core_controller->get_current_user();
 
-		$status = $this->confirm_new_status($this->input->post('oid', TRUE), $Status_KEY_driver_waiting, 
-			$this->order_model->KEY_did, $current_driver[$this->order_model->KEY_did]);
+		$oid = $this->input->post('oid', TRUE);
+
+		$apns_array = array(
+				'message' => 'Your driver is waiting for you.',
+				'detail' => array('oid' => $oid),
+			);
+
+		$status = $this->confirm_new_status($oid, $Status_KEY_driver_waiting, 
+			$this->order_model->KEY_did, $current_driver[$this->order_model->KEY_did], 'driver', $apns_array);
 
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(100000002);
@@ -422,9 +412,15 @@ class Trip extends REST_Controller {
 		$this->load->model('order_model');
 		$current_driver = $this->core_controller->get_current_user();
 
+		$oid = $this->input->post('oid', TRUE);
 
-		$status = $this->confirm_new_status($this->input->post('oid', TRUE), $Status_KEY_driver_picked_up, 
-			$this->order_model->KEY_did, $current_driver[$this->order_model->KEY_did]);
+		$apns_array = array(
+				'message' => 'Your trip should be started now.',
+				'detail' => array('oid' => $oid),
+			);
+
+		$status = $this->confirm_new_status($oid, $Status_KEY_driver_picked_up, 
+			$this->order_model->KEY_did, $current_driver[$this->order_model->KEY_did], 'driver', $apns_array);
 
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(100000002);
@@ -454,7 +450,7 @@ class Trip extends REST_Controller {
 		}
 		$this->load->model('order_model');
 		$current_driver = $this->core_controller->get_current_user();
-
+		$oid = $this->input->post('oid', TRUE);
 
 		$order = $this->order_model->get_active_order_by_oid($oid);
 		if (count($order) == 0) {
@@ -464,8 +460,13 @@ class Trip extends REST_Controller {
 			$this->core_controller->fail_response(103);
 		}
 
+		$apns_array = array(
+				'message' => 'Your trip is finished. Thank you for riding with TaxiBook.',
+				'detail' => array('oid' => $oid),
+			);
+
 		$status = $this->order_model->move_order_from_active_to_inactive($oid, $this->Status_KEY_trip_finished, 
-			$this->input->post('actual_price', TRUE));
+			$this->input->post('actual_price', TRUE), 'driver', $apns_array);
 
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(100000002);
@@ -500,7 +501,7 @@ class Trip extends REST_Controller {
 		return $data;
 	}
 
-	private function confirm_new_status($oid, $new_status_id, $check_key, $check_value) {
+	private function confirm_new_status($oid, $new_status_id, $check_key, $check_value, $init_from, $details) {
 
 		$this->load->model('order_model');
 		$order = $this->order_model->get_active_order_by_oid($oid);
@@ -516,7 +517,25 @@ class Trip extends REST_Controller {
 			return TRUE;
 		}
 
-		return $this->order_model->change_status($oid, $new_status_id);
+		$new_status = $this->order_model->change_status($oid, $new_status_id);
+
+		if ($new_status == TRUE) {
+			if ( strtolower($init_from) == 'passenger') {
+				// send to driver
+
+				$did = $order[$this->order_model->KEY_did];
+				if ($did != 0 && is_numeric($did)) {
+					$this->send_apns_to_driver($did, $details['message'], $details['detail']);
+				}
+			} else if (strtolower($init_from) == 'driver') {
+				// send to passenger
+
+				$pid = $order[$this->order_model->KEY_pid];
+				if ($pid != 0 && is_numeric($pid)) {
+					$this->send_apns_to_passenger($pid, $details['message'], $details['detail']);
+				}
+			}
+		}
 
 	}
 
@@ -537,6 +556,45 @@ class Trip extends REST_Controller {
 
 		return $driver_data_array;
 	}
+
+	private function send_apns_to_driver($did, $message, $details) {
+
+		$this->load->model('apns_model');
+		$this->load->helper('sns');
+		$this->load->config('amazon');
+
+		$access_key = $this->config->item('amazonS3AccessKey');
+		$secret_key = $this->config->item('amazonS3SecretKey');
+
+		$devices = $this->apns_model->get_all_active_device_from_driver($did);
+
+		foreach ($devices as $device) {
+			if (!empty($device['sns_endpoint'])) {
+				sns_apple_push_notification_message($access_key, $secret_key, $device['sns_endpoint'], $message, $details);	
+			}
+		}
+
+	}
+
+	private function send_apns_to_passenger($pid, $message, $details) {
+
+		$this->load->model('apns_model');
+		$this->load->helper('sns');
+		$this->load->config('amazon');
+
+		$access_key = $this->config->item('amazonS3AccessKey');
+		$secret_key = $this->config->item('amazonS3SecretKey');
+
+		$devices = $this->apns_model->get_all_active_device_from_passenger($pid);
+
+		foreach ($devices as $device) {
+			if (!empty($device['sns_endpoint'])) {
+				sns_apple_push_notification_message($access_key, $secret_key, $device['sns_endpoint'], $message, $details);	
+			}
+		}
+
+	}
+
 }
 
 /* End of file trip.php */
