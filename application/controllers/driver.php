@@ -403,6 +403,85 @@ class Driver extends REST_Controller {
 		
 	}
 
+	public function logout_post()
+	{
+		// expire current passenger session token
+		$this->load->model('session_model');
+		$this->load->model('driver_model');
+		$current_user = $this->core_controller->get_current_user();
+
+		if ($this->input->post('device_token')) {
+			$this->load->model('apns_model');
+			$this->apns_model->deactive_driver_device($current_user[$this->driver_model->KEY_did], $this->input->post('device_token'));
+		}
+
+		$this->session_model->expire_session($current_user[$this->driver_model->KEY_did], $this->user_type);
+
+		$this->core_controller->successfully_processed();
+		
+	}
+
+	public function register_apns_token_post() {
+
+		$this->load->library('form_validation');
+
+		$validation_config = array(
+			array('field'=>'device_token', 'label' => 'Device Token', 'rules'=>'trim|min_length[6]|xss_clean'),
+		);
+
+		$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
+
+		if ($this->form_validation->run() === FALSE) {
+			$this->core_controller->request_fail_process(2, validation_errors());
+		}
+
+		$current_user = $this->core_controller->get_current_user();
+
+		$this->load->model('driver_model');
+		$this->load->model('apns_model');
+
+		// prepare to register the device token
+	
+		$device_token = $this->input->post('device_token');
+		$did = $current_user[$this->driver_model->KEY_did];
+		$email = $current_user[$this->driver_model->KEY_email];
+
+		// check if the device is registered by the same user before
+		$self_register_status = $this->apns_model->
+			check_ios_device_token_exists_with_driver_id($did, $device_token);
+
+		if ($self_register_status === FALSE) {
+			// not register before
+
+			// create an service endpoint here first
+			$this->load->config('amazon');
+			$access_key = $this->config->item('amazonS3AccessKey');
+			$secret_key = $this->config->item('amazonS3SecretKey');
+			$this->load->helper('sns');
+
+			$sns_endpoint_name = sns_apple_register_endpoint($access_key, $secret_key, $email."_device", $device_token);
+
+			$insert_status = $this->apns_model->register_driver_device($did, $device_token, $sns_endpoint_name);
+			if ($insert_status !== FALSE) {
+				$status = TRUE;
+			} else {
+				$status = FALSE;
+			}
+		} else if ($self_register_status[$this->apns_model->KEY_active] == 0) {
+			// active the device
+			$active_status = $this->apns_model->active_driver_device($did, $device_token);
+			$status = $active_status;
+		} else {
+			// already an active device
+			$status = TRUE;
+		}
+
+		$this->core_controller->add_return_data('register_status', $status);
+
+		$this->core_controller->request_successfully_processed();
+
+	}
+
 	/* helper function */
 
 	private function get_valid_session_token_for_driver($did) {
