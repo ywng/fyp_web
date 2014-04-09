@@ -478,7 +478,7 @@ class Driver extends REST_Controller {
 
 		$this->core_controller->add_return_data('register_status', $status);
 
-		$this->core_controller->request_successfully_processed();
+		$this->core_controller->successfully_processed();
 
 	}
 

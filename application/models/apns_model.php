@@ -36,7 +36,7 @@ class APNS_model extends CI_Model {
 	function check_ios_device_token_exists_with_driver_id($driver_id, $device_token) {
 
 		$result = $this->db->from($this->Table_name_driver)
-							->where($this->KEY_pid, $driver_id)
+							->where($this->KEY_did, $driver_id)
 							->where($this->KEY_device_token, $device_token)
 							->get();
 
