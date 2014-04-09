@@ -54,7 +54,7 @@ if (!function_exists('sns_apple_push_notification_message')) {
 				)
 			);
 		if ($additional_detail != NULL) {
-			$json_payload['aps']['d'] = $additional_detail;
+			$json_payload['d'] = $additional_detail;
 		}
 
 		$body['APNS'] = json_encode($json_payload);
