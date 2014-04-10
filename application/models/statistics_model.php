@@ -27,12 +27,19 @@ class Statistics_model extends CI_Model{
    /* gps related */
     function get_all_order_gps_location() {
 
-        $result = $this->db->select($this->KEY_GPS_location_from)
+        $result1 = $this->db->select($this->KEY_GPS_location_from)
                         ->from($this->Table_name_Active_Order)
+                        ->get();
+
+
+        $result2 = $this->db->select($this->KEY_GPS_location_from)
                         ->from($this->Table_name_Inactive_Order)
                         ->get();
-        if ($result->num_rows() > 0) {
-           return $result->result_array();
+
+        // Merge both query results
+        $result_combined = array_merge($result1,$result2);
+        if ($result_combined->num_rows() > 0) {
+           return $result_combined->result_array();
         } else {
             return array();
         }
