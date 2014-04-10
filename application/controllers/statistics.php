@@ -62,6 +62,15 @@ class Statistics extends REST_Controller {
 		
 	}
 
+	public function getAllOrdersGPSLocation_get(){
+
+		$this->load->model('statistics_model');
+		$result= $this->statistics_model->get_all_order_gps_location();
+
+		$this->core_controller->add_return_data('gps_loca',$result)->successfully_processed();
+		
+	}
+
 }
 
 /* End of file statistics.php */
