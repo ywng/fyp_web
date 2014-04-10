@@ -29,20 +29,16 @@ class Statistics_model extends CI_Model{
 
         $result1 = $this->db->select($this->KEY_GPS_location_from)
                         ->from($this->Table_name_Active_Order)
-                        ->get();
+                        ->get()->result_array();
 
 
         $result2 = $this->db->select($this->KEY_GPS_location_from)
                         ->from($this->Table_name_Inactive_Order)
-                        ->get();
+                        ->get()->result_array();
 
         // Merge both query results
         $result_combined = array_merge($result1,$result2);
-        if ($result_combined->num_rows() > 0) {
-           return $result_combined->result_array();
-        } else {
-            return array();
-        }
+        return $result_combined;
 
     }
     
