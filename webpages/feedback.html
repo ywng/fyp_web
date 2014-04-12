@@ -81,32 +81,32 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
     <form role="form">
-      <h2>Please comment on your trip <small><br>Your feedback is our improvement.</small></h2>
+      <h2>Please comment on your ride <small><br>Your feedback is our improvement.</small></h2>
       <hr class="colorgraph">
       <div class="row">
         <div class="col-xs-6 col-sm-6 col-md-6">
           <div class="form-group">
-                        <input type="text" name="oid" id="oid" class="form-control input-lg" placeholder="Order ID" tabindex="1">
+                        <input type="text" name="oid" id="oid" class="form-control input-lg" placeholder="Order ID" readonly tabindex="1">
           </div>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6">
           <div class="form-group">
-            <input type="text" name="driver_name" id="driver_name" class="form-control input-lg" placeholder="Driver Name" tabindex="2">
+            <input type="text" name="driver_name" id="driver_name" class="form-control input-lg" placeholder="Driver Name" readonly tabindex="2">
           </div>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6">
           <div class="form-group">
-                        <input type="text" name="date" id="date" class="form-control input-lg" placeholder="Date" tabindex="3">
+                        <input type="text" name="date" id="date" class="form-control input-lg" placeholder="Date" readonly tabindex="3">
           </div>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6">
           <div class="form-group">
-            <input type="text" name="time" id="time" class="form-control input-lg" placeholder="Time" tabindex="4">
+            <input type="text" name="time" id="time" class="form-control input-lg" placeholder="Time" readonly tabindex="4">
           </div>
         </div>
       </div>
       <div class="form-group">
-        <input type="text" name="places" id="places" class="form-control input-lg" placeholder="The trip is from xxx to xxx" tabindex="5">
+        <input type="text" name="places" id="places" class="form-control input-lg" placeholder="The trip is from xxx to xxx" readonly tabindex="5">
       </div>
       <br>
       <div ng-controller="RatingDemoCtrl">
@@ -115,7 +115,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       </div>
 
       <div class="form-group">
-        <input type="text" name="comment" id="comment" class="form-control input-lg" placeholder="Please type your comment here" tabindex="6">
+        <input type="text" name="price" id="price" class="form-control input-lg" placeholder="Actual price paid" tabindex="6">
+      </div>
+
+      <div class="form-group">
+        <input type="text" name="comment" id="comment" class="form-control input-lg" placeholder="Please type your comment here" tabindex="7">
       </div>
       <div class="row">
         
