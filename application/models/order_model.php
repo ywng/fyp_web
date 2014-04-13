@@ -29,7 +29,7 @@ class Order_model extends CI_Model {
 	var $KEY_actual_price = 'actual_price';
 
 	var $Table_name_rating_session = 'Rating_Session';
-	var $KEY_rating_session_key = 'Key';
+	var $KEY_rating_session_key = 'hash_key';
 	
 	var $Status_KEY_pending = 0;
 	var $Status_KEY_bidded = 1;

@@ -471,25 +471,35 @@ class Trip extends REST_Controller {
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(100000002);
 		} else {
-			$this->load->model('driver_model');
-			$driver=$this->driver_model-> get_driver_by_did($order['did']);
+			$data = array(
+                $this->order_model->KEY_rating_session_key => md5($order['order_time']),
+                $this->order_model->KEY_oid => $oid,
+       	    );
 
-		    //generate email for rating 
-		    $link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?oid=".$oid.
-		    '&date_time='.$order['order_time'].'&location_from='.$order['location_from'].'&location_to='.$order['location_to'].
-		    '&driver='.$driver['first_name'].' '.$driver['last_name'];
-	
+			$status =$this->order_model->generate_rating_session($data);
 
-		    $config = Array(		
-		    'protocol' => 'smtp',
-		    'smtp_host' => 'ssl://smtp.googlemail.com',
-		    'smtp_port' => 465,
-		    'smtp_user' => 'taxibook.no.reply@gmail.com',  //use our google ac to send the email
-		    'smtp_pass' => 'taxibook123',
-		    'smtp_timeout' => '4',
-		    'mailtype'  => 'text', 
-		    'charset'   => 'iso-8859-1'
-		    );
+			if ($status == FALSE) {
+				$this->core_controller->fail_response(100000002);
+		    } else {
+				$this->load->model('driver_model');
+				$driver=$this->driver_model-> get_driver_by_did($order['did']);
+
+			    //generate email for rating 
+			    $link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?oid=".$oid.
+			    '&date_time='.$order['order_time'].'&location_from='.$order['location_from'].'&location_to='.$order['location_to'].
+			    '&driver='.$driver['first_name'].' '.$driver['last_name'];
+		
+
+			    $config = Array(		
+			    'protocol' => 'smtp',
+			    'smtp_host' => 'ssl://smtp.googlemail.com',
+			    'smtp_port' => 465,
+			    'smtp_user' => 'taxibook.no.reply@gmail.com',  //use our google ac to send the email
+			    'smtp_pass' => 'taxibook123',
+			    'smtp_timeout' => '4',
+			    'mailtype'  => 'text', 
+			    'charset'   => 'iso-8859-1'
+			    );
 
 		    $message = 
 'Dear valued user,
@@ -510,20 +520,20 @@ Thank you!
 Best regards,
 Taxibook';
 
-			$this->load->model('passenger_model');
-			$passenger=$this->passenger_model-> get_passenger_by_pid($order['pid']);
- 
-			$this->load->library('email', $config);
-			$this->email->set_newline("\r\n");
-			$this->email->from('taxibook.no.reply@gmail.com', 'TaxiBook');
-			$this->email->to($passenger['email']); 
-			$this->email->subject('[non-reply]Please rate your driver.');
-			$this->email->message($message);	
+				$this->load->model('passenger_model');
+				$passenger=$this->passenger_model-> get_passenger_by_pid($order['pid']);
+	 
+				$this->load->library('email', $config);
+				$this->email->set_newline("\r\n");
+				$this->email->from('taxibook.no.reply@gmail.com', 'TaxiBook');
+				$this->email->to($passenger['email']); 
+				$this->email->subject('[non-reply]Please rate your driver.');
+				$this->email->message($message);	
 
-			$this->email->send();
+				$this->email->send();
 
-			$this->core_controller->add_return_data('mail details', $this->email->print_debugger())->successfully_processed();
-		    
+				$this->core_controller->add_return_data('mail details', $this->email->print_debugger())->successfully_processed();
+			}
 
 		}
 	}
