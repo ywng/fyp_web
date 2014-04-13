@@ -478,7 +478,7 @@ class Trip extends REST_Controller {
 	                $this->order_model->KEY_oid=> $oid,                        
 	                
 	        );
-			$status=$this->order_model->generate_rating_session(
+			$status=$this->order_model->generate_rating_session($data);
 
 			if ($status == FALSE) {
 				$this->core_controller->fail_response(100000002);
