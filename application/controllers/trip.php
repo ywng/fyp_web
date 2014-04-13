@@ -474,9 +474,24 @@ class Trip extends REST_Controller {
 			
 		    //generate email for rating 
 		    $link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?oid=".$oid;
-		    $this->load->library('email');
+	
 
-			$this->email->from('ywng@ust.hkm', 'TaxiBook');
+		    $config = Array(		
+		    'protocol' => 'smtp',
+		    'smtp_host' => 'ssl://smtp.googlemail.com',
+		    'smtp_port' => 465,
+		    'smtp_user' => 'taxibook.no.reply@gmail.com',
+		    'smtp_pass' => 'taxibook123',
+		    'smtp_timeout' => '4',
+		    'mailtype'  => 'text', 
+		    'charset'   => 'iso-8859-1'
+		);
+ 
+		$this->load->library('email', $config);
+		$this->email->set_newline("\r\n");
+
+
+			$this->email->from('taxibook.no.reply@gmail.com', 'TaxiBook');
 			$this->email->to('ywng@ust.hk'); 
 
 			$this->email->subject('Email Test');
