@@ -471,9 +471,13 @@ class Trip extends REST_Controller {
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(100000002);
 		} else {
-			
+			$this->load->model('driver_model');
+			$driver=$this->driver_model-> get_driver_by_did($order['did']);
+
 		    //generate email for rating 
-		    $link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?oid=".$oid;
+		    $link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?oid=".$oid.'
+		    &date_time='$order['order_time'].'&location_from='.$order['location_from'].'&location_to='.$order['location_to'].
+		    '&driver='$driver['first_name'].' '.$driver['last_name'];
 	
 
 		    $config = Array(		
@@ -487,25 +491,24 @@ class Trip extends REST_Controller {
 		    'charset'   => 'iso-8859-1'
 		    );
 
-		    $message = '
-			Dear valued user,\r
+		    $message = 
+'Dear valued user,
 
-			Thank you for booking a taxi journey using our app!\r
-			\r
-			The journey details:\r
-			Order id: '.$oid.'\r
-			Date & Time: '.$order['order_time'].'\r
-			From: '.$order['location_from'].'\r
-			To: '.$order['location_to'].'\r
-			\r
-			You can rate the driver and comment by clicking the following link:\r
-			'.$link.'\r
-			\r
-			Thank you!\r
+Thank you for booking a taxi journey using our app!
 
-			Best regards,\r
-			Taxibook\r
-			';
+The journey details:
+Order id: '.$oid.'
+Date & Time: '.$order['order_time'].'
+From: '.$order['location_from'].'
+To: '.$order['location_to'].'
+
+You can rate the driver and comment by clicking the following link:
+'.$link.'
+
+Thank you!
+
+Best regards,
+Taxibook';
 
 			$this->load->model('passenger_model');
 			$passenger=$this->passenger_model-> get_passenger_by_pid($order['pid']);
