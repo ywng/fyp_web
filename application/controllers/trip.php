@@ -471,18 +471,24 @@ class Trip extends REST_Controller {
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(100000002);
 		} else {
-			//generate email for rating 
+			
+		    //generate email for rating 
 		    $link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?oid=".$oid;
-		    $to      = 'ywng@ust.hk';
-			$subject = 'the subject';
-			$message = 'hello';
-			$headers = 'From: webmaster@example.com' . "\r\n" .
-			    'Reply-To: webmaster@example.com' . "\r\n" .
-			    'X-Mailer: PHP/' . phpversion();
+		    $this->load->library('email');
 
-			mail($to, $subject, $message, $headers);
+			$this->email->from('ywng@ust.hkm', 'TaxiBook');
+			$this->email->to('ywng@ust.hk'); 
 
-	    	
+			$this->email->subject('Email Test');
+			$this->email->message('Testing the email class.');	
+
+			$this->email->send();
+
+
+
+		
+
+			$this->core_controller->->add_return_data('mail details', $this->email->print_debugger())->successfully_processed();
 		    
 
 		}
