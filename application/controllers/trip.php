@@ -488,7 +488,7 @@ class Trip extends REST_Controller {
 
 		
 
-			$this->core_controller->->add_return_data('mail details', $this->email->print_debugger())->successfully_processed();
+			$this->core_controller->add_return_data('mail details', $this->email->print_debugger())->successfully_processed();
 		    
 
 		}
