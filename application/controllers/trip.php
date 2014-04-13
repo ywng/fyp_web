@@ -472,9 +472,9 @@ class Trip extends REST_Controller {
 			$this->core_controller->fail_response(100000002);
 		} else {
 			//generate email for rating 
-			$hash_key=md5(date('Y-m-d G:i:s'));
+			$rating_session_key=date('m/d/Y h:i:s a', time());
 	        $data = array(
-	                $this->order_model->KEY_rating_session_key =>$hash_key,
+	                $this->order_model->KEY_rating_session_key =>$rating_session_key,
 	                $this->order_model->KEY_oid=> $oid,                        
 	                
 	        );
@@ -483,7 +483,7 @@ class Trip extends REST_Controller {
 			if ($status == FALSE) {
 				$this->core_controller->fail_response(100000002);
 		    } else{
-		    	$link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?key=".$hash_key."&oid=".$oid;
+		    	$link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?key=".md5($rating_session_key)."&oid=".$oid;
 
 
 		    	//send mail
