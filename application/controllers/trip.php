@@ -488,25 +488,23 @@ class Trip extends REST_Controller {
 		    );
 
 		    $message = '
-			<html>
-			<head>
-			  <title>Birthday Reminders for August</title>
-			</head>
-			<body>
-			  <p>Here are the birthdays upcoming in August!</p>
-			  <table>
-			    <tr>
-			      <th>Person</th><th>Day</th><th>Month</th><th>Year</th>
-			    </tr>
-			    <tr>
-			      <td>Joe</td><td>3rd</td><td>August</td><td>1970</td>
-			    </tr>
-			    <tr>
-			      <td>Sally</td><td>17th</td><td>August</td><td>1973</td>
-			    </tr>
-			  </table>
-			</body>
-			</html>
+			Dear valued user,\r
+
+			Thank you for booking a taxi journey using our app!\r
+			\r
+			The journey details:\r
+			Order id: '.$oid.'\r
+			Date & Time: '.$order['order_time'].'\r
+			From: '.$order['location_from'].'\r
+			To: '.$order['location_to'].'\r
+			\r
+			You can rate the driver and comment by clicking the following link:\r
+			'.$link.'\r
+			\r
+			Thank you!\r
+
+			Best regards,\r
+			Taxibook\r
 			';
 
 			$this->load->model('passenger_model');
@@ -516,7 +514,7 @@ class Trip extends REST_Controller {
 			$this->email->set_newline("\r\n");
 			$this->email->from('taxibook.no.reply@gmail.com', 'TaxiBook');
 			$this->email->to($passenger['email']); 
-			$this->email->subject('Please rate your driver.');
+			$this->email->subject('[non-reply]Please rate your driver.');
 			$this->email->message($message);	
 
 			$this->email->send();
