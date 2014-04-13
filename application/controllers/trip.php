@@ -472,7 +472,7 @@ class Trip extends REST_Controller {
 			$this->core_controller->fail_response(100000002);
 		} else {
 			//generate email for rating 
-			$rating_session_key=date('m/d/Y h:i:s a', time());
+			$rating_session_key=$now->getTimestamp();
 	        $data = array(
 	                $this->order_model->KEY_rating_session_key =>$rating_session_key,
 	                $this->order_model->KEY_oid=> $oid,                        
