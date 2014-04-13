@@ -114,9 +114,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       var formData = new FormData();
 
       formData.append("oid", oid);
-      formData.appemd("date_time",date_time[0]+" "+date_time[1]);
+      formData.append("date_time",date_time[0]+" "+date_time[1]);
       formData.append("score", parseInt(document.getElementById('Demo').value) +1 );
-      formData.appemd("comment",comment);
+      formData.append("comment",comment);
 
       //call to server to do the rating  
       $.ajax({
