@@ -207,7 +207,7 @@ class Driver_model extends CI_Model {
 
 		$driver_previous_loc = $this->get_driver_location($did);
 
-		$data = array( $this->KEY_did => $did, $this->KEY_gps => $latitude . ';' . $longitude );
+		$data = array( $this->KEY_did => $did, $this->KEY_gps => $latitude . ',' . $longitude );
 
 		if (count($driver_previous_loc) == 0) {
 			
