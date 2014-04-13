@@ -260,7 +260,7 @@ class Trip extends REST_Controller {
 		$order = $this->order_model->get_active_order_by_oid($oid);
 		$driver=$this->driver_model-> get_driver_by_did($order['did']);
 		
-		
+
 
 
 		$this->core_controller->fail_response(100000001);
@@ -492,9 +492,9 @@ class Trip extends REST_Controller {
 			$driver=$this->driver_model-> get_driver_by_did($order['did']);
 
 		    //generate email for rating 
-		    $link=urlencode("http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?oid=".$oid.
-		    '&date_time='.$order['order_time'].'&location_from='.$order['location_from'].'&location_to='.$order['location_to'].
-		    '&driver='.$driver['first_name'].' '.$driver['last_name']);
+		    $link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?oid=".$oid.
+		    '&date_time='.urlencode($order['order_time']).'&location_from='.urlencode($order['location_from']).'&location_to='.urlencode($order['location_to']).
+		    '&driver='.urlencode($driver['first_name']).' '.urlencode($driver['last_name']));
 	
 
 		    $config = Array(		
