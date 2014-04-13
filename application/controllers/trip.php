@@ -472,10 +472,26 @@ class Trip extends REST_Controller {
 			$this->core_controller->fail_response(100000002);
 		} else {
 			//generate email for rating 
-			md5($str)
+
+	        $data = array(
+	                $this->order_model->KEY_rating_session_key => md5($this->core_controller->get_current_user()['session_token']),
+	                $this->order_model->KEY_oid=> $oid,                        
+	                
+	        );
+			$status=$this->order_model->generate_rating_session(
+
+			if ($status == FALSE) {
+				$this->core_controller->fail_response(100000002);
+		    } else{
+		    	$link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?key=".md5($this->core_controller->get_current_user()['session_token'])."&oid=".$oid;
 
 
-			$this->core_controller->successfully_processed();
+		    	//send mail
+				mail('ywng@ust.hk.com', 'Please rate the driver.', "Dear value passengers,\n You can rate the driver by clicking the
+					following link: \n".$link);
+				$this->core_controller->successfully_processed();
+		    }
+
 		}
 	}
 
@@ -600,7 +616,7 @@ class Trip extends REST_Controller {
 	}
 
 	private function generate_rating_sessiom($Key, $oid) {
-		
+
 	
 
 	}

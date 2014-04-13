@@ -29,6 +29,7 @@ class Order_model extends CI_Model {
 	var $KEY_actual_price = 'actual_price';
 
 	var $Table_name_rating_session = 'Rating_Session';
+	var $KEY_rating_session_key = 'Key';
 	
 	var $Status_KEY_pending = 0;
 	var $Status_KEY_bidded = 1;
@@ -120,6 +121,17 @@ class Order_model extends CI_Model {
 	
 	function driver_confirm_order($oid, $did) {
 		return $this->update_order($oid, array($this->KEY_status_id => $Status_KEY_bidded, $this->KEY_did => $did));
+	}
+
+	function generate_rating_session($data) {
+		$this->db->insert($this->Table_name_rating_session, $data);
+
+		if ($this->db->affected_rows() > 0) {
+			return $this->db->insert_id();
+		} else {
+			return FALSE;
+		}
+		
 	}
 
 	function update_order($oid, $detail) {
