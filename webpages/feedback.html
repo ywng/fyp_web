@@ -67,10 +67,24 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     jQuery(document).ready(function($) {
 
       //load the order info to display
-      
+      var oid = getURLParameter('oid');
+      var date_time = getURLParameter('date_time').split(" ");
+      var location_from = getURLParameter('location_from');
+      var location_to = getURLParameter('location_to');
+      var driver = getURLParameter('driver');
+
+      $('#oid').val(oid);
+      $('#driver_name').val(driver);
+      $('#date').val(date_time[0]);
+      $('#time').val(date_time[1]);
+      $('#places').val("The trip is from "+location_from+" to "+location_to);
 
         
     });
+
+    function getURLParameter(name) {
+      return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+    }
 
    
   </script>
