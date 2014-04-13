@@ -480,22 +480,44 @@ class Trip extends REST_Controller {
 		    'protocol' => 'smtp',
 		    'smtp_host' => 'ssl://smtp.googlemail.com',
 		    'smtp_port' => 465,
-		    'smtp_user' => 'taxibook.no.reply@gmail.com',
+		    'smtp_user' => 'taxibook.no.reply@gmail.com',  //use our google ac to send the email
 		    'smtp_pass' => 'taxibook123',
 		    'smtp_timeout' => '4',
 		    'mailtype'  => 'text', 
 		    'charset'   => 'iso-8859-1'
-		);
+		    );
+
+		    $message = '
+			<html>
+			<head>
+			  <title>Birthday Reminders for August</title>
+			</head>
+			<body>
+			  <p>Here are the birthdays upcoming in August!</p>
+			  <table>
+			    <tr>
+			      <th>Person</th><th>Day</th><th>Month</th><th>Year</th>
+			    </tr>
+			    <tr>
+			      <td>Joe</td><td>3rd</td><td>August</td><td>1970</td>
+			    </tr>
+			    <tr>
+			      <td>Sally</td><td>17th</td><td>August</td><td>1973</td>
+			    </tr>
+			  </table>
+			</body>
+			</html>
+			';
+
+			$this->load->model('passenger_model');
+			$passenger=$this->passenger_model-> get_passenger_by_pid($order['pid']);
  
-		$this->load->library('email', $config);
-		$this->email->set_newline("\r\n");
-
-
+			$this->load->library('email', $config);
+			$this->email->set_newline("\r\n");
 			$this->email->from('taxibook.no.reply@gmail.com', 'TaxiBook');
-			$this->email->to('ywng@ust.hk'); 
-
-			$this->email->subject('Email Test');
-			$this->email->message('Testing the email class.');	
+			$this->email->to($passenger['email']); 
+			$this->email->subject('Please rate your driver.');
+			$this->email->message($message);	
 
 			$this->email->send();
 
