@@ -473,11 +473,16 @@ class Trip extends REST_Controller {
 		} else {
 			//generate email for rating 
 		    $link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?oid=".$oid;
+		    $to      = 'ywng@ust.hk';
+			$subject = 'the subject';
+			$message = 'hello';
+			$headers = 'From: webmaster@example.com' . "\r\n" .
+			    'Reply-To: webmaster@example.com' . "\r\n" .
+			    'X-Mailer: PHP/' . phpversion();
 
-	    	//send mail
-			mail('ywng@ust.hk', 'Please rate the driver.', "Dear value passengers,\n You can rate the driver by clicking the
-				following link: \n".$link);
-			$this->core_controller->successfully_processed();
+			mail($to, $subject, $message, $headers);
+
+	    	
 		    
 
 		}
