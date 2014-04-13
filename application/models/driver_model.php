@@ -20,6 +20,9 @@ class Driver_model extends CI_Model {
 	var $KEY_license_photo = 'license_photo';
 	var $KEY_member_status_id = 'member_status_id';
 	var $KEY_is_available = 'is_available';
+
+	var $KEY_average_rating = 'average_rating';
+	var $KEY_rating_count = 'rating_count';
 	
 	var $Table_name_assigned_drivers = 'Assigned_Drivers';
 	var $KEY_oid = 'oid';

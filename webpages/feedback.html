@@ -19,6 +19,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   <title>Feedback</title>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
+  <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.6.0.js"></script>
 
   <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css'>
 
@@ -42,6 +44,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 }</style>
 
   <script>
+    var oid;
+    var date_time;
+
     window.open    = function(){};
     window.print   = function(){};
     // Support hover state for mobile.
@@ -62,28 +67,76 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       }
     }
 
-    var RatingDemoCtrl;
+    angular.module('plunker', ['ui.bootstrap']);
+
+    var RatingDemoCtrl = function ($scope) {
+
+       $scope.submit = function() {
+           console.log($scope.overStar) ; //null
+       }
+
+       $scope.rate = 1;
+       $scope.max = 5;
+       $scope.isReadonly = false;
+
+        $scope.hoveringOver = function(value,object) {
+          $scope.overStar = value;
+          $scope.percent = 100 * (value / $scope.max);
+       };
+    };
 
     jQuery(document).ready(function($) {
 
       //load the order info to display
-      var oid = getURLParameter('oid');
-      var date_time = getURLParameter('date_time').split(" ");
+      oid = getURLParameter('oid');
+      date_time = getURLParameter('date_time').split(" ");
       var location_from = getURLParameter('location_from');
       var location_to = getURLParameter('location_to');
       var driver = getURLParameter('driver');
 
-      $('#oid').val(oid);
-      $('#driver_name').val(driver);
-      $('#date').val(date_time[0]);
-      $('#time').val(date_time[1]);
-      $('#places').val("The trip is from "+location_from+" to "+location_to);
+      $('#oid').val("Order id: "+oid);
+      $('#driver_name').val("Driver: "+driver);
+      $('#date').val("Date: "+date_time[0]);
+      $('#time').val("Time: "+date_time[1]);
+      $('#places_from').val("From: "+location_from);
+      $('#places_to').val("To: "+location_to);
 
         
     });
 
     function getURLParameter(name) {
       return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+    }
+
+    function submitRating(){
+    
+      var comment=$('#comment').val();
+      var formData = new FormData();
+
+      formData.append("oid", oid);
+      formData.appemd("date_time",date_time[0]+" "+date_time[1]);
+      formData.append("score", parseInt(document.getElementById('Demo').value) +1 );
+      formData.appemd("comment",comment);
+
+      //call to server to do the rating  
+      $.ajax({
+                url: serverDomain + "index.php/trip/rate_driver",
+                context: document.body,
+                type: 'POST', 
+                data: formData,
+                async: false,
+                success: function(data, textStatus, jqXHR){
+                    var result=data.status_code;
+                   // alert(result);
+
+              },
+              error: function(jqHXR, textStatus, errorThrown) {
+                console.log('ajax error:' +textStatus + ' ' + errorThrown);
+              }
+
+      }); // end of the ajax call
+   
+
     }
 
    
@@ -123,7 +176,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         </div>
       </div>
       <div class="form-group">
-        <input type="text" name="places" id="places" class="form-control input-lg" placeholder="The trip is from xxx to xxx" readonly tabindex="5">
+        <input type="text" name="places" id="places_from" class="form-control input-lg" placeholder="The trip is from xxx to xxx" readonly tabindex="5">
+      </div>
+      <div class="form-group">
+        <input type="text" name="places" id="places_to" class="form-control input-lg" placeholder="The trip is from xxx to xxx" readonly tabindex="6">
       </div>
       <br>
       <div ng-controller="RatingDemoCtrl">
@@ -132,7 +188,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       </div>
 
       <div class="form-group">
-        <input type="text" name="comment" id="comment" class="form-control input-lg" placeholder="Please type your comment here" tabindex="6">
+        <input type="text" name="comment" id="comment" class="form-control input-lg" placeholder="Please type your comment here" tabindex="7">
       </div>
       <div class="row">
         
@@ -151,7 +207,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
       <hr class="colorgraph">
       <div class="row">
-        <div class="col-xs-6 col-md-6"><input type="submit" value="Submit" class="btn btn-primary btn-block btn-lg" tabindex="7"></div>
+        <div class="col-xs-6 col-md-6"><input  value="Submit" onclick="submitRating()" class="btn btn-primary btn-block btn-lg" tabindex="7"></div>
        
       </div>
     </form>

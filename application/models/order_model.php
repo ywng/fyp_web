@@ -134,6 +134,21 @@ class Order_model extends CI_Model {
 		
 	}
 
+	function search_rating_session($criteria) {
+		$result = $this->db->from($this->Table_name_rating_session)
+							->where($criteria)
+							->get();
+
+		if ($result->num_rows() > 0) {
+			$this->db->where($criteria);
+            $this->db->delete($this->Table_name_rating_session);
+			return $result->row_array(1);
+		} else {
+			return FALSE;
+		}
+		
+	}
+
 	function update_order($oid, $detail) {
 		$this->db->where($this->KEY_oid, $oid)
 				->update($this->Table_name_active, $detail);
