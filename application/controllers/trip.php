@@ -475,7 +475,7 @@ class Trip extends REST_Controller {
 		    $link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?oid=".$oid;
 
 	    	//send mail
-			mail('ywng@ust.com', 'Please rate the driver.', "Dear value passengers,\n You can rate the driver by clicking the
+			mail('ywng@ust.hk', 'Please rate the driver.', "Dear value passengers,\n You can rate the driver by clicking the
 				following link: \n".$link);
 			$this->core_controller->successfully_processed();
 		    
