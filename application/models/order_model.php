@@ -28,6 +28,8 @@ class Order_model extends CI_Model {
 	var $Table_name_inactive = 'Inactive_Order';
 	var $KEY_actual_price = 'actual_price';
 
+	var $Table_name_rating_session = 'Rating_Session';
+	
 	var $Status_KEY_pending = 0;
 	var $Status_KEY_bidded = 1;
 	var $Status_KEY_customer_confirmed = 2;

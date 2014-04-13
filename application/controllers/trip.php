@@ -471,6 +471,10 @@ class Trip extends REST_Controller {
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(100000002);
 		} else {
+			//generate email for rating 
+			md5($str)
+
+
 			$this->core_controller->successfully_processed();
 		}
 	}
@@ -592,6 +596,12 @@ class Trip extends REST_Controller {
 				sns_apple_push_notification_message($access_key, $secret_key, $device['sns_endpoint'], $message, $details);	
 			}
 		}
+
+	}
+
+	private function generate_rating_sessiom($Key, $oid) {
+		
+	
 
 	}
 
