@@ -281,7 +281,8 @@ class Trip extends REST_Controller {
        	
 			$this->driver_model->update_driver($order['did'],$rating);
 
-			$this->core_controller->successfully_processed();
+			$this->core_controller->add_return_data('message', "Driver rated successfully. oid: ".$oid." driver new score: ".$new_avg_score.
+				" number of rate: ". $driver[$this->driver_model->KEY_rating_count]+1)->successfully_processed();
 
 
        	}
