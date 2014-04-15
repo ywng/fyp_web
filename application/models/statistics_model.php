@@ -19,10 +19,36 @@ class Statistics_model extends CI_Model{
         parent::__construct();
     }
     
+	function get_all_order_cumulative() {
+		$query_result = $this->db->query("SELECT date(order_time) as order_date, count(*) as freq FROM taxibook.Active_Order group by date(order_time) order by date(order_time)");
+		
+		$returned_result = array();
+		
+		foreach($query_result as $row){
+			array_push($returned_result,array("order_date" => $row->{"order_date"} , "freq" => $row->{"freq"}));
+		}
+		/*
+		//data processing
+		$cnt_result = count($returned_result);
+		for($i=1;$i<$cnt_result;$i++){
+			$returned_result[$i]["freq"] = $returned_result[$i]["freq"]+$returned_result[$i-1]["freq"];
+		}
+		*/
+		
+		return $returned_result;
+    }
     
-    /*
-     * 
-     */
+	function get_all_order_DayOfWeek() {
+		$query_result = $this->db->query("SELECT DAYNAME(order_time) as weekay, count(*) as freq FROM taxibook.Active_Order group by DAYNAME(order_time) order by DAYOFWEEK(order_time)");
+		
+		return $query_result;
+    }
+	
+    function get_all_order_TimeOfDay() {
+		$query_result = $this->db->query("SELECT HOUR(order_time) as hr, count(*) as freq FROM taxibook.Active_Order group by HOUR(order_time) order by HOUR(order_time)");
+		
+		return $query_result;
+    }
     
    /* gps related */
     function get_all_order_gps_location() {

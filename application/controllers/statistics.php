@@ -27,6 +27,46 @@ class Statistics extends REST_Controller {
 	}
 
 	/**
+	*  This can be accessed by /statistics/getAllTrip_TimeOfDay with GET method
+	*/
+	public function getAllOrderDayOfWeek_get()
+	{
+		$this->load->model('statistics_model');
+		$results= $this->statistics_model->get_all_order_DayOfWeek();
+
+		foreach($results as $result)
+			$this->core_controller->add_return_data($result->{"weekday"},$result->{"freq"});
+		$this->successfully_processed();
+	}
+	
+	/**
+	*  This can be accessed by /statistics/getAllTrip_TimeOfDay with GET method
+	*/
+	public function getAllOrderTimeOfDay_get()
+	{
+		$this->load->model('statistics_model');
+		$results= $this->statistics_model->get_all_order_TimeOfDay();
+
+		foreach($results as $result)
+			$this->core_controller->add_return_data($result->{"hr"},$result->{"freq"});
+		$this->successfully_processed();
+	}
+	
+	/**
+	*  This can be accessed by /statistics/getAllOrderCumulative with GET method
+	*/
+	public function getAllOrderCumulative_get()
+	{
+		$this->load->model('statistics_model');
+		
+		$results= $this->statistics_model->get_all_order_cumulative();
+		
+		foreach($results as $result)
+			$this->core_controller->add_return_data($result["order_date"],$result["freq"]);	//hard-coded field name here
+		$this->successfully_processed();
+	}
+	
+	/**
 	*  This can be accessed by /statistics/getDriverStat with GET method
 	*
 	*/
