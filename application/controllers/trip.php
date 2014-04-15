@@ -262,7 +262,7 @@ class Trip extends REST_Controller {
 		$criteria = array(
                 $this->order_model->KEY_rating_session_key => md5($this->input->post('date_time')),
                 $this->order_model->KEY_oid => $oid,
-                $this->order_model->KEY_rating_score => null,
+                $this->order_model->KEY_rating_score => "NULL",
        	);
 
        	$update_data = array(
@@ -277,7 +277,7 @@ class Trip extends REST_Controller {
        	}else{
        		//as delete the rating session
    			$order = $this->order_model->get_inactive_order_by_oid($oid);
-   			$driver=$this->driver_model-> get_driver_by_did($order['did']);
+   			$driver=$this->driver_model->get_driver_by_did($order['did']);
 
    			$new_avg_score=($driver[$this->driver_model->KEY_average_rating]*$driver[$this->driver_model->KEY_rating_count]+$this->input->post('score'))/($driver[$this->driver_model->KEY_rating_count]+1);
        		$rating = array(
