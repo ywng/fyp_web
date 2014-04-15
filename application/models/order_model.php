@@ -193,7 +193,7 @@ class Order_model extends CI_Model {
 
 	private function get_all_inactive_orders_by_key($key, $value, $limit, $offset) {
 		$result = $this->db->from($this->Table_name_inactive)
-						->->join($this->Table_name_rating_session, 'NATURAL') 
+						->join($this->Table_name_rating_session, 'NATURAL') 
 						->where($key, $value)
 						->order_by($this->KEY_post_time, 'DESC')
 						->limit($limit, $offset)->get();
