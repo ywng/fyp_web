@@ -53,6 +53,7 @@ class Order_model extends CI_Model {
 			$active_order[$this->KEY_status_id] = $new_status_id;
 			if (!is_null($actual_price) && is_numeric($actual_price)) {
 				$this->db->insert($this->Table_name_inactive, $active_order);
+				$this->db->delete($this->Table_name_active, $oid);
 				return TRUE;
 			} else {
 				return FALSE;
