@@ -64,7 +64,7 @@ class Statistics extends REST_Controller {
 		foreach($results as $result)
 			$this->core_controller->add_return_data($result["order_date"],$result["freq"]);*/	//hard-coded field name here
 			
-		$this->core_controller->add_return_data()->successfully_processed();
+		$this->core_controller->add_return_data('a','b')->successfully_processed();
 			
 		//$this->successfully_processed();
 	}
