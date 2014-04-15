@@ -16,6 +16,7 @@ class Passenger_model extends CI_Model {
 	var $KEY_email = 'email';
 	var $KEY_phone_no = 'phone_no';
 	var $KEY_password = 'password';
+	var $KEY_profile_pic = 'profile_pic';
 
 
 	/* this is used for internal mapping, normally do not call this outside this file */
