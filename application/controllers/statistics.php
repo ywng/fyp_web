@@ -60,7 +60,7 @@ class Statistics extends REST_Controller {
 	/**
 	*  This can be accessed by /statistics/getAllOrderWeekDay with GET method
 	*/
-	public function getAllOrderHourOfDay_get()
+	public function getAllOrderWeekDay_get()
 	{
 		$this->load->model('statistics_model');
 		$results= $this->statistics_model->getAllOrderWeekDay();
