@@ -28,8 +28,12 @@ class Order_model extends CI_Model {
 	var $Table_name_inactive = 'Inactive_Order';
 	var $KEY_actual_price = 'actual_price';
 
+
 	var $Table_name_rating_session = 'Rating_Session';
 	var $KEY_rating_session_key = 'hash_key';
+	var $KEY_rating_score = 'score';
+	var $KEY_rating_comment = 'comment';
+
 	
 	var $Status_KEY_pending = 0;
 	var $Status_KEY_bidded = 1;
@@ -134,14 +138,14 @@ class Order_model extends CI_Model {
 		
 	}
 
-	function search_rating_session($criteria) {
+	function search_and_update_rating_session($criteria,$update_data) {
 		$result = $this->db->from($this->Table_name_rating_session)
 							->where($criteria)
 							->get();
 
 		if ($result->num_rows() > 0) {
-			$this->db->where($criteria);
-            $this->db->delete($this->Table_name_rating_session);
+			$this->db->where($criteria)
+				->update($this->Table_name_rating_session, $update_data);
 			return $result->row_array(1);
 		} else {
 			return FALSE;

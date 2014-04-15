@@ -262,9 +262,16 @@ class Trip extends REST_Controller {
 		$criteria = array(
                 $this->order_model->KEY_rating_session_key => md5($this->input->post('date_time')),
                 $this->order_model->KEY_oid => $oid,
+                $this->order_model->KEY_rating_score => null;
        	);
 
-       	if ( !$this->order_model->search_rating_session($criteria)){
+       	$update_data = array(
+                $this->order_model->KEY_rating_score => $this->input->post('score'),
+                $this->order_model->KEY_rating_comment => $this->input->post('comment'),
+       
+       	);
+
+       	if ( !$this->order_model->search_rating_session($criteria,$update_data)){
        		$this->core_controller->add_return_data('error', "invalid link for rating!")->successfully_processed();
 
        	}else{
