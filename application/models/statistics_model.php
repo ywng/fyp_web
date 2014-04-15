@@ -32,7 +32,7 @@ class Statistics_model extends CI_Model{
 		}
 		/**/
 		
-		return $query_result->result_array();
+		return $returned_result;
     }
     
 	function get_all_order_DayOfWeek() {
