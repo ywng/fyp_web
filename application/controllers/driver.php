@@ -274,7 +274,7 @@ class Driver extends REST_Controller {
         // passed the validation process & upload photo sucessfully, then we add the passenger into the database
         // the photo absolute path is stored
         $update_data = array();
-		$update_data[$this->driver_model->KEY_license_photo] = $url;
+		$update_data[$this->driver_model->KEY_profile_pic] = $url;
 
 		$current_user = $this->core_controller->get_current_user();
 
