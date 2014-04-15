@@ -271,7 +271,7 @@ class Trip extends REST_Controller {
        
        	);
 
-       	if ( !$this->order_model->search_rating_session($criteria,$update_data)){
+       	if ( !$this->order_model->search_and_update_rating_session($criteria,$update_data)){
        		$this->core_controller->add_return_data('error', "invalid link for rating!")->successfully_processed();
 
        	}else{
@@ -296,8 +296,6 @@ class Trip extends REST_Controller {
 
 	
 		
-
-
 
 		$this->core_controller->fail_response(100000001);
 	}
