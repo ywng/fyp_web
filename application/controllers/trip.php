@@ -508,11 +508,15 @@ class Trip extends REST_Controller {
 			);
 
 		$status = $this->order_model->move_order_from_active_to_inactive($oid, $this->Status_KEY_trip_finished, 
-			$this->input->post('actual_price', TRUE), 'driver', $apns_array);
+			$this->input->post('actual_price', TRUE));
 
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(100000002);
 		} else {
+
+			$pid = $order[$this->order_model->KEY_pid];
+			$this->send_apns_to_passenger($pid, $apns_array['message'], $apns_array['detail']);
+
 			$data = array(
                 $this->order_model->KEY_rating_session_key => md5($order['order_time']),
                 $this->order_model->KEY_oid => $oid,
