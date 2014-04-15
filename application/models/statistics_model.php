@@ -24,7 +24,7 @@ class Statistics_model extends CI_Model{
 		
 		$returned_result = array();
 		
-		foreach($query_result as $row){
+		foreach($query_result->result() as $row){
 			array_push($returned_result,array("order_date" => $row->{"order_date"} , "freq" => $row->{"freq"}));
 		}
 		/*
@@ -35,7 +35,7 @@ class Statistics_model extends CI_Model{
 		}
 		*/
 		
-		return $returned_result->result();
+		return $returned_result;
     }
     
 	function get_all_order_DayOfWeek() {
