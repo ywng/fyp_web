@@ -47,8 +47,8 @@ class Statistics_model extends CI_Model{
 				$freq = 0;
 				if($k<count($query_result)){
 					$row = $query_result[$k];
-					if($row['weekday']==$i && $row['weekday']==$j){
-						$freq = $row['freq'];
+					if($row[0]==$i && $row[1]==$j){
+						$freq = $row[2];
 						$k++;
 					}
 					else{
