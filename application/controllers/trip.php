@@ -262,7 +262,7 @@ class Trip extends REST_Controller {
 		$criteria = array(
                 $this->order_model->KEY_rating_session_key => md5($this->input->post('date_time')),
                 $this->order_model->KEY_oid => $oid,
-                $this->order_model->KEY_rating_score => "NULL",
+                $this->order_model->KEY_rating_score => "-1",
        	);
 
        	$update_data = array(
