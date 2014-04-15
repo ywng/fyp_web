@@ -40,10 +40,10 @@ class Order_model extends CI_Model {
 	var $Status_KEY_pending = 0;
 	var $Status_KEY_bidded = 1;
 	var $Status_KEY_customer_confirmed = 2;
-	var $Status_KEY_driver_coming = 3;
-	var $Status_KEY_driver_waiting = 4;
-	var $Status_KEY_driver_picked_up = 5;
-	var $Status_KEY_trip_finished = 6;
+	// var $Status_KEY_driver_coming = 3;
+	// var $Status_KEY_driver_waiting = 4;
+	// var $Status_KEY_driver_picked_up = 5;
+	var $Status_KEY_trip_finished = 3;
 
 
 	function move_order_from_active_to_inactive($oid, $new_status_id, $actual_price = NULL) {

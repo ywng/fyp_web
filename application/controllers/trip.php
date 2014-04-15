@@ -364,112 +364,112 @@ class Trip extends REST_Controller {
 	*  Confirm Coming
 	*
 	*/
-	public function confirm_coming_post()
-	{
-		$this->load->library('form_validation');
-		$validation_config = array(
-			array('field' => 'oid', 'label' => 'order id', 'rules' => 'trim|required|xss_clean|min_length[1]|numeric'), 
-			);
+	// public function confirm_coming_post()
+	// {
+	// 	$this->load->library('form_validation');
+	// 	$validation_config = array(
+	// 		array('field' => 'oid', 'label' => 'order id', 'rules' => 'trim|required|xss_clean|min_length[1]|numeric'), 
+	// 		);
 
-		$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
+	// 	$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
 
-		if ($this->form_validation->run() === FALSE) {
-			$this->core_controller->fail_response(2, validation_errors());
-		}
-		$this->load->model('order_model');
-		$current_driver = $this->core_controller->get_current_user();
+	// 	if ($this->form_validation->run() === FALSE) {
+	// 		$this->core_controller->fail_response(2, validation_errors());
+	// 	}
+	// 	$this->load->model('order_model');
+	// 	$current_driver = $this->core_controller->get_current_user();
 
-		$oid = $this->input->post('oid', TRUE);
+	// 	$oid = $this->input->post('oid', TRUE);
 
-		$apns_array = array(
-				'message' => 'Your driver is coming now!',
-				'detail' => array('oid' => $oid),
-			);
+	// 	$apns_array = array(
+	// 			'message' => 'Your driver is coming now!',
+	// 			'detail' => array('oid' => $oid),
+	// 		);
 
-		$status = $this->confirm_new_status($oid, $Status_KEY_driver_coming, 
-			$this->order_model->KEY_did, $current_driver[$this->order_model->KEY_did], 'driver', $apns_array);
+	// 	$status = $this->confirm_new_status($oid, $Status_KEY_driver_coming, 
+	// 		$this->order_model->KEY_did, $current_driver[$this->order_model->KEY_did], 'driver', $apns_array);
 
-		if ($status == FALSE) {
-			$this->core_controller->fail_response(100000002);
-		} else {
-			$this->core_controller->successfully_processed();
-		}
-	}
+	// 	if ($status == FALSE) {
+	// 		$this->core_controller->fail_response(100000002);
+	// 	} else {
+	// 		$this->core_controller->successfully_processed();
+	// 	}
+	// }
 
 	/**
 	*  This can be accessed by /trip/confirm_waiting with POST method
 	*  Confirm Waiting
 	*
 	*/
-	public function confirm_waiting_post()
-	{
-		$this->load->library('form_validation');
-		$validation_config = array(
-			array('field' => 'oid', 'label' => 'order id', 'rules' => 'trim|required|xss_clean|min_length[1]|numeric'), 
-			);
+	// public function confirm_waiting_post()
+	// {
+	// 	$this->load->library('form_validation');
+	// 	$validation_config = array(
+	// 		array('field' => 'oid', 'label' => 'order id', 'rules' => 'trim|required|xss_clean|min_length[1]|numeric'), 
+	// 		);
 
-		$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
+	// 	$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
 
-		if ($this->form_validation->run() === FALSE) {
-			$this->core_controller->fail_response(2, validation_errors());
-		}
-		$this->load->model('order_model');
-		$current_driver = $this->core_controller->get_current_user();
+	// 	if ($this->form_validation->run() === FALSE) {
+	// 		$this->core_controller->fail_response(2, validation_errors());
+	// 	}
+	// 	$this->load->model('order_model');
+	// 	$current_driver = $this->core_controller->get_current_user();
 
-		$oid = $this->input->post('oid', TRUE);
+	// 	$oid = $this->input->post('oid', TRUE);
 
-		$apns_array = array(
-				'message' => 'Your driver is waiting for you.',
-				'detail' => array('oid' => $oid),
-			);
+	// 	$apns_array = array(
+	// 			'message' => 'Your driver is waiting for you.',
+	// 			'detail' => array('oid' => $oid),
+	// 		);
 
-		$status = $this->confirm_new_status($oid, $Status_KEY_driver_waiting, 
-			$this->order_model->KEY_did, $current_driver[$this->order_model->KEY_did], 'driver', $apns_array);
+	// 	$status = $this->confirm_new_status($oid, $Status_KEY_driver_waiting, 
+	// 		$this->order_model->KEY_did, $current_driver[$this->order_model->KEY_did], 'driver', $apns_array);
 
-		if ($status == FALSE) {
-			$this->core_controller->fail_response(100000002);
-		} else {
-			$this->core_controller->successfully_processed();
-		}
+	// 	if ($status == FALSE) {
+	// 		$this->core_controller->fail_response(100000002);
+	// 	} else {
+	// 		$this->core_controller->successfully_processed();
+	// 	}
 		
-	}	
+	// }	
 
 	/**
 	*  This can be accessed by /trip/confirm_pickup with POST method
 	*  Confirm Pick-up
 	*
 	*/
-	public function confirm_pickup_post()
-	{
-		$this->load->library('form_validation');
-		$validation_config = array(
-			array('field' => 'oid', 'label' => 'order id', 'rules' => 'trim|required|xss_clean|min_length[1]|numeric'), 
-			);
+	// public function confirm_pickup_post()
+	// {
+	// 	$this->load->library('form_validation');
+	// 	$validation_config = array(
+	// 		array('field' => 'oid', 'label' => 'order id', 'rules' => 'trim|required|xss_clean|min_length[1]|numeric'), 
+	// 		);
 
-		$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
+	// 	$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
 
-		if ($this->form_validation->run() === FALSE) {
-			$this->core_controller->fail_response(2, validation_errors());
-		}
-		$this->load->model('order_model');
-		$current_driver = $this->core_controller->get_current_user();
+	// 	if ($this->form_validation->run() === FALSE) {
+	// 		$this->core_controller->fail_response(2, validation_errors());
+	// 	}
+	// 	$this->load->model('order_model');
+	// 	$current_driver = $this->core_controller->get_current_user();
 
-		$oid = $this->input->post('oid', TRUE);
+	// 	$oid = $this->input->post('oid', TRUE);
 
-		$apns_array = array(
-				'message' => 'Your trip should be started now.',
-				'detail' => array('oid' => $oid),
-			);
+	// 	$apns_array = array(
+	// 			'message' => 'Your trip should be started now.',
+	// 			'detail' => array('oid' => $oid),
+	// 		);
 
-		$status = $this->confirm_new_status($oid, $Status_KEY_driver_picked_up, 
-			$this->order_model->KEY_did, $current_driver[$this->order_model->KEY_did], 'driver', $apns_array);
+	// 	$status = $this->confirm_new_status($oid, $Status_KEY_driver_picked_up, 
+	// 		$this->order_model->KEY_did, $current_driver[$this->order_model->KEY_did], 'driver', $apns_array);
 
-		if ($status == FALSE) {
-			$this->core_controller->fail_response(100000002);
-		} else {
-			$this->core_controller->successfully_processed();
-		}
-	}
+	// 	if ($status == FALSE) {
+	// 		$this->core_controller->fail_response(100000002);
+	// 	} else {
+	// 		$this->core_controller->successfully_processed();
+	// 	}
+	// }
 
 	/**
 	*  This can be accessed by /trip/confirm_finish with POST method
