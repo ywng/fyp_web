@@ -35,16 +35,12 @@ class Statistics_model extends CI_Model{
 		return $returned_result;
     }
     
-	function get_all_order_DayOfWeek() {
-		$query_result = $this->db->query("SELECT DAYNAME(order_time) as weekay, count(*) as freq FROM taxibook.Active_Order group by DAYNAME(order_time) order by DAYOFWEEK(order_time)");
+    function getAllOrderHourWeek() {
+		$query_result = $this->db->query("SELECT DAYOFWEEK(order_time)-1 as weekay, HOUR(order_time) as hour, count(*) as freq FROM taxibook.Active_Order group by DAYOFWEEK(order_time), HOUR(order_time) order by DAYOFWEEK(order_time)");
 		
-		return $query_result->result();
-    }
-	
-    function get_all_order_TimeOfDay() {
-		$query_result = $this->db->query("SELECT HOUR(order_time) as hr, count(*) as freq FROM taxibook.Active_Order group by HOUR(order_time) order by HOUR(order_time)");
+		$returned_result = $query_result->result_array();
 		
-		return $query_result->result();
+		return $returned_result;
     }
     
    /* gps related */
