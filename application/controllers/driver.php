@@ -223,6 +223,67 @@ class Driver extends REST_Controller {
 		$this->core_controller->successfully_processed();
 		
 	}
+	
+	/**
+	*  This can be accessed by /driver/edit_profile_pic with POST method
+	*
+	*/
+	public function edit_profile_pic_post()
+	{
+
+        $this->load->model('driver_model');
+
+        //upload profile pic
+        $config['upload_path'] = './uploads/';
+		$config['allowed_types'] = '*';
+		//$config['max_size']	= '100000';
+		//$config['max_width']  = '10240';
+		//$config['max_height']  = '887680';
+
+		$this->load->library('upload', $config);
+		$url = null;
+		if ( ! $this->upload->do_upload())
+		{
+			$error = array('error' => $this->upload->display_errors());
+			// var_dump($error);
+			//$this->load->view('upload_form'，$error);
+			 $this->core_controller->add_return_data('upload_image_error', $error);
+			 $this->core_controller->fail_response(5);
+		}
+		else
+		{
+			$file_data =  $this->upload->data();
+
+			//$this->load->view('upload_success'，$data);
+
+			// prepare to upload to S3 first
+			$this->load->helper('upload');
+			$this->load->config('amazon');
+			$accessKey = $this->config->item('amazonS3AccessKey');
+			$secretKey = $this->config->item('amazonS3SecretKey');
+
+			$url = upload_to_s3($file_data['full_path'], $file_data['file_name'], $accessKey, $secretKey);
+			if (!$url) {
+				$this->core_controller->add_return_data('upload_image_error', "Cannot upload to s3");
+				$this->core_controller->fail_response(5);
+			}
+
+			$this->core_controller->add_return_data('image_data', $file_data);
+		}
+
+        // passed the validation process & upload photo sucessfully, then we add the passenger into the database
+        // the photo absolute path is stored
+        $update_data = array(
+                $this->driver_model->KEY_license_photo=> $url,
+        );
+
+		$current_user = $this->core_controller->get_current_user();
+
+		$update_status = $this->driver_model->update_driver($current_user[$this->driver_model->KEY_did], $update_data);
+
+		$this->core_controller->successfully_processed();
+		
+	}
 
 
 	/**
