@@ -34,7 +34,7 @@ class Statistics extends REST_Controller {
 		$this->load->model('statistics_model');
 		$results= $this->statistics_model->getAllOrderHourWeek();
 
-		$this->add_return_data('result',$results)->successfully_processed();
+		$this->core_controller->add_return_data('result',$results)->successfully_processed();
 	}
 	
 	/**
