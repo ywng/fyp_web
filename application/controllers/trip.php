@@ -272,7 +272,7 @@ class Trip extends REST_Controller {
        	);
 
        	if ( !$this->order_model->search_and_update_rating_session($criteria,$update_data)){
-       		$this->core_controller->add_return_data('error', "invalid link for rating!")->successfully_processed();
+       		$this->core_controller->add_return_data('message', "invalid link for rating!")->successfully_processed();
 
        	}else{
        		//as delete the rating session
@@ -288,8 +288,7 @@ class Trip extends REST_Controller {
        	
 			$this->driver_model->update_driver($order['did'],$rating);
 
-			$this->core_controller->add_return_data('message', "Driver rated successfully. oid: ".$oid." driver new score: ".$new_avg_score.
-				" number of rate: ". $driver[$this->driver_model->KEY_rating_count]+1)->successfully_processed();
+			$this->core_controller->add_return_data('message', "successfully rated!")->successfully_processed();
 
 
        	}

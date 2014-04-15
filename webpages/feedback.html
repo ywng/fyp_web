@@ -128,9 +128,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                     data: "oid="+oid+"&date_time="+date_time[0]+" "+date_time[1]+"&score="+(parseInt(document.getElementById('Demo').value) +1)+"&comment="+comment,
                     async: false,
                     success: function(data, textStatus, jqXHR){
-                        var result=data.error;
-                        if(result!=null)
+                        var result=data.message;
+                        if(result!=null){
                           alert(result);
+                          window.close();
+                        }
+                        else{
+                          alert("Rating server-error");
+                        }
                   },
                   error: function(jqHXR, textStatus, errorThrown) {
                     console.log('ajax error:' +textStatus + ' ' + errorThrown);
