@@ -31,6 +31,8 @@ class Driver_model extends CI_Model {
 	var $Table_name_driver_location = 'Driver_Location';
 	var $KEY_gps = 'gps';
 	
+	var $Table_name_active_order = 'Active_Order';
+	
 	/* this is used for internal mapping, normally do not call this outside this file */
 
 	private function check_if_driver_exists($key, $value) {
@@ -178,6 +180,7 @@ class Driver_model extends CI_Model {
 											WHERE d.$this->KEY_is_available=1 
 												AND d.$this->KEY_member_status_id=1
 												AND d.$this->KEY_did NOT IN (SELECT $this->KEY_did FROM $this->Table_name_assigned_drivers WHERE $this->KEY_oid=$oid)
+												AND d.$this->KEY_did NOT IN (SELECT $this->KEY_did FROM $this->Table_name_active_order)
 											ORDER BY distance ASC LIMIT 0, $max_driver");
 											//exclude drivers with: 1) already in [Assigned_Driver] 2) member_status_id!=1    3) is_available!=1
 		
