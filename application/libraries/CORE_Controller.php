@@ -10,7 +10,8 @@
 class CORE_Controller {
     
     protected $current_user_obj = null;
-    private $white_list_uri = array('trip/rate_driver','statistics/getAllOrdersGPSLocation','passenger/register', 'passenger/login', 'driver/register', 'driver/login', 'admin/login'); // this will indicate the script not to run security check
+    private $white_list_uri = array('statistics/getAllOrderDayOfWeek','statistics/getAllOrderTimeOfDay','statistics/getAllOrderCumulative','trip/rate_driver',
+    'statistics/getAllOrdersGPSLocation','passenger/register', 'passenger/login', 'driver/register', 'driver/login', 'admin/login'); // this will indicate the script not to run security check
     private $session = null;
     private $response_data = array();
     private $CI = null;
