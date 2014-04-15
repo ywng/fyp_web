@@ -48,6 +48,26 @@ class Statistics extends REST_Controller {
 	}
 	
 	/**
+	*  This can be accessed by /statistics/getAllOrderHourOfDay with GET method
+	*/
+	public function getAllOrderHourOfDay_get()
+	{
+		$this->load->model('statistics_model');
+		$results= $this->statistics_model->getAllOrderHourOfDay();
+		$this->core_controller->add_return_data('result',$results)->successfully_processed();
+	}
+	
+	/**
+	*  This can be accessed by /statistics/getAllOrderWeekDay with GET method
+	*/
+	public function getAllOrderHourOfDay_get()
+	{
+		$this->load->model('statistics_model');
+		$results= $this->statistics_model->getAllOrderWeekDay();
+		$this->core_controller->add_return_data('result',$results)->successfully_processed();
+	}
+	
+	/**
 	*  This can be accessed by /statistics/getDriverStat with GET method
 	*
 	*/

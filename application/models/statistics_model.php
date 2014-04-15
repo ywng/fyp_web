@@ -62,6 +62,20 @@ class Statistics_model extends CI_Model{
 		
 		return $returned_result;
     }
+	
+	function getAllOrderHourOfDay(){
+		$query = $this->db->query("SELECT HOUR(order_time) as hour, count(*) as freq FROM taxibook.Active_Order group by HOUR(order_time) order by HOUR(order_time)");
+		
+		return $query->result_array();
+	}
+	
+	function getAllOrderWeekDay(){
+		$query = $this->db->query("SELECT DAYOFWEEK(order_time)-1 as weekday, count(*) as freq FROM taxibook.Active_Order group by DAYOFWEEK(order_time) order by DAYOFWEEK(order_time)");
+		
+		return $query->result_array();
+	}
+	
+	
     
    /* gps related */
     function get_all_order_gps_location() {
