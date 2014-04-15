@@ -29,6 +29,7 @@ class Order_model extends CI_Model {
 	var $KEY_actual_price = 'actual_price';
 
 	var $Table_name_assigned = 'Assigned_Drivers';
+	var $KEY_assigned_time = 'assigned_time';
 
 
 	var $Table_name_rating_session = 'Rating_Session';
@@ -185,6 +186,7 @@ class Order_model extends CI_Model {
 		}
 	}
 
+
 	private function get_all_active_orders_by_key($key, $value, $limit, $offset) {
 		return $this->get_all_orders_by_key($this->Table_name_active, $key, $value, $limit, $offset);
 	}
@@ -194,7 +196,16 @@ class Order_model extends CI_Model {
 	}
 
 	private function get_all_assigned_orders_by_key($key, $value, $limit, $offset) {
-		return $this->get_all_orders_by_key($this->Table_name_assigned, $key, $value, $limit, $offset);
+		$result = $this->db->from($this->Table_name_assigned)
+						->where($key, $value)
+						->order_by($this->KEY_assigned_time, 'DESC')
+						->limit($limit, $offset)->get();
+
+		if ($result->num_rows() > 0) {
+			return $result->result_array();
+		} else {
+			return array();
+		}
 	}
 
 }
