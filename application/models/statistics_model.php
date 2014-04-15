@@ -40,22 +40,22 @@ class Statistics_model extends CI_Model{
 
 		$query_result = $query->result_array();
 		
-		/*$k = 0;
-		
-		if($k<count($query_result)){
-			$row = $query_result[$k];
-		}
-		
-		if($row['weekday']==$i && $row['weekday']==$j){
-			$row['freq'];
-			$k++;
-			$row = $query_result[$k];
-		}*/
-		
+		$k = 0;
 		$returned_result = array();
 		for($i=0;$i<7;$i++){
 			for($j=0;$j<24;$j++){
-				array_push($returned_result, array('weekay'=>$i,'hour'=>$j,'freq'=>0));
+				$freq = 0;
+				if($k<count($query_result)){
+					$row = $query_result[$k];
+					if($row['weekday']==$i && $row['weekday']==$j){
+						$freq = $row['freq'];
+						$k++;
+					}
+					else{
+						$freq = 0;
+					}
+				}
+				array_push($returned_result, array('weekay'=>$i,'hour'=>$j,'freq'=>$freq));
 			}
 		}
 		
