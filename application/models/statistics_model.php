@@ -24,13 +24,14 @@ class Statistics_model extends CI_Model{
 		
 		$returned_result = $query_result->result_array();
 		
-		
 		//data processing
 		$cnt_result = count($returned_result);
+		if($cnt_result>0)
+			$returned_result[0]["freq"] = (int)$returned_result[0]["freq"];
+		
 		for($i=1;$i<$cnt_result;$i++){
 			$returned_result[$i]["freq"] = $returned_result[$i]["freq"]+$returned_result[$i-1]["freq"];
 		}
-		/**/
 		
 		return $returned_result;
     }
@@ -48,7 +49,7 @@ class Statistics_model extends CI_Model{
 				if($k<count($query_result)){
 					$row = $query_result[$k];
 					if($row['weekday']==$i && $row['hour']==$j){
-						$freq = $row['freq'];
+						$freq = (int)$row['freq'];
 						$k++;
 					}
 					else{
