@@ -182,9 +182,9 @@ class Driver_model extends CI_Model {
 											WHERE d.$this->KEY_is_available=1 
 												AND d.$this->KEY_member_status_id=1
 												AND d.$this->KEY_did NOT IN (SELECT $this->KEY_did FROM $this->Table_name_assigned_drivers WHERE $this->KEY_oid=$oid)
-												AND d.$this->KEY_did NOT IN (SELECT $this->KEY_did FROM $this->Table_name_active_order)
+												AND d.$this->KEY_did NOT IN (SELECT $this->KEY_did FROM $this->Table_name_active_order where $this->KEY_did is not NULL)
 											ORDER BY distance ASC LIMIT 0, $max_driver");
-											//exclude drivers with: 1) already in [Assigned_Driver] 2) member_status_id!=1    3) is_available!=1
+											//exclude drivers with: 1) already in [Assigned_Driver] 2) member_status_id!=1    3) is_available!=1  4) already in [Active_Order]
 		
 		$dids = array();
 		foreach ($query->result() as $row)
