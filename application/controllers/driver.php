@@ -408,7 +408,7 @@ class Driver extends REST_Controller {
 		$current_driver = $this->core_controller->get_current_user();
 
 		$this->load->model('order_model');
-		$results = $this->order_model->get_all_active_orders_by_did($current_driver[$this->order_model->KEY_did], $limit, $offset);
+		$results = $this->order_model->get_all_assigned_orders_by_did($current_driver[$this->order_model->KEY_did], $limit, $offset);
 
 		$results_with_separated_gps = array();
 
