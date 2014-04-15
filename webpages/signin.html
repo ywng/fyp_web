@@ -27,6 +27,8 @@
                     $(location).attr('href', serverDomain + 'webpages/pass_dash.html');
                 } else if(localStorage.getItem("X-taxibook-user-type")=="admin"){
                     $(location).attr('href',serverDomain + 'webpages/admin_dash.html');
+                }else if(localStorage.getItem("X-taxibook-user-type")=="driver"){
+                    $(location).attr('href',serverDomain + 'webpages/driver_dash.html');
                 }
               }
          });
