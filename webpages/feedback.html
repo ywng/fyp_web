@@ -110,8 +110,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     }
 
     function submitRating(){
-
-      if(document.getElementById('Demo').value==null){
+      alert(document.getElementById('Demo').value=="");
+      if(document.getElementById('Demo').value==""){
         alert("Please give the score to the driver before submit");
       }
     
