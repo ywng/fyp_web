@@ -59,11 +59,14 @@ class Statistics extends REST_Controller {
 	{
 		$this->load->model('statistics_model');
 		
-		$results= $this->statistics_model->get_all_order_cumulative();
+		/*$results= $this->statistics_model->get_all_order_cumulative();
 		
 		foreach($results as $result)
-			$this->core_controller->add_return_data($result["order_date"],$result["freq"]);	//hard-coded field name here
-		$this->successfully_processed();
+			$this->core_controller->add_return_data($result["order_date"],$result["freq"]);*/	//hard-coded field name here
+			
+		$this->core_controller->add_return_data()->successfully_processed();
+			
+		//$this->successfully_processed();
 	}
 	
 	/**
