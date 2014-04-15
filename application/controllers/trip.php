@@ -525,6 +525,9 @@ class Trip extends REST_Controller {
 			$this->load->model('driver_model');
 			$driver=$this->driver_model-> get_driver_by_did($order['did']);
 
+			$this->load->model('passenger_model');
+			$passenger=$this->passenger_model-> get_passenger_by_pid($order['pid']);
+
 		    //generate email for rating 
 		    $link="http://ec2-54-255-141-218.ap-southeast-1.compute.amazonaws.com/webpages/feedback.html?oid=".$oid.
 		    '&date_time='.urlencode($order['order_time']).'&location_from='.urlencode($order['location_from']).'&location_to='.urlencode($order['location_to']).
@@ -543,7 +546,7 @@ class Trip extends REST_Controller {
 		    );
 
 		    $message = 
-'Dear valued user,
+'Dear '.$passenger['first_name'].',
 
 Thank you for booking a taxi journey using our app!
 
@@ -561,14 +564,13 @@ Thank you!
 Best regards,
 Taxibook';
 
-			$this->load->model('passenger_model');
-			$passenger=$this->passenger_model-> get_passenger_by_pid($order['pid']);
+		
  
 			$this->load->library('email', $config);
 			$this->email->set_newline("\r\n");
 			$this->email->from('taxibook.no.reply@gmail.com', 'TaxiBook');
 			$this->email->to($passenger['email']); 
-			$this->email->subject('[non-reply]Please rate your driver.');
+			$this->email->subject('[no-reply]Please rate your driver.');
 			$this->email->message($message);	
 
 			$this->email->send();
