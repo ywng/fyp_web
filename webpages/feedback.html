@@ -110,33 +110,34 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     }
 
     function submitRating(){
-      alert(document.getElementById('Demo').value=="");
+      //alert(document.getElementById('Demo').value=="");
       if(document.getElementById('Demo').value==""){
         alert("Please give the score to the driver before submit");
-      }
-    
-      var comment=$('#comment').val();
-      if(comment==""){
-        comment="No comment.";
-      }
+      }else{
 
-      //call to server to do the rating  
-      $.ajax({
-                url: serverDomain + "index.php/trip/rate_driver",
-                context: document.body,
-                type: 'POST', 
-                data: "oid="+oid+"&date_time="+date_time[0]+" "+date_time[1]+"&score="+(parseInt(document.getElementById('Demo').value) +1)+"&comment="+comment,
-                async: false,
-                success: function(data, textStatus, jqXHR){
-                    var result=data.error;
-                    if(result!=null)
-                      alert(result);
-              },
-              error: function(jqHXR, textStatus, errorThrown) {
-                console.log('ajax error:' +textStatus + ' ' + errorThrown);
-              }
+          var comment=$('#comment').val();
+          if(comment==""){
+            comment="No comment.";
+          }
 
-      }); // end of the ajax call
+          //call to server to do the rating  
+          $.ajax({
+                    url: serverDomain + "index.php/trip/rate_driver",
+                    context: document.body,
+                    type: 'POST', 
+                    data: "oid="+oid+"&date_time="+date_time[0]+" "+date_time[1]+"&score="+(parseInt(document.getElementById('Demo').value) +1)+"&comment="+comment,
+                    async: false,
+                    success: function(data, textStatus, jqXHR){
+                        var result=data.error;
+                        if(result!=null)
+                          alert(result);
+                  },
+                  error: function(jqHXR, textStatus, errorThrown) {
+                    console.log('ajax error:' +textStatus + ' ' + errorThrown);
+                  }
+
+          }); // end of the ajax call
+      }
    
 
     }
