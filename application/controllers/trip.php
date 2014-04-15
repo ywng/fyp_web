@@ -14,10 +14,7 @@ class Trip extends REST_Controller {
 	var $Status_KEY_pending = 0;
 	var $Status_KEY_bidded = 1;
 	var $Status_KEY_customer_confirmed = 2;
-	var $Status_KEY_driver_coming = 3;
-	var $Status_KEY_driver_waiting = 4;
-	var $Status_KEY_driver_picked_up = 5;
-	var $Status_KEY_trip_finished = 6;
+	var $Status_KEY_trip_finished = 3;
 
 	var $CONST_MAX_DRIVERS_NEARBY = 5;
 
