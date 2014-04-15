@@ -22,11 +22,11 @@ class Statistics_model extends CI_Model{
 	function get_all_order_cumulative() {
 		$query_result = $this->db->query("SELECT date(order_time) as order_date, count(*) as freq FROM taxibook.Active_Order group by date(order_time) order by date(order_time)");
 		
-		$returned_result = array();
+		/*$returned_result = array();
 		
-		foreach($query_result->result() as $row){
+		foreach($query_result->result_array() as $row){
 			array_push($returned_result,array("order_date" => $row->{"order_date"} , "freq" => $row->{"freq"}));
-		}
+		}*/
 		/*
 		//data processing
 		$cnt_result = count($returned_result);
@@ -35,7 +35,7 @@ class Statistics_model extends CI_Model{
 		}
 		*/
 		
-		return $returned_result;
+		return $query_result->result_array();
     }
     
 	function get_all_order_DayOfWeek() {
