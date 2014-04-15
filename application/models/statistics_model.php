@@ -36,7 +36,7 @@ class Statistics_model extends CI_Model{
     }
     
     function getAllOrderHourWeek() {
-		$query = $this->db->query("SELECT DAYOFWEEK(order_time)-1 as weekay, HOUR(order_time) as hour, count(*) as freq FROM taxibook.Active_Order group by DAYOFWEEK(order_time), HOUR(order_time) order by DAYOFWEEK(order_time)");
+		$query = $this->db->query("SELECT DAYOFWEEK(order_time)-1 as weekday, HOUR(order_time) as hour, count(*) as freq FROM taxibook.Active_Order group by DAYOFWEEK(order_time), HOUR(order_time) order by DAYOFWEEK(order_time)");
 
 		$query_result = $query->result_array();
 		
@@ -47,8 +47,8 @@ class Statistics_model extends CI_Model{
 				$freq = 0;
 				if($k<count($query_result)){
 					$row = $query_result[$k];
-					if($row->weekay==$i && $row[1]==$j){
-						$freq = $row[2];
+					if($row['weekday']==$i && $row['hour']==$j){
+						$freq = $row['freq'];
 						$k++;
 					}
 					else{
