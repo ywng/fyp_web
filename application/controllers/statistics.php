@@ -27,14 +27,14 @@ class Statistics extends REST_Controller {
 	}
 
 	/**
-	*  This can be accessed by /statistics/getAllTrip_TimeOfDay with GET method
+	*  This can be accessed by /statistics/getAllOrderHourWeek with GET method
 	*/
 	public function getAllOrderHourWeek_get()
 	{
 		$this->load->model('statistics_model');
 		$results= $this->statistics_model->getAllOrderHourWeek();
 
-		$this->add_return_data('result',$result)->successfully_processed();
+		$this->add_return_data('result',$results)->successfully_processed();
 	}
 	
 	/**
