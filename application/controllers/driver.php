@@ -392,6 +392,41 @@ class Driver extends REST_Controller {
 	}
 
 	/**
+	*  This can be accessed by /driver/assigned_trip with GET method
+	*  Get Assigned Trip
+	*
+	*/
+	public function assigned_trip_get($limit = NULL, $offset = NULL)
+	{
+		if (is_null($limit) || empty($limit) || !is_numeric($limit)) {
+			$limit = 20;
+		}
+		if (is_null($offset) || empty($offset) || !is_numeric($offset)) {
+			$offset = 0;
+		}
+
+		$current_driver = $this->core_controller->get_current_user();
+
+		$this->load->model('order_model');
+		$results = $this->order_model->get_all_active_orders_by_did($current_driver[$this->order_model->KEY_did], $limit, $offset);
+
+		$results_with_separated_gps = array();
+
+		foreach ($results as $row) {
+
+			$trip_detail = $this->split_latitude_longitude($row, $this->order_model->KEY_gps_from, 
+				$this->order_model->KEY_gps_from.'_latitude', $this->order_model->KEY_gps_from.'_longitude');
+
+			$trip_detail = $this->split_latitude_longitude($trip_detail, $this->order_model->KEY_gps_to, 
+				$this->order_model->KEY_gps_to.'_latitude', $this->order_model->KEY_gps_to.'_longitude');
+			$results_with_separated_gps[] = $trip_detail;
+		}
+
+		$this->core_controller->add_return_data('order', $results_with_separated_gps)->successfully_processed();
+		
+	}
+
+	/**
 	*  This can be accessed by /driver/login with POST method
 	*  Login
 	*

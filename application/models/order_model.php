@@ -28,6 +28,8 @@ class Order_model extends CI_Model {
 	var $Table_name_inactive = 'Inactive_Order';
 	var $KEY_actual_price = 'actual_price';
 
+	var $Table_name_assigned = 'Assigned_Drivers';
+
 
 	var $Table_name_rating_session = 'Rating_Session';
 	var $KEY_rating_session_key = 'hash_key';
@@ -92,6 +94,10 @@ class Order_model extends CI_Model {
 
 	function get_all_active_orders_by_did($did, $limit, $offset) {
 		return $this->get_all_active_orders_by_key($this->KEY_did, $did, $limit, $offset);
+	}
+
+	function get_all_assigned_orders_by_did($did, $limit, $offset) {
+		return $this->get_all_assigned_orders_by_key($this->KEY_did, $did, $limit, $offset);
 	}
 
 	function get_all_active_orders_by_pid($pid, $limit, $offset) {
@@ -185,6 +191,10 @@ class Order_model extends CI_Model {
 
 	private function get_all_inactive_orders_by_key($key, $value, $limit, $offset) {
 		return $this->get_all_orders_by_key($this->Table_name_inactive, $key, $value, $limit, $offset);
+	}
+
+	private function get_all_assigned_orders_by_key($key, $value, $limit, $offset) {
+		return $this->get_all_orders_by_key($this->Table_name_assigned, $key, $value, $limit, $offset);
 	}
 
 }
