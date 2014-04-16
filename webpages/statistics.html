@@ -107,7 +107,7 @@
       var heatMap = svg.selectAll(".hour")
           .data(DayHourHeatmap)
           .enter().append("rect")
-          .attr("x", function(d) { return (d[1]-1) * gridSize; })
+          .attr("x", function(d) { return (d[1]) * gridSize; })
           .attr("y", function(d) { return (d[0]) * gridSize; })
           .attr("rx", 4)
           .attr("ry", 4)
