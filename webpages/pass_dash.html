@@ -211,7 +211,7 @@
             async: false,
             success: function(data, textStatus, jqXHR){
                 var len=data.order.length;
-                trip_record_for_driver=new Array(); 
+                trip_record_for_passenger=new Array(); 
                 for(var i=0;i<len;i++){
                    var trip_record=new Array(); 
                    trip_record[0]=data.order[i].oid;
