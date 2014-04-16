@@ -235,7 +235,7 @@ class Passenger extends REST_Controller {
 		$current_passenger = $this->core_controller->get_current_user();
 
 		$this->load->model('order_model');
-		$results = $this->order_model->get_all_inactive_orders_by_pid($current_driver[$this->order_model->KEY_pid], $limit, $offset);
+		$results = $this->order_model->get_all_inactive_orders_by_pid($current_passenger[$this->order_model->KEY_pid], $limit, $offset);
 
 		$results_with_separated_gps = array();
 
