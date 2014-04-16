@@ -219,8 +219,14 @@
                    trip_record[1]=data.order[i].location_from;
                    trip_record[2]=data.order[i].location_to;
                    trip_record[3]=data.order[i].order_time;
-                   trip_record[4]=data.order[i].score;
-                   trip_record[5]=data.order[i].comment;
+                   if(data.order[i].score==-1){
+                     trip_record[4]="Not yet rated";
+                     trip_record[5]="Not yet rated";
+                  }
+                   else{
+                     trip_record[4]=data.order[i].score;
+                     trip_record[5]=data.order[i].comment;
+                  }
                    
 
                   trip_record_for_driver[i]=trip_record;
