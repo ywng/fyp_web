@@ -43,7 +43,7 @@ function _init(){
 			}
 
 			for(var i=0;i<resultArray.length;i++){
-				console.log(resultArray[i][0]+ "  "+resultArray[i][1]+"  "+resultArray[i][2]);
+				console.log(DayHourHeatmap[i][0]+ "  "+DayHourHeatmap[i][1]+"  "+DayHourHeatmap[i][2]);
 			}
 		},
 		error: function(jqHXR, textStatus, errorThrown) {
