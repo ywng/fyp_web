@@ -42,9 +42,10 @@ function _init(){
 				DayHourHeatmap[i]=dataPt;
 			}
 
+			/*for debug only**
 			for(var i=0;i<resultArray.length;i++){
 				console.log(DayHourHeatmap[i][0]+ "  "+DayHourHeatmap[i][1]+"  "+DayHourHeatmap[i][2]);
-			}
+			}*/
 		},
 		error: function(jqHXR, textStatus, errorThrown) {
 			console.log('ajax error in get survey ID call:' +textStatus + ' ' + errorThrown);
