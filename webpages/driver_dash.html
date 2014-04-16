@@ -222,11 +222,11 @@
                    if(data.order[i].score==-1){
                      trip_record[4]="Not yet rated";
                      trip_record[5]="Not yet rated";
-                  }
-                   else{
-                     trip_record[4]=data.order[i].score;
-                     trip_record[5]=data.order[i].comment;
-                  }
+                    }
+                     else{
+                       trip_record[4]=data.order[i].score;
+                       trip_record[5]=data.order[i].comment;
+                    }
                    
 
                   trip_record_for_driver[i]=trip_record;
@@ -243,8 +243,8 @@
        var oTable = $('#example').dataTable({ "aaData":trip_record_for_driver, bJQueryUI: true,"sPaginationType": "full_numbers"}).makeEditable({
                               
 
-           });
-      });
+        });
+   
 
 
 
