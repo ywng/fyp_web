@@ -25,7 +25,44 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <!-- styles for tables-->
+    <style type="text/css" media="screen">
+      @import "DataTables-1.9.4/media/css/demo_page.css";
+      @import "DataTables-1.9.4/media/css/demo_table.css";
+      @import "http://www.datatables.net/media/css/site_jui.ccss";
+      @import "DataTables-1.9.4/media/css/demo_table_jui.css";
+      @import "DataTables-1.9.4/media/css/themes/base/jquery-ui.css";
+      @import "DataTables-1.9.4/media/css/themes/smoothness/jquery-ui-1.7.2.custom.css";
+      /*
+       * Override styles needed due to the mix of three different CSS sources! For proper examples
+       * please see the themes example in the 'Examples' section of this site
+       */
+      .dataTables_info { padding-top: 0; }
+      .dataTables_paginate { padding-top: 0; }
+      .css_right { float: right; }
+      #example_wrapper .fg-toolbar { font-size: 0.8em }
+      #theme_links span { float: left; padding: 2px 10px; }
+    </style>
+
+    <script type="text/javascript" src="DataTables-1.9.4/media/js/complete.js"></script>
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script src="DataTables-1.9.4/media/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="DataTables-1.9.4/media/js/jquery.dataTables.editable.js"></script>
+    <script src="DataTables-1.9.4/media/js/jquery.jeditable.js" type="text/javascript"></script>
+    <script src="DataTables-1.9.4/media/js/jquery-ui.js" type="text/javascript"></script>
+    <script src="DataTables-1.9.4/media/js/jquery.validate.js" type="text/javascript"></script>
     <script src="config/config.js"></script>
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
   </head>
 
 
@@ -106,134 +143,42 @@
             </div>
           </div>
 
-          <h2 class="sub-header">Section title</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                  <td>adipiscing</td>
-                  <td>elit</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>Integer</td>
-                  <td>nec</td>
-                  <td>odio</td>
-                  <td>Praesent</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>libero</td>
-                  <td>Sed</td>
-                  <td>cursus</td>
-                  <td>ante</td>
-                </tr>
-                <tr>
-                  <td>1,004</td>
-                  <td>dapibus</td>
-                  <td>diam</td>
-                  <td>Sed</td>
-                  <td>nisi</td>
-                </tr>
-                <tr>
-                  <td>1,005</td>
-                  <td>Nulla</td>
-                  <td>quis</td>
-                  <td>sem</td>
-                  <td>at</td>
-                </tr>
-                <tr>
-                  <td>1,006</td>
-                  <td>nibh</td>
-                  <td>elementum</td>
-                  <td>imperdiet</td>
-                  <td>Duis</td>
-                </tr>
-                <tr>
-                  <td>1,007</td>
-                  <td>sagittis</td>
-                  <td>ipsum</td>
-                  <td>Praesent</td>
-                  <td>mauris</td>
-                </tr>
-                <tr>
-                  <td>1,008</td>
-                  <td>Fusce</td>
-                  <td>nec</td>
-                  <td>tellus</td>
-                  <td>sed</td>
-                </tr>
-                <tr>
-                  <td>1,009</td>
-                  <td>augue</td>
-                  <td>semper</td>
-                  <td>porta</td>
-                  <td>Mauris</td>
-                </tr>
-                <tr>
-                  <td>1,010</td>
-                  <td>massa</td>
-                  <td>Vestibulum</td>
-                  <td>lacinia</td>
-                  <td>arcu</td>
-                </tr>
-                <tr>
-                  <td>1,011</td>
-                  <td>eget</td>
-                  <td>nulla</td>
-                  <td>Class</td>
-                  <td>aptent</td>
-                </tr>
-                <tr>
-                  <td>1,012</td>
-                  <td>taciti</td>
-                  <td>sociosqu</td>
-                  <td>ad</td>
-                  <td>litora</td>
-                </tr>
-                <tr>
-                  <td>1,013</td>
-                  <td>torquent</td>
-                  <td>per</td>
-                  <td>conubia</td>
-                  <td>nostra</td>
-                </tr>
-                <tr>
-                  <td>1,014</td>
-                  <td>per</td>
-                  <td>inceptos</td>
-                  <td>himenaeos</td>
-                  <td>Curabitur</td>
-                </tr>
-                <tr>
-                  <td>1,015</td>
-                  <td>sodales</td>
-                  <td>ligula</td>
-                  <td>in</td>
-                  <td>libero</td>
-                </tr>
-              </tbody>
-            </table>
+          <!-- Table========================== -->
+          <h2 class="sub-header" id ='tripHistoryDriver'>Trip History Table</h2>
+          <div class="full_width">
+
+          <table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Driver ID</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Date Time</th>
+                <th>Rating Score</th>
+                <th>Comment</th>
+              
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th>Order ID</th>
+                <th>Driver ID</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Date Time</th>
+                <th>Rating Score</th>
+                <th>Comment</th>
+              </tr>
+
+            </tfoot>
+            <tbody>
+              
+            </tbody>
+          </table>
           </div>
+
+        
         </div>
       </div>
     </div>
@@ -242,21 +187,68 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
 
-    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="js/docs.min.js"></script>
   </body>
 
   <script>
 
+      var trip_record_for_passenger;
+
       $( document ).ready(function() {
              //alert(localStorage.getItem("X-taxibook-session-token"));
                //if not login, redirect to login page
-            if(!(localStorage.getItem("X-taxibook-loggedIn")=="true" && localStorage.getItem("X-taxibook-user-type")=="passenger")){
+          if(!(localStorage.getItem("X-taxibook-loggedIn")=="true" && localStorage.getItem("X-taxibook-user-type")=="passenger")){
               window.location.href="signin.html";
-      }
+           }
            
+          $.ajax({
+            url: serverDomain + "index.php/passenger/inactive_trip",
+            context: document.body,
+           // dataType: "json", 
+            headers : {"Access-Control-Allow-Origin" : "*","X-taxibook-session-token":localStorage.getItem("X-taxibook-session-token"),"X-taxibook-email":localStorage.getItem("X-taxibook-email"),"X-taxibook-user-type":localStorage.getItem("X-taxibook-user-type")},
+            type: 'GET', 
+            async: false,
+            success: function(data, textStatus, jqXHR){
+                var len=data.order.length;
+                trip_record_for_driver=new Array(); 
+                for(var i=0;i<len;i++){
+                   var trip_record=new Array(); 
+                   trip_record[0]=data.order[i].oid;
+                   trip_record[1]=data.order[i].pid;//implement onclick to view more about a driver
+                   trip_record[2]=data.order[i].location_from;
+                   trip_record[3]=data.order[i].location_to;
+                   trip_record[4]=data.order[i].order_time;
+                   if(data.order[i].score==-1){
+                     trip_record[5]="Not yet rated";
+                     trip_record[6]="Not yet rated";
+                    }
+                     else{
+                       trip_record[5]=data.order[i].score;
+                       trip_record[6]=data.order[i].comment;
+                    }
+                   
+
+                  trip_record_for_passenger[i]=trip_record;
+                }
+
+            },
+            error: function(jqHXR, textStatus, errorThrown) {
+              console.log('ajax error:' +textStatus + ' ' + errorThrown);
+            }
+
+        }); // end of the ajax call
+
+   /* Init the table */
+       var oTable = $('#example').dataTable({ "aaData":trip_record_for_passenger, bJQueryUI: true,"sPaginationType": "full_numbers"}).makeEditable({
+                              
+
+        });
+   
+
+
+
+
       });
 
       function logout(){
