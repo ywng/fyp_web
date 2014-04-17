@@ -49,6 +49,31 @@
 	      text.axis-worktime {
 	        fill: #000;
 	      }
+
+	    .bar {
+		  fill: steelblue;
+		}
+
+		.bar:hover {
+		  fill: brown;
+		}
+
+		.axis {
+		  font: 10px sans-serif;
+		}
+
+		.axis path,
+		.axis line {
+		  fill: none;
+		  stroke: #000;
+		  shape-rendering: crispEdges;
+		}
+
+		.x.axis path {
+		  display: none;
+		}
+
+
 	 </style>
 
 	<h2>Other Useful Taxi Data Statistics </h2>
@@ -61,9 +86,15 @@
 <body> 
 	<h4>Day/Hour Heatmap for Taxi Riding Time </h4>
 	<p>From this simple heatmap, you can get a visualization of real time data about on which days and which hours of the day, that people are more likely to take a taxi.</p>
- 	<div id="chart"></div>
+ 	<div id="chart_day_week"></div>
+
+ 	<div id="bar_charts_day"></div>
+
+ 	<div id="bar_charts_week"></div>
 
     <script type="text/javascript">
+
+    //Day-Week Heatmap---------------------------------------------------//
       var margin = { top: 50, right: 0, bottom: 100, left: 30 },
           width = 960 - margin.left - margin.right,
           height = 430 - margin.top - margin.bottom,
@@ -80,7 +111,7 @@
           .domain([0, buckets - 1, d3.max(DayHourHeatmap, function (d) { return d[2]; })])
           .range(colors);
 
-      var svg = d3.select("#chart").append("svg")
+      var svg = d3.select("#chart_day_week").append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
           .append("g")
@@ -141,6 +172,60 @@
         .attr("x", function(d, i) { return legendElementWidth * i; })
         .attr("y", height + gridSize);
       
+
+      //bar charts=============================================================
+		var x = d3.scale.ordinal()
+		    .rangeRoundBands([0, width], .1);
+
+		var y = d3.scale.linear()
+		    .range([height, 0]);
+
+		var xAxis = d3.svg.axis()
+		    .scale(x)
+		    .orient("bottom");
+
+		var yAxis = d3.svg.axis()
+		    .scale(y)
+		    .orient("left")
+
+		var svg_bar_chart = d3.select("bar_charts_week").append("svg")
+		    .attr("width", width + margin.left + margin.right)
+		    .attr("height", height + margin.top + margin.bottom)
+		 	.append("g")
+		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		
+		  x.domain(WeekBarChart.map(function(d) { return d.weekday; }));
+		  y.domain([0, d3.max(WeekBarChart, function(d) { return d.freq; })]);
+
+		  svg_bar_chart.append("g")
+		      .attr("class", "x axis")
+		      .attr("transform", "translate(0," + height + ")")
+		      .call(xAxis);
+
+		  svg_bar_chart.append("g")
+		      .attr("class", "y axis")
+		      .call(yAxis)
+		    .append("text")
+		      .attr("transform", "rotate(-90)")
+		      .attr("y", 6)
+		      .attr("dy", ".71em")
+		      .style("text-anchor", "end")
+		      .text("Frequency");
+
+		  svg_bar_chart.selectAll(".bar")
+		      .data(WeekBarChart)
+		    .enter().append("rect")
+		      .attr("class", "bar")
+		      .attr("x", function(d) { return x(d.weekday); })
+		      .attr("width", x.rangeBand())
+		      .attr("y", function(d) { return y(d.freq); })
+		      .attr("height", function(d) { return height - y(d.freq); });
+
+	
+
+
+
     </script>
 
 

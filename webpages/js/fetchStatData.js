@@ -19,7 +19,8 @@
  * Data Visualization, CSE, HKUST
  */
 
-var DayHourHeatmap=new Array();;
+var DayHourHeatmap=new Array();
+var WeekBarChart=new Array();
 
 function _init(){
 	// fetch data from database
@@ -52,6 +53,24 @@ function _init(){
 		}
 
 	 }); // end of the ajax call
+
+	$.ajax({
+		url: serverDomain+"index.php/statistics/getAllOrderWeekDay",
+		context: document.body,
+		dataType: "json", 
+		headers : {Accept : "application/json","Access-Control-Allow-Origin" : "*"},
+		type: 'GET', 
+		async: false,
+		success: function(data, textStatus, jqXHR){
+			WeekBarChart=data.result;	
+		},
+		error: function(jqHXR, textStatus, errorThrown) {
+			console.log('ajax error in get survey ID call:' +textStatus + ' ' + errorThrown);
+		}
+
+	 }); // end of the ajax call
+
+	
 
 }
 
