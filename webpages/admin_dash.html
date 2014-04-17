@@ -84,8 +84,14 @@
                  driver[3]=data.aaData[i].license_no;
                  var filePath= data.aaData[i].license_photo;
                 
-                 driver[4]="<a href="+data.aaData[i].license_photo+" target=\"_blank\">Click to view</a>";
-                 driver[5]="<a href="+data.aaData[i].profile_pic+" target=\"_blank\">Click to view</a>";
+                 if(data.aaData[i].license_photo==null)
+                    driver[4]="No License Photo";
+                 else
+                    driver[4]="<a href="+data.aaData[i].license_photo+" target=\"_blank\">Click to view</a>";
+                 if(data.aaData[i].profile_pic==null)
+                     driver[5]="No Profile Picture";
+                 else
+                     driver[5]="<a href="+data.aaData[i].profile_pic+" target=\"_blank\">Click to view</a>";
                  if(data.aaData[i].member_status_id=="1")
                    driver[6]="Approved";
                  else
