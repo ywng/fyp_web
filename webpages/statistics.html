@@ -225,17 +225,17 @@
 
 	
 		// bar charts hours stat
-		var x = d3.scale.ordinal()
+		var x2 = d3.scale.ordinal()
 		    .rangeRoundBands([0, width], .1);
 
-		var y = d3.scale.linear()
+		var y2 = d3.scale.linear()
 		    .range([height, 0]);
 
-		var xAxis = d3.svg.axis()
+		var xAxis2 = d3.svg.axis()
 		    .scale(x)
 		    .orient("bottom");
 
-		var yAxis = d3.svg.axis()
+		var yAxis2 = d3.svg.axis()
 		    .scale(y)
 		    .orient("left");
 
@@ -246,17 +246,17 @@
 		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 		
-		  x.domain(DayBarChart.map(function(d) { return d.hour; }));
-		  y.domain([0, d3.max(DayBarChart, function(d) { return d.freq; })]);
+		  x2.domain(DayBarChart.map(function(d) { return d.hour; }));
+		  y2.domain([0, d3.max(DayBarChart, function(d) { return d.freq; })]);
 
 		  svg_bar_chart2.append("g")
 		      .attr("class", "x axis")
 		      .attr("transform", "translate(0," + height + ")")
-		      .call(xAxis);
+		      .call(xAxis2);
 
 		  svg_bar_chart2.append("g")
 		      .attr("class", "y axis")
-		      .call(yAxis)
+		      .call(yAxis2)
 		    .append("text")
 		      .attr("transform", "rotate(-90)")
 		      .attr("y", 6)
@@ -268,10 +268,10 @@
 		      .data(DayBarChart)
 		    .enter().append("rect")
 		      .attr("class", "bar")
-		      .attr("x", function(d) { return x(d.hour); })
-		      .attr("width", x.rangeBand())
-		      .attr("y", function(d) { return y(d.freq); })
-		      .attr("height", function(d) { return height - y(d.freq); });
+		      .attr("x", function(d) { return x2(d.hour); })
+		      .attr("width", x2.rangeBand())
+		      .attr("y", function(d) { return y2(d.freq); })
+		      .attr("height", function(d) { return height - y2(d.freq); });
 
 
 
