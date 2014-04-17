@@ -247,7 +247,7 @@
 
 		
 		  x2.domain(DayBarChart.map(function(d) { return d.hour; }));
-		  y2.domain([0, d3.max(DayBarChart, function(d) { return d.freq; })]);
+		  y2.domain([0, d3.max(DayBarChart, function(d) { return parseInt(d.freq); })]);
 
 		  svg_bar_chart2.append("g")
 		      .attr("class", "x axis")
