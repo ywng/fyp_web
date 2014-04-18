@@ -84,18 +84,22 @@
 <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 
 <body> 
-	<h4>Day/Hour Heatmap for Taxi Riding Time </h4>
-	<p>From this simple heatmap, you can get a visualization of real time data about on which days and which hours of the day, that people are more likely to take a taxi.</p>
+	<br>
+	<h4>(1) Day/Hour Heatmap for Taxi Riding Time </h4>
  	<div id="chart_day_week"></div>
 
+ 	<br>
+	<h4>(2) Taxi Ride Distribution Throughout a Day </h4>
  	<div id="bar_charts_day"></div>
 
+ 	<br>
+	<h4>(3) Taxi Ride Distribution Throughout a Week </h4>
  	<div id="bar_charts_week"></div>
 
     <script type="text/javascript">
 
     //Day-Week Heatmap---------------------------------------------------//
-      var margin = { top: 50, right: 0, bottom: 100, left: 30 },
+      var margin = { top: 50, right: 0, bottom: 100, left: 100 },
           width = 960 - margin.left - margin.right,
           height = 430 - margin.top - margin.bottom,
           gridSize = Math.floor(width / 24),
