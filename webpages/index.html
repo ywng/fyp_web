@@ -338,7 +338,11 @@
                   .style("text-anchor", "end")
                   .text("Cummulative # Orders Handled");
 
-                focus.append("path")
+                var plot = focus.selectAll(".plot")
+                                .enter().append("g")
+                                .attr("class", "plot");
+
+                plot.append("path")
                   .attr("class", "line")
                   .attr("clip-path", "url(#clip)")//use clip path to make irrelevant part invisible
                   .attr("d", line(cummulativeOrderStat))
@@ -352,7 +356,7 @@
                 //for brusher of the slider bar at the bottom
                 function brushed() {
                   x.domain(brush.empty() ? x2.domain() : brush.extent());
-                  focus.select("path").transition()//update curve 
+                  plot.select("path").transition()//update curve 
                     .attr("d", line(cummulativeOrderStat))
                   focus.select(".x.axis").call(xAxis);
                 }
