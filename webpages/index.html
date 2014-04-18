@@ -360,7 +360,7 @@
                 function brushed() {
                   x.domain(brush.empty() ? x2.domain() : brush.extent());
                   plot.select("path").transition()//update curve 
-                    .attr("d", line(cummulativeOrderStat))
+                    .attr("d", function(d) {line(d);})
                   focus.select(".x.axis").call(xAxis);
                 }
                 
