@@ -5,6 +5,9 @@
 *
  * @author ywng
  */
+ 
+
+ 
 class Statistics_model extends CI_Model{
 
     var $KEY_order_id = 'oid';
@@ -14,6 +17,15 @@ class Statistics_model extends CI_Model{
     var $Table_name_Active_Order = 'Active_Order';
     var $Table_name_Inactive_Order = 'Inactive_Order';
     
+	var $weekday_name= array(
+		'0'=>'Sunday',
+		'1'=>'Monday',
+		'2'=>'Tuesday',
+		'3'=>'Wednesday',
+		'4'=>'Thursday',
+		'5'=>'Friday',
+		'6'=>'Saturday'
+	);
 
     function __construct() {
         parent::__construct();
@@ -37,7 +49,7 @@ class Statistics_model extends CI_Model{
     }
     
     function getAllOrderHourWeek() {
-		$query = $this->db->query("SELECT DAYOFWEEK(order_time) as weekday, HOUR(order_time) as hour, count(*) as freq FROM (SELECT order_time FROM taxibook.Active_Order UNION ALL SELECT order_time FROM taxibook.Inactive_Order) T_Active_UNION_Inactive group by DAYOFWEEK(order_time), HOUR(order_time) order by DAYOFWEEK(order_time)");
+		$query = $this->db->query("SELECT DAYOFWEEK(order_time)-1 as weekday, HOUR(order_time) as hour, count(*) as freq FROM (SELECT order_time FROM taxibook.Active_Order UNION ALL SELECT order_time FROM taxibook.Inactive_Order) T_Active_UNION_Inactive group by DAYOFWEEK(order_time), HOUR(order_time) order by DAYOFWEEK(order_time)");
 
 		$query_result = $query->result_array();
 		
@@ -56,7 +68,7 @@ class Statistics_model extends CI_Model{
 						$freq = 0;
 					}
 				}
-				array_push($returned_result, array('weekay'=>$i,'hour'=>$j,'freq'=>$freq));
+				array_push($returned_result, array('weekay'=>$weekday_name[$i],'hour'=>$j,'freq'=>$freq));
 			}
 		}
 		
