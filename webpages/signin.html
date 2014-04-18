@@ -60,6 +60,7 @@
                         //alert("equal");
                         if(checkedValue.toLowerCase()=="driver" && data.member_status_id!="1"){
                            alert("Your account is suspended or not yet approved!");
+                           return false;
                         }
                         
                         localStorage.setItem("X-taxibook-session-token", data.session_token);
