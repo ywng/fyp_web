@@ -20,7 +20,7 @@ class Statistics_model extends CI_Model{
     }
     
 	function get_all_order_cumulative() {
-		$query_result = $this->db->query("SELECT date(order_time) as order_date, count(*) as freq FROM taxibook.Active_Order group by date(order_time) order by date(order_time)");
+		$query_result = $this->db->query("SELECT date(order_time) as order_date, count(*) as freq FROM (SELECT order_time FROM taxibook.Active_Order UNION ALL SELECT order_time FROM taxibook.Inactive_Order) T_Active_UNION_Inactive group by date(order_time) order by date(order_time)");
 		
 		$returned_result = $query_result->result_array();
 		
@@ -37,7 +37,7 @@ class Statistics_model extends CI_Model{
     }
     
     function getAllOrderHourWeek() {
-		$query = $this->db->query("SELECT DAYOFWEEK(order_time)-1 as weekday, HOUR(order_time) as hour, count(*) as freq FROM taxibook.Active_Order group by DAYOFWEEK(order_time), HOUR(order_time) order by DAYOFWEEK(order_time)");
+		$query = $this->db->query("SELECT DAYNAME(order_time) as weekday, HOUR(order_time) as hour, count(*) as freq FROM (SELECT order_time FROM taxibook.Active_Order UNION ALL SELECT order_time FROM taxibook.Inactive_Order) T_Active_UNION_Inactive group by DAYOFWEEK(order_time), HOUR(order_time) order by DAYOFWEEK(order_time)");
 
 		$query_result = $query->result_array();
 		
@@ -64,13 +64,14 @@ class Statistics_model extends CI_Model{
     }
 	
 	function getAllOrderHourOfDay(){
-		$query = $this->db->query("SELECT HOUR(order_time) as hour, count(*) as freq FROM taxibook.Active_Order group by HOUR(order_time) order by HOUR(order_time)");
+		$query = $this->db->query("SELECT HOUR(order_time) as hour, count(*) as freq from (SELECT order_time FROM taxibook.Active_Order UNION ALL SELECT order_time FROM taxibook.Inactive_Order) T_Active_UNION_Inactive group by HOUR(order_time) order by HOUR(order_time)");
+		
 		
 		return $query->result_array();
 	}
 	
 	function getAllOrderWeekDay(){
-		$query = $this->db->query("SELECT DAYOFWEEK(order_time)-1 as weekday, count(*) as freq FROM taxibook.Active_Order group by DAYOFWEEK(order_time) order by DAYOFWEEK(order_time)");
+		$query = $this->db->query("SELECT DAYNAME(order_time) as weekday, count(*) as freq FROM (SELECT order_time FROM taxibook.Active_Order  UNION ALL SELECT order_time FROM taxibook.Inactive_Order ) T_Active_UNION_Inactive group by DAYOFWEEK(order_time) order by DAYOFWEEK(order_time)");
 		
 		return $query->result_array();
 	}
