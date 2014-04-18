@@ -177,7 +177,6 @@
         <hr class="featurette-divider">
 
         <div class="featurette">
-            <h2 class="featurette-heading">Number of Orders <br><span class="muted">Handled since inception</span></h2>
 
             <div id="CummulativeOrderChart"></div>
            
@@ -230,6 +229,11 @@
                         dateData.freq=result[i].freq;
                         
                         cummulativeOrderStat[i]=dateData;
+
+                      }
+
+                      for(var i=0;i<result.length;i++){
+                        console.log(cummulativeOrderStat[i].date+"  "+cummulativeOrderStat[i].freq);
 
                       }
 
@@ -337,7 +341,7 @@
                   .attr("y", 6)
                   .attr("dy", ".71em")
                   .style("text-anchor", "end")
-                  .text("Number of Orders");
+                  .text("Number of Orders Handled");
                 
                 //curving part of those funds------------------------------------------------------------------------
                 var fund = focus.selectAll(".plot")
