@@ -339,6 +339,7 @@
                   .text("Cummulative # Orders Handled");
 
                 var plot = focus.selectAll(".plot")
+                                .data(null)
                                 .enter().append("g")
                                 .attr("class", "plot");
 
