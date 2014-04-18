@@ -206,6 +206,7 @@
 
                 //chart
                 var cummulativeOrderStat=new Array(); 
+                var data=new Array();
                 var parseDate = d3.time.format("%Y-%m-%d").parse;
 
                 //get data
@@ -231,6 +232,7 @@
                         console.log(cummulativeOrderStat[i].date+"  "+cummulativeOrderStat[i].freq);
 
                       }*/
+                      data[0]=cummulativeOrderStat;
 
                   },
                   error: function(jqHXR, textStatus, errorThrown) {
@@ -339,14 +341,14 @@
                   .text("Cummulative # Orders Handled");
 
                 var plot = focus.selectAll(".plot")
-                                .data(null)
+                                .data(data)
                                 .enter().append("g")
                                 .attr("class", "plot");
 
                 plot.append("path")
                   .attr("class", "line")
                   .attr("clip-path", "url(#clip)")//use clip path to make irrelevant part invisible
-                  .attr("d", line(cummulativeOrderStat))
+                  .attr("d", function(d) { line(d);})
                   .style("stroke",  "SkyBlue");
 
                
