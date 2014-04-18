@@ -231,11 +231,11 @@
                         cummulativeOrderStat[i]=dateData;
 
                       }
-
+                      /*/for debug only
                       for(var i=0;i<result.length;i++){
                         console.log(cummulativeOrderStat[i].date+"  "+cummulativeOrderStat[i].freq);
 
-                      }
+                      }*/
 
                   },
                   error: function(jqHXR, textStatus, errorThrown) {
@@ -342,17 +342,11 @@
                   .attr("dy", ".71em")
                   .style("text-anchor", "end")
                   .text("Number of Orders Handled");
-                
-                //curving part of those funds------------------------------------------------------------------------
-                var fund = focus.selectAll(".plot")
-                    .data(cummulativeOrderStat)
-                    .enter().append("g")
-                    .attr("class", "plot");
 
-                fund.append("path")
+                focus.append("path")
                   .attr("class", "line")
                   .attr("clip-path", "url(#clip)")//use clip path to make irrelevant part invisible
-                  .attr("d", function(d) { d.freq;})
+                  .attr("d", line(cummulativeOrderStat);)
                   .style("stroke", function(d) { return "SkyBlue"; });
 
                
@@ -363,8 +357,8 @@
                 //for brusher of the slider bar at the bottom
                 function brushed() {
                   x.domain(brush.empty() ? x2.domain() : brush.extent());
-                  fund.select("path").transition()//update curve 
-                    .attr("d", function(d) { line(d); })
+                  fund.select("plot").transition()//update curve 
+                    .attr("d", line(cummulativeOrderStat); })
                   focus.select(".x.axis").call(xAxis);
                 }
                 
