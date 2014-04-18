@@ -341,10 +341,10 @@
                   .attr("y", 6)
                   .attr("dy", ".71em")
                   .style("text-anchor", "end")
-                  .text("Number of Orders Handled");
+                  .text("Cummulative # Orders Handled");
 
                 focus.append("path")
-                  .attr("class", "curve")
+                  .attr("class", "line")
                   .attr("clip-path", "url(#clip)")//use clip path to make irrelevant part invisible
                   .attr("d", line(cummulativeOrderStat))
                   .style("stroke",  "SkyBlue");
