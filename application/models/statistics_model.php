@@ -68,7 +68,7 @@ class Statistics_model extends CI_Model{
 						$freq = 0;
 					}
 				}
-				array_push($returned_result, array('weekay'=>$weekday_name[$i],'hour'=>$j,'freq'=>$freq));
+				array_push($returned_result, array('weekay'=>$this->weekday_name[$i],'hour'=>$j,'freq'=>$freq));
 			}
 		}
 		
