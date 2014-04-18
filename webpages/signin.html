@@ -58,14 +58,15 @@
                       //alert(data.status_code);
                       if(data.status_code=='1'){
                         //alert("equal");
-                        if(data.member_status_id=="1"){
-                          localStorage.setItem("X-taxibook-session-token", data.session_token);
-                          localStorage.setItem("X-taxibook-email", data.email);
-                          localStorage.setItem("X-taxibook-user-type", checkedValue.toLowerCase());
-                          localStorage.setItem("X-taxibook-loggedIn", "true");
-                        }else{
-                          alert("Your account is suspended or not yet approved!");
+                        if(checkedValue.toLowerCase()=="driver" && data.member_status_id!="1"){
+                           alert("Your account is suspended or not yet approved!");
                         }
+                        
+                        localStorage.setItem("X-taxibook-session-token", data.session_token);
+                        localStorage.setItem("X-taxibook-email", data.email);
+                        localStorage.setItem("X-taxibook-user-type", checkedValue.toLowerCase());
+                        localStorage.setItem("X-taxibook-loggedIn", "true");
+                    
 
                       }else{
                         alert(data.message);
