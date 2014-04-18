@@ -206,7 +206,6 @@
 
                 //chart
                 var cummulativeOrderStat=new Array(); 
-                var data=new Array();
                 var parseDate = d3.time.format("%Y-%m-%d").parse;
 
                 //get data
@@ -232,7 +231,6 @@
                         console.log(cummulativeOrderStat[i].date+"  "+cummulativeOrderStat[i].freq);
 
                       }*/
-                      data[0]=cummulativeOrderStat;
 
                   },
                   error: function(jqHXR, textStatus, errorThrown) {
@@ -340,24 +338,23 @@
                   .style("text-anchor", "end")
                   .text("Cummulative # Orders Handled");
 
-              var fund = focus.selectAll(".fund")
-                  .data(data)
-                  .enter().append("g")
-                  .attr("class", "fund");
+                focus.append("path")
+                  .attr("class", "line")
+                  .attr("id", "plot")
+                  .attr("clip-path", "url(#clip)")//use clip path to make irrelevant part invisible
+                  .attr("d", line(cummulativeOrderStat))
+                  .style("stroke",  "SkyBlue");
 
-              fund.append("path")
-                .attr("class", "line")
-                .attr("clip-path", "url(#clip)")//use clip path to make irrelevant part invisible
-                .attr("d", function(d) { line(d);})
-                .style("stroke", "SkyBlue");
-
-
+               
+                //end of curving part of those funds------------------------------------------------------------- 
+                    
+                
               //************************************************* Supporting Functions***********************************************
                 //for brusher of the slider bar at the bottom
                 function brushed() {
                   x.domain(brush.empty() ? x2.domain() : brush.extent());
-                  plot.select("path").transition()//update curve 
-                    .attr("d", function(d) {line(d);})
+                  focus.selectAll("path#plot").transition()//update curve 
+                    .attr("d", line(cummulativeOrderStat))
                   focus.select(".x.axis").call(xAxis);
                 }
                 
