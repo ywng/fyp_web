@@ -357,7 +357,7 @@
                 //for brusher of the slider bar at the bottom
                 function brushed() {
                   x.domain(brush.empty() ? x2.domain() : brush.extent());
-                  focus.transition()//update curve 
+                  focus.selectAll("path").transition()//update curve 
                     .attr("d", line(cummulativeOrderStat))
                   focus.select(".x.axis").call(xAxis);
                 }
