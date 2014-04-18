@@ -175,7 +175,9 @@
         <hr class="featurette-divider">
 
         <div class="featurette">
-            <h2 class="featurette-heading"><span class="muted">Number of orders handled by our system since inception</span></h2>
+            <h2 class="featurette-heading">Number of Orders <br><span class="muted">Handled since inception</span></h2>
+
+            <div id="CummulativeOrderChart"></div>
            
         </div>
 
@@ -205,6 +207,168 @@
             $(function () {
                 // carousel demo
                 $('#myCarousel').carousel()
+
+                //chart
+                var cummulativeOrderStat=new Array(); 
+                var parseDate = d3.time.format("%Y-%m-%d").parse;
+
+                //get data
+                $.ajax({
+                  url: serverDomain+"index.php/statistics/getAllOrderCumulative",
+                  context: document.body,
+                  dataType: "json", 
+                  headers : {Accept : "application/json","Access-Control-Allow-Origin" : "*"},
+                  type: 'GET', 
+                  async: false,
+                  success: function(data, textStatus, jqXHR){
+                      var result=data.result; 
+                      for(var i=0;i<result.length;i++){
+                        var dateData=new Object();
+                        dateData.date= parseDate(result[i].order_date);
+                        dateData.freq=result[i].freq;
+                        
+                        cummulativeOrderStat[i]=dateData;
+
+                      }
+
+                  },
+                  error: function(jqHXR, textStatus, errorThrown) {
+                    console.log('ajax error in get survey ID call:' +textStatus + ' ' + errorThrown);
+                  }
+
+                }); // end of the ajax call
+                var margin = {top: 15, right: 50, bottom: 100, left: 50},
+                  margin2 = {top: 500, right: 50, bottom: 50, left: 50},
+                  width = 1300 - margin.left - margin.right,
+                  height = 570 - margin.top - margin.bottom,
+                  height2 = 570 - margin2.top - margin2.bottom;
+
+                var maxY=findMaxY();
+                var minY=findMinY();
+                
+                var x = d3.time.scale()
+                  .range([0, width-210]),
+                  x2 = d3.time.scale()
+                  .range([0, width-210]);
+
+                var y = d3.scale.linear()
+                  .range([height, 0]),
+                  y2 = d3.scale.linear()
+                  .range([height2, 0]);
+
+                var xAxis = d3.svg.axis()
+                  .scale(x)
+                  .orient("bottom");
+                  xAxis2 = d3.svg.axis()
+                  .scale(x2).orient("bottom");
+
+                var yAxis = d3.svg.axis()
+                  .scale(y)
+                  .orient("left");
+                
+                var line = d3.svg.line()
+                  .interpolate("linear")
+                  .x(function(d) { return x(d.date); })
+                  .y(function(d) { return y(d.freq); });
+
+                var svg = d3.select("#CummulativeOrderChart").append("svg")
+                  .attr("width", width + margin.left + margin.right)
+                  .attr("height", height + margin.top + margin.bottom);
+                
+                //the main graphic component of the plot
+                var focus=svg.append("g")
+                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                
+                //for slider part-----------------------------------------------------------------------------------
+                var brush = d3.svg.brush()//for slider bar at the bottom
+                  .x(x2)
+                  .on("brush", brushed);
+                
+                var context = svg.append("g")
+                  .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+                
+                //append click path for controlling the sliding of curve, clip those part out of bounds
+                svg.append("defs").append("clipPath") 
+                .attr("id", "clip")
+                .append("rect")
+                .attr("width", width-210)
+                .attr("height", height); 
+
+                x.domain(cummulativeOrderStat.map(function(d) { return d.date; })); 
+                y.domain([0, d3.max(cummulativeOrderStat, function(d) { return d.freq; })]);
+                x2.domain(x.domain());//the domain axis for the bar at the bottom
+                
+                context.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height2 + ")")
+                    .call(xAxis2);
+                  
+                var contextArea = d3.svg.area()
+                  .interpolate("monotone")
+                  .x(function(d) { return x2(d.date); })
+                  .y0(height2)
+                  .y1(0);
+                
+                //plot the rect as the bar at the bottom
+                context.append("path")
+                  .attr("class", "area")
+                  .attr("d", contextArea(cummulativeOrderStat))
+                  .attr("fill", "LightYellow ");
+                  
+                //append the brush for the selection of subsection  
+                context.append("g")
+                  .attr("class", "x brush")
+                  .call(brush)
+                  .selectAll("rect")
+                  .attr("height", height2)
+                    .attr("fill", "SkyBlue");  
+                //end slider part-----------------------------------------------------------------------------------
+                
+                //x,y-axis for the plot
+                focus.append("g")
+                  .attr("class", "x axis")
+                  .attr("transform", "translate(0," + height + ")")
+                  .call(xAxis);
+
+                focus.append("g")
+                  .attr("class", "y axis")
+                  .call(yAxis)
+                  .append("text")
+                  .attr("transform", "rotate(-90)")
+                  .attr("y", 6)
+                  .attr("dy", ".71em")
+                  .style("text-anchor", "end")
+                  .text("Number of Orders");
+                
+                //curving part of those funds------------------------------------------------------------------------
+                var fund = focus.selectAll(".plot")
+                    .data(data2)
+                    .enter().append("g")
+                    .attr("class", "plot");
+
+                fund.append("path")
+                  .attr("class", "line")
+                  .attr("clip-path", "url(#clip)")//use clip path to make irrelevant part invisible
+                  .attr("d", function(d) { d.freq;})
+                  .style("stroke", function(d) { return "SkyBlue"; });
+
+               
+                //end of curving part of those funds------------------------------------------------------------- 
+                    
+                
+              //************************************************* Supporting Functions***********************************************
+                //for brusher of the slider bar at the bottom
+                function brushed() {
+                  x.domain(brush.empty() ? x2.domain() : brush.extent());
+                  fund.select("path").transition()//update curve 
+                    .attr("d", function(d) { if(d.vis=="1"){return line(d.priceList);} else{ return null;} })
+                  focus.select(".x.axis").call(xAxis);
+                }
+                
+              
+
+
+
             })
         }(window.jQuery)
     </script>
