@@ -297,7 +297,7 @@
                 .attr("width", width-210)
                 .attr("height", height); 
 
-                x.domain(cummulativeOrderStat.map(function(d) { return d.date; })); 
+                x.domain([cummulativeOrderStat[0].date,cummulativeOrderStat[cummulativeOrderStat.length-1].date]); 
                 y.domain([0, d3.max(cummulativeOrderStat, function(d) { return d.freq; })]);
                 x2.domain(x.domain());//the domain axis for the bar at the bottom
                 
@@ -347,7 +347,7 @@
                   .attr("class", "line")
                   .attr("clip-path", "url(#clip)")//use clip path to make irrelevant part invisible
                   .attr("d", line(cummulativeOrderStat))
-                  .style("stroke", function(d) { return "SkyBlue"; });
+                  .style("stroke",  "SkyBlue");
 
                
                 //end of curving part of those funds------------------------------------------------------------- 
