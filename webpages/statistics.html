@@ -252,13 +252,7 @@
 		  svg_bar_chart2.append("g")
 		      .attr("class", "x axis")
 		      .attr("transform", "translate(0," + height + ")")
-		      .call(xAxis2)
-			  .append("text")
-		      .attr("class", "x label")
-			  .attr("text-anchor", "end")
-		      .attr("x", width)
-			  .attr("y", height - 6)
-			  .text("Hours");
+		      .call(xAxis20);
 
 		  svg_bar_chart2.append("g")
 		      .attr("class", "y axis")
