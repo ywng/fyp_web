@@ -324,7 +324,7 @@
                   .call(brush)
                   .selectAll("rect")
                   .attr("height", height2)
-                    .attr("fill", "SkyBlue");  
+                  .attr("fill", "SkyBlue");  
                 //end slider part-----------------------------------------------------------------------------------
                 
                 //x,y-axis for the plot
@@ -344,7 +344,7 @@
                   .text("Number of Orders Handled");
 
                 focus.append("path")
-                  .attr("class", "line")
+                  .attr("class", "curve")
                   .attr("clip-path", "url(#clip)")//use clip path to make irrelevant part invisible
                   .attr("d", line(cummulativeOrderStat))
                   .style("stroke",  "SkyBlue");
