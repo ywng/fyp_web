@@ -341,7 +341,7 @@
                 
                 //curving part of those funds------------------------------------------------------------------------
                 var fund = focus.selectAll(".plot")
-                    .data(data2)
+                    .data(cummulativeOrderStat)
                     .enter().append("g")
                     .attr("class", "plot");
 
