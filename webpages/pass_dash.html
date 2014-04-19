@@ -240,7 +240,21 @@
         }); // end of the ajax call
 
    /* Init the table */
-       var oTable = $('#example').dataTable({ "aaData":trip_record_for_passenger, bJQueryUI: true,"sPaginationType": "full_numbers"}).makeEditable({
+       var oTable = $('#example').dataTable({ 
+          "aaData":trip_record_for_passenger, 
+          bJQueryUI: true,
+          "sPaginationType": "full_numbers",
+          "bAutoWidth": false, // Disable the auto width calculation 
+          "aoColumns": [
+          { "sWidth": "1.5%" }, // 1st column width 
+          { "sWidth": "2%" }, // 2nd column width 
+          { "sWidth": "30%" }, // 3rd column width and so on 
+          { "sWidth": "30%" }, 
+          { "sWidth": "15%" }, 
+          { "sWidth": "1.5%" },
+          { "sWidth": "20%" }
+          ]
+        }).makeEditable({
                               
 
         });
