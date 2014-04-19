@@ -36,10 +36,10 @@
      
          function signin(){
                
-                if(!document.querySelector('.userTypeCheckbox:checked')){
+                if(!document.querySelector('input[name="userType"]:checked')){
                   alert("Please select the user type!");
                 }
-                var checkedValue = document.querySelector('.userTypeCheckbox:checked').value;
+                var checkedValue = document.querySelector('input[name="userType"]:checked').value;
                 //alert(checkedValue);
                 var data='email='+escape($('#email').val())+'&password='+escape($('#password').val());
         
@@ -108,16 +108,14 @@
         <h2 class="form-signin-heading">Please sign in</h2>
         <input type="email" class="form-control" placeholder="Email address" id="email" required autofocus>
         <input type="password" class="form-control" placeholder="Password" id="password" required>
-        <label class="checkbox">
-          <input class="userTypeCheckbox" type="checkbox" value="Driver" > Driver
-        </label>
-        <label class="checkbox">
-          <input class="userTypeCheckbox" type="checkbox" value="Passenger" > Passenger
-        </label>
-        <label class="checkbox">
-          <input class="userTypeCheckbox" type="checkbox" value="Admin" > Admin
-        </label>
-        <button class="btn btn-lg btn-primary btn-block"  id="signinBtn" onclick="signin()">Sign in</button>
+        <br>
+        <input type = "radio" name = "userType" id = "driver" value = "driver"> Driver<br>
+        <input type = "radio" name = "userType" id = "passenger" value = "passenger"  checked = "checked"> Passenger</br>
+        <input type = "radio" name = "userType" id = "admin" value = "admin" > Admin</br>
+
+        <br><br>
+
+        <button class="btn btn-lg btn-primary btn-block"  id="signinBtn" onclick="signin()" width="100">Sign in</button>
       </form>
 
     </div> <!-- /container -->
