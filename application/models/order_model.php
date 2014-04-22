@@ -165,6 +165,12 @@ class Order_model extends CI_Model {
 	function update_order($oid, $detail) {
 		$this->db->where($this->KEY_oid, $oid)
 				->update($this->Table_name_active, $detail);
+
+		if ($this->db->affected_rows() > 0) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 
 	function change_status($oid, $new_status_id) {
