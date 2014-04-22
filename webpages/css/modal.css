@@ -20,7 +20,8 @@
 	}
 
 	.modalDialog > div {
-		width: 900px;
+		width: 400px;
+		overflow:scroll;
 		position: relative;
 		margin: 10% auto;
 		padding: 5px 20px 13px 20px;
