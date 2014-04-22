@@ -175,12 +175,16 @@
 
     <!--Modal window -->
     <div id="driverDetailsModal" class="modalDialog">
-      <div>
+      <div style="overflow:scroll; height:600px;">
         <a href="#close" title="Close" class="close">X</a>
         <h2>Driver Detailed Information</h2>
         
          <img id="driver_profile_pic" src = "img/no_profile.png"
-         alt = "img/no_profile.png" />
+         alt = "img/no_profile.png" width="128"/>
+
+         <form id="driver_details">
+          
+        </form>
 
       </div>
     </div>
@@ -284,12 +288,18 @@
                driver.profile_pic=data.driver.profile_pic;
                driver.first_name=data.driver.first_name;
                driver.last_name=data.driver.last_name;
-               driver.first_name=data.driver.first_name;
                driver.email=data.driver.email;
                driver.average_rating=data.driver.average_rating;
                driver.rating_count=data.driver.rating_count;
 
                $("#driver_profile_pic").attr( "src" ,driver.profile_pic);
+
+               var infoHTML="<label>Name: "+driver.first_name+" "+ driver.last_name+"</label>";
+               infoHTML+="<label>Email: "+driver.email+"</label>";
+               infoHTML+="<label>Average Rating: "+driver.average_rating+"</label>";
+               infoHTML+="<label>Rating Count: "+driver.rating_count+"</label>";
+
+               $('#driver_details').html(infoHTML);
 
             },
             error: function(jqHXR, textStatus, errorThrown) {
