@@ -67,7 +67,7 @@
                         localStorage.setItem("X-taxibook-email", data.email);
                         localStorage.setItem("X-taxibook-user-type", checkedValue.toLowerCase());
                         localStorage.setItem("X-taxibook-loggedIn", "true");
-                        localStorage.setItem("X-taxibook-timestamp", new Date().getTime());
+                        localStorage.setItem("X-taxibook-expire-time", data.expire_time);
                     
                         //alert(localStorage.getItem("X-taxibook-timestamp"));
 
