@@ -324,7 +324,7 @@ class Trip extends REST_Controller {
 		$this->load->model('order_model');
 		$current_driver = $this->core_controller->get_current_user();
 
-		$order = $this->core_controller->get_active_order_by_oid($this->input->post('oid', TRUE));
+		$order = $this->order_model->get_active_order_by_oid($this->input->post('oid', TRUE));
 		if (count($order) == 0) {
 			$this->core_controller->fail_response(101);
 		}
@@ -375,7 +375,7 @@ class Trip extends REST_Controller {
 		$this->load->model('order_model');
 		$current_driver = $this->core_controller->get_current_user();
 
-		$order = $this->core_controller->get_active_order_by_oid($this->input->post('oid', TRUE));
+		$order = $this->order_model->get_active_order_by_oid($this->input->post('oid', TRUE));
 
 		if (count($order) == 0) {
 			$this->core_controller->fail_response(101);
