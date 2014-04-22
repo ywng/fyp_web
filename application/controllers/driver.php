@@ -146,13 +146,17 @@ class Driver extends REST_Controller {
 	
 
 	/**
-	*  This can be accessed by /driver/viewProfile with GET method
+	*  This can be accessed by /driver/getDriverProfile with GET method
 	*  View Profile
 	*
 	*/
-	public function viewProfile_get()
+	public function getDriverProfile_post()
 	{
+		$this->load->model('driver_model');
 
+		$driver=$this->driver_model->get_driver_by_did($this->input->post('did'));
+
+		$this->core_controller->add_return_data('driver', $driver)->successfully_processed();	
 		
 	}
 

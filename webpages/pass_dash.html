@@ -227,7 +227,7 @@
                 for(var i=0;i<len;i++){
                    var trip_record=new Array(); 
                    trip_record[0]=data.order[i].oid;
-                   trip_record[1]="<a href=\""+serverDomain+"webpages/pass_dash.html?did="+data.order[i].did+"#driverDetailsModal\">"+data.order[i].did+"</a>";
+                   trip_record[1]="<a href=\""+serverDomain+"webpages/pass_dash.html?did="+data.order[i].did+"#driverDetailsModal\">"+data.order[i].did+" onclick=\"loadDriverInfo("+data.order[i].did+")\"</a>";
                    trip_record[2]=data.order[i].location_from;
                    trip_record[3]=data.order[i].location_to;
                    trip_record[4]=data.order[i].order_time;
@@ -276,6 +276,46 @@
 
 
       });
+
+      function loadDriverInfo(did){
+           $.ajax({
+            url: serverDomain + "index.php/driver",
+            context: document.body,
+           // dataType: "json", 
+            headers : {"Access-Control-Allow-Origin" : "*","X-taxibook-session-token":localStorage.getItem("X-taxibook-session-token"),"X-taxibook-email":localStorage.getItem("X-taxibook-email"),"X-taxibook-user-type":localStorage.getItem("X-taxibook-user-type")},
+            type: 'GET', 
+            async: false,
+            success: function(data, textStatus, jqXHR){
+                var len=data.order.length;
+                trip_record_for_passenger=new Array(); 
+                for(var i=0;i<len;i++){
+                   var trip_record=new Array(); 
+                   trip_record[0]=data.order[i].oid;
+                   trip_record[1]="<a href=\""+serverDomain+"webpages/pass_dash.html?did="+data.order[i].did+"#driverDetailsModal\">"+data.order[i].did+" onclick=\"loadDriverInfo("+data.order[i].did+")\"</a>";
+                   trip_record[2]=data.order[i].location_from;
+                   trip_record[3]=data.order[i].location_to;
+                   trip_record[4]=data.order[i].order_time;
+                   if(data.order[i].score==-1){
+                     trip_record[5]="Not yet rated";
+                     trip_record[6]="Not yet rated";
+                    }
+                     else{
+                       trip_record[5]=data.order[i].score;
+                       trip_record[6]=data.order[i].comment;
+                    }
+                   
+
+                  trip_record_for_passenger[i]=trip_record;
+                }
+
+            },
+            error: function(jqHXR, textStatus, errorThrown) {
+              console.log('ajax error:' +textStatus + ' ' + errorThrown);
+            }
+
+        }); // end of the ajax call
+      }
+
 
       function logout(){
          localStorage.setItem("X-taxibook-session-token", "");
