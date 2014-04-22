@@ -211,7 +211,7 @@ class Order_model extends CI_Model {
 		$result = $this->db->from($this->Table_name_assigned)
 						->join($this->Table_name_active, $this->Table_name_active.'.'.$this->KEY_oid
 							.'='.$this->Table_name_assigned.'.'.$this->KEY_oid)
-						->where($key, $value)
+						->where($this->Table_name_assigned.'.'.$key, $value)
 						->order_by($this->KEY_assigned_time, 'DESC')
 						->limit($limit, $offset)->get();
 
