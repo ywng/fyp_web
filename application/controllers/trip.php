@@ -231,6 +231,12 @@ class Trip extends REST_Controller {
 		if ($status == FALSE) {
 			$this->core_controller->fail_response(100000002);
 		} else {
+			// remove all records inside assigned drivers
+
+			$remove_status = $this->order_model->remove_all_drivers_in_assign_table($oid);
+			if (!$remove_status) {
+				error_log("cannot remove all drivers in assign table");
+			}
 
 			$this->core_controller->successfully_processed();
 		}

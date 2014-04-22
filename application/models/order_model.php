@@ -194,6 +194,16 @@ class Order_model extends CI_Model {
 		}
 	}
 
+	function remove_all_drivers_in_assign_table($oid) {
+		$this->db->delete($this->Table_name_assigned, array( $this->KEY_oid => $oid ) );
+
+		if ($this->db->affected_rows() > 0) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+
 	// private functions
 
 
