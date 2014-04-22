@@ -15,4 +15,11 @@ function compareDates(dateString)
 
   var difference = currentDate - userDate;
   alert("The date entered differs from today's date by " + difference + " milliseconds");
+
+  if(difference>24*60*60*1000000){
+     alert("expire");
+     return false;
+  }
+  
+  return true;
 }
