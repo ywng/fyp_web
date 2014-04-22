@@ -30,6 +30,7 @@ class Order_model extends CI_Model {
 
 	var $Table_name_assigned = 'Assigned_Drivers';
 	var $KEY_assigned_time = 'assigned_time';
+	var $KEY_is_rejected = 'is_rejected';
 
 
 	var $Table_name_rating_session = 'Rating_Session';
@@ -168,6 +169,23 @@ class Order_model extends CI_Model {
 
 	function change_status($oid, $new_status_id) {
 		return $this->update_order($oid, array($this->KEY_status_id => $new_status_id));
+	}
+
+	function driver_reject_passenger($oid, $did) {
+		$result = $this->db->from($this->Table_name_assigned)
+						->where($this->KEY_oid, $oid)
+						->where($this->KEY_did, $did)
+						->get();
+		if ($result->num_rows() > 0) {
+			$this->db->where($this->KEY_oid, $oid)
+				->where($this->KEY_did, $did)
+				->update($this->Table_name_assigned, array(
+						$this->KEY_is_rejected => 1
+					));
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 
 	// private functions

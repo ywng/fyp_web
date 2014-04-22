@@ -338,7 +338,8 @@ class Trip extends REST_Controller {
 		}
 
 		// send apns to passenger
-
+		$this->send_apns_to_passenger($order[$this->order_model->KEY_pid], 
+			"A driver confirm your booking. Review now?", array( 'oid' => $this->input->post('oid', TRUE)));
 
 		$this->core_controller->successfully_processed();
 
@@ -354,7 +355,43 @@ class Trip extends REST_Controller {
 		$this->core_controller->fail_response(100000001);
 	}
 
+	/**
+	*  This can be accessed by /trip/driver_reject_trip with POST method
+	*  Cancel Trip
+	*
+	*/
+	public function driver_reject_trip_post()
+	{
+		$this->load->library('form_validation');
+		$validation_config = array(
+			array('field' => 'oid', 'label' => 'order id', 'rules' => 'trim|required|xss_clean|min_length[1]|numeric'), 
+			);
 
+		$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
+
+		if ($this->form_validation->run() === FALSE) {
+			$this->core_controller->fail_response(2, validation_errors());
+		}
+		$this->load->model('order_model');
+		$current_driver = $this->core_controller->get_current_user();
+
+		$order = $this->core_controller->get_active_order_by_oid($this->input->post('oid', TRUE));
+
+		if (count($order) == 0) {
+			$this->core_controller->fail_response(101);
+		}
+		if (array_key_exists($this->order_model->KEY_did, $order) && !is_null($order[$this->order_model->KEY_did])) {
+			$this->core_controller->fail_response(104);
+		}
+
+		// change the is_reject status to 1
+		$did = $current_driver[$this->order_model->KEY_did];
+
+		$status = $this->order_model->driver_reject_passenger($order[$this->order_model->KEY_oid], $did);
+		$this->core_controller->add_return_data("reject_status", $status);
+
+		$this->core_controller->successfully_processed();
+	}	
 
 	/**
 	*  This can be accessed by /trip/confirm_coming with POST method
