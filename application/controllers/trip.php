@@ -679,7 +679,7 @@ Taxibook';
 				}
 			}
 		}
-
+		return $new_status;
 	}
 
 	private function hide_passenger_data($passenger_data_array) {

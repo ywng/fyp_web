@@ -405,8 +405,8 @@ class Passenger extends REST_Controller {
 		// prepare to register the device token
 	
 		$device_token = $this->input->post('device_token');
-		$pid = $current_user[$this->passeneger_model->KEY_pid];
-		$email = $current_user[$this->passeneger_model->KEY_email];
+		$pid = $current_user[$this->passenger_model->KEY_pid];
+		$email = $current_user[$this->passenger_model->KEY_email];
 
 		// check if the device is registered by the same user before
 		$self_register_status = $this->apns_model->
