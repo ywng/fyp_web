@@ -285,7 +285,7 @@
             headers : {"Access-Control-Allow-Origin" : "*","X-taxibook-session-token":localStorage.getItem("X-taxibook-session-token"),"X-taxibook-email":localStorage.getItem("X-taxibook-email"),"X-taxibook-user-type":localStorage.getItem("X-taxibook-user-type")},
             type: 'POST', 
             async: false,
-            data: "did="+did;
+            data: "did="+did,
             success: function(data, textStatus, jqXHR){
                
 
