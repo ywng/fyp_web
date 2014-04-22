@@ -201,7 +201,7 @@
                      trip_record[6]="Not yet rated";
                     }
                      else{
-                       trip_record[5]=data.order[i].score;
+                       trip_record[5]=data.order[i].score+"/6";
                        trip_record[6]=data.order[i].comment;
                     }
                    
@@ -271,7 +271,7 @@
 
          var infoHTML="<label>Name: "+driver.first_name+" "+ driver.last_name+"</label><br>";
          infoHTML+="<label>Email: "+driver.email+"</label><br>";
-         infoHTML+="<label>Average Rating: "+driver.average_rating+"</label><br>";
+         infoHTML+="<label>Average Rating: "+driver.average_rating+"/6</label><br>";
          infoHTML+="<label>Rating Count: "+driver.rating_count+"</label><br>";
 
          $('#driver_details').html(infoHTML);
