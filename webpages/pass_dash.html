@@ -270,6 +270,8 @@
 
                $('#driver_details').html(infoHTML);
 
+               location.reload();
+
             },
             error: function(jqHXR, textStatus, errorThrown) {
               console.log('ajax error:' +textStatus + ' ' + errorThrown);
