@@ -192,7 +192,7 @@
                 for(var i=0;i<len;i++){
                    var trip_record=new Array(); 
                    trip_record[0]=data.order[i].oid;
-                   trip_record[1]="<a href=\""+serverDomain+"webpages/pass_dash.html?did="+data.order[i].did+"#driverDetailsModal\" onclick=\"return loadDriverInfo("+data.order[i].did+")\">"+data.order[i].did+"</a>";
+                   trip_record[1]="<button onclick=\"loadDriverInfo("+data.order[i].did+")\">"+data.order[i].did+"</button>";
                    trip_record[2]=data.order[i].location_from;
                    trip_record[3]=data.order[i].location_to;
                    trip_record[4]=data.order[i].order_time;
@@ -276,8 +276,6 @@
 
          $('#driver_details').html(infoHTML);
          location.href=serverDomain+"webpages/pass_dash.html#driverDetailsModal";
-
-        return true; //do the href
       }
 
 
