@@ -193,7 +193,8 @@ class Order_model extends CI_Model {
 
 	private function get_all_inactive_orders_by_key($key, $value, $limit, $offset) {
 		$result = $this->db->from($this->Table_name_inactive)
-						->join($this->Table_name_rating_session, 'Rating_Session.oid = Inactive_Order.oid', 'left') 
+						->join($this->Table_name_rating_session, $this->Table_name_rating_session.'.'.$this->KEY_oid
+							.' = '. $this->Table_name_inactive .'.'. $this->KEY_oid, 'left') 
 						->where($key, $value)
 						->order_by($this->KEY_post_time, 'DESC')
 						->limit($limit, $offset)->get();
@@ -208,6 +209,8 @@ class Order_model extends CI_Model {
 
 	private function get_all_assigned_orders_by_key($key, $value, $limit, $offset) {
 		$result = $this->db->from($this->Table_name_assigned)
+						->join($this->Table_name_active, $this->Table_name_active.'.'.$this->KEY_oid
+							.'='.$this->Table_name_assigned.'.'.$this->KEY_oid)
 						->where($key, $value)
 						->order_by($this->KEY_assigned_time, 'DESC')
 						->limit($limit, $offset)->get();
