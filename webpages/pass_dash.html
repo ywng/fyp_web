@@ -177,7 +177,7 @@
       $( document ).ready(function() {
              //alert(localStorage.getItem("X-taxibook-session-token"));
                //if not login, redirect to login page
-               compareDates(localStorage.getItem("X-taxibook-timestamp"));
+               compareDates(localStorage.getItem("X-taxibook-expire-time"));
           if(!(localStorage.getItem("X-taxibook-loggedIn")=="true" && localStorage.getItem("X-taxibook-user-type")=="passenger")){
               window.location.href="signin.html";
            }

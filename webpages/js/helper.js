@@ -1,7 +1,7 @@
 function compareDates(dateString)
 {
   // Convert the user's text to a Date object
-  var userDate = new Date(dateString);
+  var userDate = Date.parse(dateString);
 
   // Get the current time
   var currentDate = new Date();
