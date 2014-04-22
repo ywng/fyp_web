@@ -1,4 +1,4 @@
-function compareDates(dateString)
+function compareSessionDates(dateString)
 {
   // Convert the user's text to a Date object
   var userDate = Date.parse(dateString);
@@ -13,13 +13,13 @@ function compareDates(dateString)
     return;
   }
 
-  var difference = currentDate - userDate;
-  alert("The date entered differs from today's date by " + difference + " milliseconds");
+  var difference = -(currentDate - userDate);
+  //alert("The date entered differs from today's date by " + difference + " milliseconds");
 
-  if(difference>24*60*60*1000000){
-     alert("expire");
+  if(difference<1000*60*60){//smaller than 1 hour session time 
+     //alert("expire");
      return false;
   }
-  
+
   return true;
 }

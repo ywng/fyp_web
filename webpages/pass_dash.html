@@ -175,11 +175,8 @@
       var driver;
 
       $( document ).ready(function() {
-             //alert(localStorage.getItem("X-taxibook-session-token"));
-               //if not login, redirect to login page
-               alert(localStorage.getItem("X-taxibook-expire-time"));
-               compareDates(localStorage.getItem("X-taxibook-expire-time"));
-          if(!(localStorage.getItem("X-taxibook-loggedIn")=="true" && localStorage.getItem("X-taxibook-user-type")=="passenger")){
+        
+          if(!(localStorage.getItem("X-taxibook-loggedIn")=="true" && localStorage.getItem("X-taxibook-user-type")=="passenger") && compareSessionDates(localStorage.getItem("X-taxibook-expire-time"))){
               window.location.href="signin.html";
            }
            
