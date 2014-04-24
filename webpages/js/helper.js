@@ -19,7 +19,7 @@ function compareSessionDates(dateString)
   var difference = -(currentDate - userDate);
   //alert("The date entered differs from today's date by " + difference + " milliseconds");
 
-  if(difference<1000*60*60){//smaller than 1 hour session time 
+  if(difference<=1000){//smaller than 1 hour session time 
      //alert("expire");
      return false;
   }
