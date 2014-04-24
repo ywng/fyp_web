@@ -1,6 +1,9 @@
 function compareSessionDates(dateString)
 {
   // Convert the user's text to a Date object
+  if(dateString==""){
+     return false;
+  }
   var userDate = Date.parse(dateString);
 
   // Get the current time
