@@ -63,7 +63,7 @@
       $( document ).ready(function() {
            //  alert(localStorage.getItem("X-taxibook-session-token"));
       //if not login, redirect to login page
-      if(!(localStorage.getItem("X-taxibook-loggedIn")=="true" && localStorage.getItem("X-taxibook-user-type")=="admin") &&  compareSessionDates(localStorage.getItem("X-taxibook-expire-time"))){
+      if(!(localStorage.getItem("X-taxibook-loggedIn")=="true" && localStorage.getItem("X-taxibook-user-type")=="admin" && compareSessionDates(localStorage.getItem("X-taxibook-expire-time"))) ){
         window.location.href="signin.html";
       }
 
