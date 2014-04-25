@@ -445,7 +445,7 @@ class Trip extends REST_Controller {
 		$status = $this->order_model->driver_reject_passenger($order[$this->order_model->KEY_oid], $did);
 		$this->core_controller->add_return_data("reject_status", $status);
 
-		$this->check_if_order_needs_redistribute($order[$this->order_model->KEY_oid]);
+		$this->check_if_order_needs_redistribute($order[$this->order_model->KEY_oid], $order[$this->order_model->KEY_pid]);
 
 		$this->core_controller->successfully_processed();
 	}	
