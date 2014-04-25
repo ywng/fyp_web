@@ -67,6 +67,7 @@
         window.location.href="signin.html";
       }
 
+      checkValidRequestWithSessionToken(localStorage.getItem("X-taxibook-expire-time"));
       $.ajax({
           url: serverDomain + "index.php/admin/allDriver",
           context: document.body,
@@ -139,7 +140,7 @@
                     member_status=1;
 
                 // alert(did+"  "+sData[5]);
-                 
+                 checkValidRequestWithSessionToken(localStorage.getItem("X-taxibook-expire-time"));
                  $.ajax({
                       url: serverDomain + "index.php/admin/approve_driver",
                       context: document.body,
@@ -179,12 +180,8 @@
       }
 
       function logout(){
-         localStorage.setItem("X-taxibook-session-token", "");
-         localStorage.setItem("X-taxibook-email","");
-         localStorage.setItem("X-taxibook-user-type", "");
-          localStorage.setItem("X-taxibook-expire-time","");
-         localStorage.setItem("X-taxibook-loggedIn","false");
-
+           checkValidRequestWithSessionToken(localStorage.getItem("X-taxibook-expire-time"));
+    
           $.ajax({
                 url: serverDomain + "index.php/admin/logout",
                 context: document.body,
@@ -201,6 +198,12 @@
               }
 
           }); // end of the ajax call
+
+         localStorage.setItem("X-taxibook-session-token", "");
+         localStorage.setItem("X-taxibook-email","");
+         localStorage.setItem("X-taxibook-user-type", "");
+          localStorage.setItem("X-taxibook-expire-time","");
+         localStorage.setItem("X-taxibook-loggedIn","false");
       }
        
 

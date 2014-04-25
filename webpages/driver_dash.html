@@ -158,6 +158,7 @@
               window.location.href="signin.html";
            }
            
+          checkValidRequestWithSessionToken(localStorage.getItem("X-taxibook-expire-time"));
           $.ajax({
             url: serverDomain + "index.php/driver/inactive_trip",
             context: document.body,
@@ -221,12 +222,8 @@
       });
 
       function logout(){
-         localStorage.setItem("X-taxibook-session-token", "");
-         localStorage.setItem("X-taxibook-email","");
-         localStorage.setItem("X-taxibook-user-type", "");
-         localStorage.setItem("X-taxibook-expire-time","");
-         localStorage.setItem("X-taxibook-loggedIn","false");
-
+      
+          checkValidRequestWithSessionToken(localStorage.getItem("X-taxibook-expire-time"));
          $.ajax({
                 url: serverDomain + "index.php/driver/logout",
                 context: document.body,
@@ -243,6 +240,12 @@
               }
 
           }); // end of the ajax call
+
+         localStorage.setItem("X-taxibook-session-token", "");
+         localStorage.setItem("X-taxibook-email","");
+         localStorage.setItem("X-taxibook-user-type", "");
+         localStorage.setItem("X-taxibook-expire-time","");
+         localStorage.setItem("X-taxibook-loggedIn","false");
       }
        
 
