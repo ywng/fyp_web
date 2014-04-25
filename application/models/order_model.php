@@ -189,6 +189,11 @@ class Order_model extends CI_Model {
 				->update($this->Table_name_assigned, array(
 						$this->KEY_is_rejected => 1
 					));
+			$this->db->where($this->KEY_oid, $oid)
+					->update($this->Table_name_active, array(
+							$this->KEY_status_id => $this->Status_KEY_pending,
+							$this->KEY_did => null,
+						));
 			return TRUE;
 		} else {
 			return FALSE;
