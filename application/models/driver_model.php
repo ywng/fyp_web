@@ -192,7 +192,24 @@ class Driver_model extends CI_Model {
 		   array_push($dids,$row->{"$this->KEY_did"});
 		}
 		return $dids;
+
 	}
+
+	function get_available_drivers($oid) {
+		$result = $this->db->query("SELECT distinct(d.$this->KEY_did)
+									FROM $this->Table_name_driver d
+									WHERE d.$this->KEY_is_available = 1
+										AND d.$this->KEY_member_status_id = 1
+										AND d.$this->KEY_did NOT IN (SELECT $this->KEY_did FROM $this->Table_name_assigned_drivers WHERE $this->KEY_oid=$oid)
+										AND d.$this->KEY_did NOT IN (SELECT $this->KEY_did FROM $this->Table_name_active_order where $this->KEY_did is not NULL)");
+
+		if ($result->num_rows() > 0) {
+			return $result->result_array();
+		} else {
+			return array();
+		}
+	}
+
 	
 	/* gps related */
 	function get_driver_location($did) {

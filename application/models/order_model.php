@@ -46,6 +46,7 @@ class Order_model extends CI_Model {
 	// var $Status_KEY_driver_waiting = 4;
 	// var $Status_KEY_driver_picked_up = 5;
 	var $Status_KEY_trip_finished = 3;
+	var $Status_KEY_trip_cancelled = -1;
 
 
 	function move_order_from_active_to_inactive($oid, $new_status_id, $actual_price = NULL) {
@@ -177,6 +178,23 @@ class Order_model extends CI_Model {
 		return $this->update_order($oid, array($this->KEY_status_id => $new_status_id));
 	}
 
+	function passenger_reject_driver($oid, $did) {
+		$result = $this->db->from($this->Table_name_assigned)
+						->where($this->KEY_oid, $oid)
+						->where($this->KEY_did, $did)
+						->get();
+		if ($result->num_rows() > 0) {
+			$this->db->where($this->KEY_oid, $oid)
+				->where($this->KEY_did, $did)
+				->update($this->Table_name_assigned, array(
+						$this->KEY_is_rejected => 1
+					));
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+
 	function driver_reject_passenger($oid, $did) {
 		$result = $this->db->from($this->Table_name_assigned)
 						->where($this->KEY_oid, $oid)
@@ -191,6 +209,20 @@ class Order_model extends CI_Model {
 			return TRUE;
 		} else {
 			return FALSE;
+		}
+	}
+
+	function get_assigned_drivers_of_order($oid) {
+		$result = $this->db->select($this->KEY_did)
+						->from($this->Table_name_assigned)
+						->where($this->KEY_oid, $oid)
+						->where($this->KEY_is_rejected, 0)
+						->get();
+
+		if ($result->num_rows() > 0) {
+			return $result->result_array();
+		} else {
+			return array();
 		}
 	}
 

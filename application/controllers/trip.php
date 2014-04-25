@@ -15,6 +15,7 @@ class Trip extends REST_Controller {
 	var $Status_KEY_bidded = 1;
 	var $Status_KEY_customer_confirmed = 2;
 	var $Status_KEY_trip_finished = 3;
+	var $Status_KEY_trip_cancelled = -1;
 
 	var $CONST_MAX_DRIVERS_NEARBY = 5;
 
@@ -242,6 +243,54 @@ class Trip extends REST_Controller {
 		}
 	}
 
+	
+
+	/**
+	*  This can be accessed by /trip/reject_driver with POST method
+	*
+	*/
+	public function reject_driver_post()
+	{
+		$this->load->library('form_validation');
+		$validation_config = array(
+			array('field' => 'oid', 'label' => 'order id', 'rules' => 'trim|required|xss_clean|min_length[1]|numeric'),
+			array('field' => 'did', 'label' => 'driver id', 'rules' => 'trim|required|xss_clean|min_length[1]|numeric'),
+			);
+
+		$this->form_validation->set_error_delimiters('', '')->set_rules($validation_config);
+
+		if ($this->form_validation->run() === FALSE) {
+			$this->core_controller->fail_response(2, validation_errors());
+		}
+		$this->load->model('order_model');
+		$current_passenger = $this->core_controller->get_current_user();
+
+		$order = $this->order_model->get_active_order_by_oid($this->input->post('oid', TRUE));
+		$did = $this->input->post('did', TRUE);
+		if (count($order) == 0) {
+			$this->core_controller->fail_response(101);
+		}
+		if (!array_key_exists($this->order_model->KEY_did, $order) || $order[$this->order_model->KEY_did] != $did) {
+			$this->core_controller->fail_response(104);
+		}
+
+		$reject_status = $this->order_model->passenger_reject_driver($order[$this->order_model->KEY_oid], $did);
+
+		$new_status = $this->Status_KEY_bidded;
+
+		if ($reject_status) {
+			// notify the driver
+			$this->send_apns_to_driver($did, "Passenger has cancelled the order.",  array( 'oid' => $order[$this->order_model->KEY_oid] ));
+
+			$new_status = $this->check_if_order_needs_redistribute($order[$this->order_model->KEY_oid], $current_passenger[$this->order_model->KEY_pid], TRUE);
+		}
+
+		$this->core_controller->add_return_data("reject_status", $reject_status)
+			->add_return_data("new_status", $new_status);
+
+		$this->core_controller->successfully_processed();
+	}	
+
 	/**
 	*  This can be accessed by /trip/passenger_cancel_trip with POST method
 	*
@@ -395,6 +444,8 @@ class Trip extends REST_Controller {
 
 		$status = $this->order_model->driver_reject_passenger($order[$this->order_model->KEY_oid], $did);
 		$this->core_controller->add_return_data("reject_status", $status);
+
+		$this->check_if_order_needs_redistribute($order[$this->order_model->KEY_oid]);
 
 		$this->core_controller->successfully_processed();
 	}	
@@ -748,6 +799,50 @@ Taxibook';
 
 	
 
+	}
+
+	private function check_if_order_needs_redistribute($oid, $pid, $need_to_send_driver_notification = FALSE) {
+
+		$this->load->model('order_model');
+
+		// check if the order needs to redistribute
+		$assigned_drivers = $this->order_model->get_assigned_drivers_of_order($oid);
+		$number_of_assigned_drivers = count($assigned_drivers);
+
+		if ($number_of_assigned_drivers == 0) {
+			// redistribute
+			$this->load->model('driver_model');
+			$available_drivers = $this->driver_model->get_available_drivers($oid);
+
+			if (count($available_drivers) > 0) {
+				$insert_array = array();
+				foreach ($available_drivers as $available_driver) {
+					$did = $available_driver[$this->driver_model->KEY_did];
+					$insert_array[] = $did;
+				}
+				$this->driver_model->insert_assigned_drivers($insert_array, $oid);
+
+				return $this->Status_KEY_pending;
+			} else {
+				// no driver available now, cancel the order and notify the customer
+				$this->order_model->remove_all_drivers_in_assign_table($oid);
+				$this->order_model->move_order_from_active_to_inactive($oid, $this->Status_KEY_trip_cancelled, 0);
+
+				$this->send_apns_to_passenger($pid, "Your order cannot deliver to other drivers. Please try again.", array( 'oid' => $oid));
+
+				return $this->Status_KEY_trip_cancelled;
+			}
+
+		} else if ($need_to_send_driver_notification) {
+			// get all those drivers and send notification again
+			
+			foreach ($assigned_drivers as $did) {
+				$this->send_apns_to_driver($did[$this->order_model->KEY_did], "Someone needs a taxi. Response?", array( 'oid' => $oid));
+			}
+
+			return $this->Status_KEY_pending;
+		}
+		return $this->Status_KEY_pending;
 	}
 
 }
