@@ -284,6 +284,7 @@ class Order_model extends CI_Model {
 							.'='.$this->Table_name_assigned.'.'.$this->KEY_oid)
 						->where($this->Table_name_assigned.'.'.$key, $value)
 						->where($this->Table_name_active.'.'.$this->KEY_status_id, $this->Status_KEY_pending)
+						->where($this->Table_name_assigned.'.'.$this->KEY_is_rejected, 0)
 						->order_by($this->KEY_assigned_time, 'DESC')
 						->limit($limit, $offset)->get();
 
